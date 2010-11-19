@@ -1,0 +1,22 @@
+<RCC>
+    <qresource prefix="/">
+        <file>TurnTable.qml</file>
+        <file>SpeedSlider.qml</file>
+        <file>Button.qml</file>
+        <file>Arm.qml</file>
+        <file>disk.png</file>
+        <file>turntable.png</file>
+        <file>arm.png</file>
+        <file>quitar1.wav</file>
+        <file>speedknob.png</file>
+        <file>speedslider.png</file>
+        <file>powerbutton.png</file>
+        <file>snare.wav</file>
+        <file>hihat_open.wav</file>
+        <file>hihat.wav</file>
+        <file>cymbal.wav</file>
+        <file>cowbell.wav</file>
+        <file>bassd.wav</file>
+        <file>SidePanel.qml</file>
+    </qresource>
+</RCC>

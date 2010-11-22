@@ -12,7 +12,6 @@
 #include <QFile>
 #include "GEInterfaces.h"
 
-
 namespace GE {
 
     class CAudioBufferPlayInstance;
@@ -99,7 +98,5 @@ namespace GE {
     };
 
 };
-
-
 
 #endif

@@ -6,47 +6,51 @@ Rectangle {
     signal turnTableClicked()
     signal drumMachineClicked()
 
-    width: 100
-    height: 200
+    width: 100; height: 200
+    color: "black"
 
-    Rectangle {
+    Button {
         id: turnTableButton
 
         width: parent.width; height: parent.height / 2
-        radius: 4
-        color: "gray"
+        pressedColor: "gray"
+        pressedColorOpacity: 1.0
 
         Text {
             anchors.centerIn: parent
             rotation: 90
             text: "Turntable"
             color: "white"
+            font.pixelSize: 20
         }
 
-        MouseArea {
-            anchors.fill: parent
-            onClicked: sidepanel.turnTableClicked()
+        onClicked: {
+            pressedColorOpacity = 1.0
+            drumMachineButton.pressedColorOpacity = 0.3
+            sidepanel.turnTableClicked()
         }
     }
 
-    Rectangle {
+    Button {
         id: drumMachineButton
 
         width: parent.width; height: parent.height / 2
         y: parent.height / 2
-        radius: 4
-        color: "gray"
+        pressedColor: "gray"
+        pressedColorOpacity: 0.3
 
         Text {
             anchors.centerIn: parent
             rotation: 90
-            text: "Drum machine"
+            text: "Drum Machine"
             color: "white"
+            font.pixelSize: 20
         }
 
-        MouseArea {
-            anchors.fill: parent
-            onClicked: sidepanel.drumMachineClicked()
+        onClicked: {
+            pressedColorOpacity = 1.0
+            turnTableButton.pressedColorOpacity = 0.3
+            sidepanel.drumMachineClicked()
         }
     }
 }

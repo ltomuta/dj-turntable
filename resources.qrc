@@ -7,7 +7,7 @@
         <file>disk.png</file>
         <file>turntable.png</file>
         <file>arm.png</file>
-        <file>quitar1.wav</file>
+        <file>melody.wav</file>
         <file>speedknob.png</file>
         <file>speedslider.png</file>
         <file>powerbutton.png</file>
@@ -18,5 +18,7 @@
         <file>cowbell.wav</file>
         <file>bassd.wav</file>
         <file>SidePanel.qml</file>
+        <file>DrumMachine.qml</file>
+        <file>closemark.png</file>
     </qresource>
 </RCC>

@@ -62,9 +62,7 @@ AudioOut::AudioOut( QObject *parent, GE::IAudioSource *source ) : QThread(parent
 
 
     m_samplesMixed = 0;
-
     m_runstate=0;
-    //start();
 };
 
 

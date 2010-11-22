@@ -49,17 +49,19 @@ int main(int argc, char *argv[])
 
     QObject *rootObject = dynamic_cast<QObject*>(view.rootObject());
 
-    QObject::connect(rootObject, SIGNAL(stop()), turnTable, SLOT(stop()));
     QObject::connect(rootObject, SIGNAL(start()), turnTable, SLOT(start()));
-    QObject::connect(rootObject, SIGNAL(stop()), turnTable, SLOT(stopBeat()));
-    QObject::connect(rootObject, SIGNAL(start()), turnTable, SLOT(startBeat()));
+    QObject::connect(rootObject, SIGNAL(stop()), turnTable, SLOT(stop()));
+    QObject::connect(rootObject, SIGNAL(startBeat()), turnTable, SLOT(startBeat()));
+    QObject::connect(rootObject, SIGNAL(stopBeat()), turnTable, SLOT(stopBeat()));
+    QObject::connect(rootObject, SIGNAL(toggleBeat(QVariant)), turnTable, SLOT(toggleBeat(QVariant)));
     QObject::connect(rootObject, SIGNAL(speed(QVariant)), turnTable, SLOT(setDiscSpeed(QVariant)));
+    QObject::connect(rootObject, SIGNAL(close()), &app, SLOT(quit()));
 
 #if defined(Q_WS_MAEMO_5)|| defined(Q_OS_SYMBIAN)
     view.setGeometry(QApplication::desktop()->screenGeometry());
     view.showFullScreen();
 #else
-    view.setGeometry(QRect(100, 100, 640, 360));
+    view.setGeometry(QRect(100, 100, 800, 480));
     view.show();
 #endif
 

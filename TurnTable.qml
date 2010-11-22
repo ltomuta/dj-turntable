@@ -8,6 +8,8 @@ Rectangle {
     signal stop()
     signal startBeat()
     signal stopBeat()
+    signal toggleBeat(variant index)
+    signal close()
 
     anchors.fill: parent
     width: 640; height: 360
@@ -40,7 +42,7 @@ Rectangle {
 
             property bool playing: false
 
-            width: ui.width; height: ui.height
+            width: flickable.width; height: flickable.height
             source: "turntable.png"
             fillMode: Image.PreserveAspectFit
 
@@ -71,7 +73,7 @@ Rectangle {
                             disk.currentSpeed = disk.targetSpeed
                         }
                         else {
-                            disk.currentSpeed += (disk.targetSpeed - disk.currentSpeed) * 0.01
+                            disk.currentSpeed += (disk.targetSpeed - disk.currentSpeed) * 0.03
                         }
                     }
                 }
@@ -141,7 +143,8 @@ Rectangle {
                 anchors.verticalCenterOffset: 0.41 * parent.paintedHeight
 
                 source: "powerbutton.png"
-                powerLightOpacity: turntable.playing ? 0.8 : 0
+                pressedColor: "green"
+                pressedColorOpacity: turntable.playing ? 0.8 : 0
 
                 onClicked: {
                     turntable.playing = !turntable.playing
@@ -173,23 +176,18 @@ Rectangle {
                 sliderimage: "speedslider.png"
                 sliderhandleimage: "speedknob.png"
             }
+
+            Text {
+                text: disk.currentSpeed.toPrecision(2)
+                color: "white"
+            }
         }
 
-        Rectangle {
+        DrumMachine {
             id: drummachine
 
             y: flickable.height
             width: flickable.width; height: flickable.height
-            color: "black"
-
-            Text {
-                anchors.centerIn: parent
-                text: "Drum Machine"
-
-                font.pixelSize: 40
-                font.bold: true
-                color: "white"
-            }
         }
 
         states: State {
@@ -201,8 +199,16 @@ Rectangle {
             from: ""
             to: "DrumMachine"
             reversible: true
-            PropertyAnimation { properties: "contentY" }
+            PropertyAnimation { properties: "contentY"; easing.type: Easing.InOutQuart }
         }
+    }
 
+    Button {
+        width: 40; height: 40
+        anchors.top: parent.top; anchors.topMargin: 10
+        anchors.right: parent.right; anchors.rightMargin: 10
+        source: "./closemark.png"
+        smooth: true
+        onClicked: ui.close()
     }
 }

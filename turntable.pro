@@ -22,7 +22,9 @@ SOURCES += main.cpp \
 OTHER_FILES += TurnTable.qml \
                SpeedSlider.qml \
                Button.qml \
-               Arm.qml
+               Arm.qml \
+               SidePanel.qml \
+               DrumMachine.qml
 
 RESOURCES +=   resources.qrc
 

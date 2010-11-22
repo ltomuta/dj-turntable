@@ -80,9 +80,21 @@ CAudioBuffer* CAudioBuffer::loadWav( QString fileName ) {
         wavFile->read( (char*)&header.blockAlign,2 );
         wavFile->read( (char*)&header.bitsPerSample,2 );
 
-        wavFile->read( (char*)&header.subchunk2id,4 );
-        if (header.subchunk2id[0]!='d' || header.subchunk2id[1]!='a' || header.subchunk2id[2]!='t' || header.subchunk2id[3]!='a') return 0;	//  incorrect header
-        wavFile->read( (char*)&header.subchunk2size,4 );
+        while (1) {
+            if (wavFile->read( (char*)&header.subchunk2id,4 ) != 4) return 0;
+            if (wavFile->read( (char*)&header.subchunk2size,4 ) != 4) return 0;
+            int deb_size = header.subchunk2size;
+            char tes[4];
+            memcpy(tes, header.subchunk2id, 4 );
+            //if (header.subchunk2id[0]!='d' || header.subchunk2id[1]!='a' || header.subchunk2id[2]!='t' || header.subchunk2id[3]!='a') return 0;	//  incorrect header
+            if (header.subchunk2id[0]=='d' && header.subchunk2id[1]=='a' && header.subchunk2id[2]=='t' && header.subchunk2id[3]=='a') break;            // found the data, chunk
+            // this was not the data-chunk. skip it
+            if (header.subchunk2size<1) return 0;           // error in file
+            char *unused = new char[header.subchunk2size];
+            wavFile->read( unused, header.subchunk2size );
+            delete [] unused;
+        }
+
 
 
         // the data follows.
@@ -297,7 +309,7 @@ int CAudioBufferPlayInstance::mixBlock( AUDIO_SAMPLE_TYPE *target, int samplesTo
 int CAudioBufferPlayInstance::pullAudio( AUDIO_SAMPLE_TYPE *target, int bufferLength ) {
     if (!m_buffer) return 0;			// no sample associated to mix..
 
-    int channelLength = ((m_buffer->getDataLength()) / (m_buffer->getNofChannels()*m_buffer->getBytesPerSample()))-1;
+    int channelLength = ((m_buffer->getDataLength()) / (m_buffer->getNofChannels()*m_buffer->getBytesPerSample()))-2;
 
     int samplesToWrite = bufferLength/2;
     int amount;
@@ -308,16 +320,23 @@ int CAudioBufferPlayInstance::pullAudio( AUDIO_SAMPLE_TYPE *target, int bufferLe
         int samplesLeft = channelLength - (m_fixedPos>>12);
         int maxMixAmount = (int)(((long long int)(samplesLeft)<<12) / m_fixedInc );         // This is how much we can mix at least
         //int maxMixAmount = (int)((float)samplesLeft / ((float)m_fixedInc/4096.0f));
+        //if (maxMixAmount<1) maxMixAmount = 1;           // NOTE, THIS MIGHT CAUSE PROBLEMS. NEEDS CHECKING
         if (maxMixAmount>samplesToWrite) {
             maxMixAmount=samplesToWrite;
         }
 
-        amount=mixBlock( target+totalMixed*2, maxMixAmount );
-        if (amount==0) break;                       // an error occured
-        totalMixed+=amount;
+        if (maxMixAmount>0) {
+            amount=mixBlock( target+totalMixed*2, maxMixAmount );
+            if (amount==0)
+            {
+                break;                       // an error occured
+            }
+            totalMixed+=amount;
+        } else {
+            amount = 0;
+            m_fixedPos = channelLength<<12;
+        }
 
-        samplesToWrite-=amount;
-        if (samplesToWrite<1) break;
 
 
         // sample is ended,.. check the looping variables and see what to do.
@@ -329,6 +348,9 @@ int CAudioBufferPlayInstance::pullAudio( AUDIO_SAMPLE_TYPE *target, int bufferLe
                 return totalMixed;
             }
         }
+
+        samplesToWrite-=amount;
+        if (samplesToWrite<1) break;
     };
     return  totalMixed*2;
 };

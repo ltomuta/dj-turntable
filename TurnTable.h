@@ -45,25 +45,18 @@ public slots:
 
     void start();
     void stop() { m_sdisc->setHeadOn(false); }
-    void startBeat( int index = 3 ) { toggleBeat(index); }
-    void stopBeat() { toggleBeat(-1); }
+    void startBeat() { m_drumMachine->setRunning(true); }
+    void stopBeat() { m_drumMachine->setRunning(false); }
     void setBeatSpeed( int speed ) { m_drumMachine->setBpm( speed ); } // good values are anything between 300 and 800.
-
-
-
-    void toggleBeat( int index );               // -1 index means that there are no beat at all. indexes 0-3 are the according presets
-
+    void toggleBeat( QVariant index );               // -1 index means that there are no beat at all. indexes 0-3 are the according presets
 
 protected:
     CScratchDisc *m_sdisc;
     CDrumMachine *m_drumMachine;
 
     GE::CAudioBufferPlayInstance *m_beatInstance;
-
     GE::AudioOut *m_audioOut;
-
     GE::CAudioMixer m_audioMixer;
-
     GE::CAudioBuffer *m_discSample;
 };
 

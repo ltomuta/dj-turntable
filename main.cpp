@@ -28,11 +28,11 @@ int main(int argc, char *argv[])
     // Lock orientation in Symbian
 #ifdef Q_OS_SYMBIAN
     CAknAppUi* appUi = dynamic_cast<CAknAppUi*> (CEikonEnv::Static()->AppUi());
-    TRAP_IGNORE( if(appUi) { appUi->SetOrientationL(CAknAppUi::EAppUiOrientationLandscape); });
+    TRAP_IGNORE( if(appUi) { appUi->SetOrientationL(CAknAppUi::EAppUiOrientationLandscape); } );
 #endif
 
     QDeclarativeView view;
-    view.setSource(QUrl("qrc:/TurnTable.qml"));
+    view.setSource(QUrl("qrc:/qml/TurnTable.qml"));
     view.setResizeMode(QDeclarativeView::SizeRootObjectToView);
 
 #ifndef QT_NO_OPENGL
@@ -51,11 +51,15 @@ int main(int argc, char *argv[])
 
     QObject::connect(rootObject, SIGNAL(start()), turnTable, SLOT(start()));
     QObject::connect(rootObject, SIGNAL(stop()), turnTable, SLOT(stop()));
+    QObject::connect(rootObject, SIGNAL(diskSpeed(QVariant)), turnTable, SLOT(setDiscSpeed(QVariant)));
+    QObject::connect(turnTable, SIGNAL(drumButtons(QVariant, QVariant)), rootObject, SLOT(setDrumGrid(QVariant, QVariant)));
     QObject::connect(rootObject, SIGNAL(startBeat()), turnTable, SLOT(startBeat()));
     QObject::connect(rootObject, SIGNAL(stopBeat()), turnTable, SLOT(stopBeat()));
     QObject::connect(rootObject, SIGNAL(toggleBeat(QVariant)), turnTable, SLOT(toggleBeat(QVariant)));
-    QObject::connect(rootObject, SIGNAL(speed(QVariant)), turnTable, SLOT(setDiscSpeed(QVariant)));
-    QObject::connect(rootObject, SIGNAL(close()), &app, SLOT(quit()));
+    QObject::connect((QObject*)view.engine(), SIGNAL(quit()), &app, SLOT(quit()));
+
+    // Start with beat 0
+    turnTable->toggleBeat(0);
 
 #if defined(Q_WS_MAEMO_5)|| defined(Q_OS_SYMBIAN)
     view.setGeometry(QApplication::desktop()->screenGeometry());

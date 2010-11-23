@@ -14,25 +14,26 @@ TEMPLATE = app
 
 SOURCES += main.cpp \
            TurnTable.cpp \
+           DrumMachine.cpp \
            ga_src/GEAudioBuffer.cpp \
            ga_src/GEInterfaces.cpp \
-           ga_src/GEAudioOut.cpp \
-           DrumMachine.cpp
+           ga_src/GEAudioOut.cpp
 
-OTHER_FILES += TurnTable.qml \
-               SpeedSlider.qml \
-               Button.qml \
-               Arm.qml \
-               SidePanel.qml \
-               DrumMachine.qml
+OTHER_FILES += qml/TurnTable.qml \
+               qml/SpeedSlider.qml \
+               qml/Button.qml \
+               qml/Arm.qml \
+               qml/SidePanel.qml \
+               qml/DrumMachine/DrumMachine.qml \
+               qml/DrumMachine/DrumButton.qml
 
 RESOURCES +=   resources.qrc
 
 HEADERS +=     TurnTable.h \
+               DrumMachine.h \
                ga_src/GEAudioOut.h \
                ga_src/GEInterfaces.h \
-               ga_src/GEAudioBuffer.h \
-               DrumMachine.h
+               ga_src/GEAudioBuffer.h
 
 unix:!symbian {
     maemo5 {

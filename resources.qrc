@@ -1,24 +1,25 @@
 <RCC>
     <qresource prefix="/">
-        <file>TurnTable.qml</file>
-        <file>SpeedSlider.qml</file>
-        <file>Button.qml</file>
-        <file>Arm.qml</file>
-        <file>disk.png</file>
-        <file>turntable.png</file>
-        <file>arm.png</file>
-        <file>melody.wav</file>
-        <file>speedknob.png</file>
-        <file>speedslider.png</file>
-        <file>powerbutton.png</file>
-        <file>snare.wav</file>
-        <file>hihat_open.wav</file>
-        <file>hihat.wav</file>
-        <file>cymbal.wav</file>
-        <file>cowbell.wav</file>
-        <file>bassd.wav</file>
-        <file>SidePanel.qml</file>
-        <file>DrumMachine.qml</file>
-        <file>closemark.png</file>
+        <file>qml/TurnTable.qml</file>
+        <file>qml/SpeedSlider.qml</file>
+        <file>qml/Button.qml</file>
+        <file>qml/Arm.qml</file>
+        <file>qml/SidePanel.qml</file>
+        <file>qml/DrumMachine/DrumMachine.qml</file>
+        <file>qml/DrumMachine/DrumButton.qml</file>
+        <file>qml/disk.png</file>
+        <file>qml/turntable.png</file>
+        <file>qml/arm.png</file>
+        <file>qml/speedknob.png</file>
+        <file>qml/speedslider.png</file>
+        <file>qml/powerbutton.png</file>
+        <file>qml/closemark.png</file>
+        <file>sounds/melody.wav</file>
+        <file>sounds/snare.wav</file>
+        <file>sounds/hihat_open.wav</file>
+        <file>sounds/hihat.wav</file>
+        <file>sounds/cymbal.wav</file>
+        <file>sounds/cowbell.wav</file>
+        <file>sounds/bassd.wav</file>
     </qresource>
 </RCC>

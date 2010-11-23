@@ -13,11 +13,15 @@ public:
 
     int pullAudio( AUDIO_SAMPLE_TYPE *target, int length );
 
-    // change the speed of the machine
+    int getSeqLen() const { return m_seqLen; }
+    int getSampleCount() const { return DRUM_MACHINE_SAMPLE_COUNT; }
+
     inline int getBpm() const { return m_bpm; }
     void setBpm( int bpm );
     void setSeq( const unsigned char *seq, int seqLen );
     void setRunning(bool running) { m_running = running; }
+
+
 
 protected:
     unsigned char *m_seq;

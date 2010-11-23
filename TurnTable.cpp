@@ -26,7 +26,6 @@ CScratchDisc::CScratchDisc( GE::CAudioBuffer *discSource )
 
 CScratchDisc::~CScratchDisc()
 {
-
 }
 
 
@@ -82,7 +81,7 @@ int CScratchDisc::pullAudio( AUDIO_SAMPLE_TYPE *target, int bufferLength )
 
 CTurnTable::CTurnTable()
 {
-    m_discSample = GE::CAudioBuffer::loadWav(QString(":melody"));
+    m_discSample = GE::CAudioBuffer::loadWav(QString(":/sounds/melody.wav"));
 
     m_sdisc = new CScratchDisc(m_discSample);
     m_audioMixer.addAudioSource(m_sdisc);
@@ -91,7 +90,6 @@ CTurnTable::CTurnTable()
     m_drumMachine = new CDrumMachine();
     m_drumMachine->setBpm( 600 );
     m_audioMixer.addAudioSource( m_drumMachine );
-    m_drumMachine->setSeq(drum_seq0, 64);
 
     m_audioMixer.setGeneralVolume(0.4999f);
     setDiscSpeed(1.0f);
@@ -100,13 +98,13 @@ CTurnTable::CTurnTable()
 
 void CTurnTable::setDiscSpeed(QVariant speed)
 {
-    m_sdisc->setSpeed( speed.toFloat() );
+    m_sdisc->setSpeed(speed.toFloat());
 }
 
 
 CTurnTable::~CTurnTable()
 {
-    if (m_audioOut){
+    if (m_audioOut) {
         delete m_audioOut;
         m_audioOut = NULL;
     }
@@ -114,12 +112,6 @@ CTurnTable::~CTurnTable()
     m_audioOut = NULL;
     m_discSample = NULL;
     m_drumMachine = NULL;
-}
-
-
-void CTurnTable::start()
-{
-    m_sdisc->setHeadOn(true);
 }
 
 
@@ -142,6 +134,10 @@ void CTurnTable::toggleBeat(QVariant index)
         m_drumMachine->setSeq(drum_seq3, 32);
         break;
     };
+
+    emit drumButtons(m_drumMachine->getSeqLen(), m_drumMachine->getSampleCount());
+
+
 };
 
 

@@ -4,12 +4,12 @@
 using namespace GE;
 
 const char *drum_sample_files[DRUM_MACHINE_SAMPLE_COUNT] = {
-    ":/hihat.wav",
-    ":/hihat_open.wav",
-    ":/bassd.wav",
-    ":/snare.wav",
-    ":/cymbal.wav",
-    ":/cowbell.wav"
+    ":/sounds/hihat.wav",
+    ":/sounds/hihat_open.wav",
+    ":/sounds/bassd.wav",
+    ":/sounds/snare.wav",
+    ":/sounds/cymbal.wav",
+    ":/sounds/cowbell.wav"
 };
 
 
@@ -25,7 +25,7 @@ CDrumMachine::CDrumMachine()
     };
 
     m_running = false;
-    m_seq = 0;
+    m_seq = NULL;
     m_seqLen = 0;
     m_tickCount = 0;
     setBpm( 440 );
@@ -71,7 +71,6 @@ void CDrumMachine::setBpm( int bpm )
     m_bpm = bpm;
     m_samplesPerTick = (AUDIO_FREQUENCY * 60) / m_bpm;
     m_sampleCounter = 0;
-
 }
 
 

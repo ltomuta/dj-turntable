@@ -10,7 +10,8 @@
 #include "DrumMachine.h"
 
 
-class CScratchDisc : public GE::IAudioSource {
+class CScratchDisc : public GE::IAudioSource
+{
 public:
     CScratchDisc( GE::CAudioBuffer *discSource );
     virtual ~CScratchDisc();
@@ -31,8 +32,8 @@ protected:
 };
 
 
-
-class CTurnTable : public QObject {
+class CTurnTable : public QObject
+{
     Q_OBJECT
 
 public:
@@ -41,14 +42,18 @@ public:
 
 public slots:
 
-    void setDiscSpeed( QVariant speed );
+    void setDiscSpeed(QVariant speed);
 
-    void start();
+    void start() { m_sdisc->setHeadOn(true); }
     void stop() { m_sdisc->setHeadOn(false); }
     void startBeat() { m_drumMachine->setRunning(true); }
     void stopBeat() { m_drumMachine->setRunning(false); }
     void setBeatSpeed( int speed ) { m_drumMachine->setBpm( speed ); } // good values are anything between 300 and 800.
-    void toggleBeat( QVariant index );               // -1 index means that there are no beat at all. indexes 0-3 are the according presets
+    void toggleBeat(QVariant index );               // -1 index means that there are no beat at all. indexes 0-3 are the according presets
+
+signals:
+    void drumButtons(QVariant ticks, QVariant samples);
+    void tick(QVariant tick);
 
 protected:
     CScratchDisc *m_sdisc;

@@ -1,29 +1,33 @@
 import Qt 4.7
+import "DrumMachine"
 
 Rectangle {
     id: ui
 
-    signal speed(variant speed)
+    // Signals for TurnTable
+    signal diskSpeed(variant speed)
     signal start()
     signal stop()
+
+    // Signals for Drum Machine
     signal startBeat()
     signal stopBeat()
-    signal toggleBeat(variant index)
-    signal close()
+    signal drumButtonToggled(int index, bool pressed)
+    signal toggleBeat(variant index)    //chooses the demo beats
+
+    function setDrumGrid(ticks, samples) {
+        drumMachine.createDrumButtons(ticks, samples)
+    }
+
+    function setDrumButton(index, pressed) {
+        drumMachine.setDrumButton(index, pressed)
+    }
 
     anchors.fill: parent
     width: 640; height: 360
     color: "black"
 
     Component.onCompleted: playTimer.start()
-
-    SidePanel {
-        id: sidepanel
-
-        width: 100; height: ui.height
-        onTurnTableClicked: flickable.state = ""
-        onDrumMachineClicked: flickable.state = "DrumMachine"
-    }
 
     Flickable {
         id: flickable
@@ -60,7 +64,7 @@ Rectangle {
                 anchors.horizontalCenterOffset: -0.095 * parent.paintedWidth
                 anchors.verticalCenterOffset: -0.0055 * parent.paintedHeight
 
-                onCurrentSpeedChanged: ui.speed(disk.currentSpeed)
+                onCurrentSpeedChanged: ui.diskSpeed(disk.currentSpeed)
 
                 Timer {
                     id: playTimer
@@ -178,16 +182,22 @@ Rectangle {
             }
 
             Text {
+                // This is only debugging information, remove this!!!
                 text: disk.currentSpeed.toPrecision(2)
                 color: "white"
             }
         }
 
         DrumMachine {
-            id: drummachine
+            id: drumMachine
 
             y: flickable.height
             width: flickable.width; height: flickable.height
+
+            onStartBeat: ui.startBeat()
+            onStopBeat: ui.stopBeat()
+            onDrumButtonToggled: ui.drumButtonToggled(index, pressed)
+            onToggleBeat: ui.toggleBeat(index)
         }
 
         states: State {
@@ -203,12 +213,20 @@ Rectangle {
         }
     }
 
+    SidePanel {
+        id: sidepanel
+
+        width: 80; height: ui.height
+        onTurnTableClicked: flickable.state = ""
+        onDrumMachineClicked: flickable.state = "DrumMachine"
+    }
+
     Button {
         width: 40; height: 40
         anchors.top: parent.top; anchors.topMargin: 10
         anchors.right: parent.right; anchors.rightMargin: 10
-        source: "./closemark.png"
+        source: "closemark.png"
         smooth: true
-        onClicked: ui.close()
+        onClicked: Qt.quit()
     }
 }

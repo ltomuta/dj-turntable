@@ -14,16 +14,6 @@ Image {
     smooth: true
     transform: Rotation { origin.x: arm.width * 0.82; origin.y: arm.height * 0.2; angle: arm.angle }
 
-    /*
-    Rectangle {
-        width: 5
-        height: 5
-        x: arm.width * 0.82
-        y: arm.height * 0.2
-        color: "green"
-    }
-    */
-
     Behavior on angle { NumberAnimation { duration: 1000 } }
 
     SequentialAnimation {

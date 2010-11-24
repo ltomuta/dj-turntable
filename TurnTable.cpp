@@ -2,16 +2,6 @@
 
 using namespace GE;
 
-const unsigned char drum_seq0[] = {5,0,1,0,9,0,5,0, 5,0,1,0,9,4,2,0, 5,0,1,0,9,0,1,4, 1,4,1,0,9,0,2,0 };
-
-const unsigned char drum_seq1[] = {21,0,1,0,14,0,0,0, 5,0,1,0,14,0,0,8, 5,0,1,0,14,0,0,0, 5,2,0,0,6,0,1,8,
-                                   21,0,1,0,14,0,0,0, 5,0,1,0,14,0,0,8, 5,0,1,0,14,0,0,0, 5,2,0,0,14,12,13,13 };
-
-const unsigned char drum_seq2[] = {5,0,1,0,33,0,5,0, 5,0,1,0,33,0,2,0 };
-
-const unsigned char drum_seq3[] = {5,0,1,0,10,4,1,0, 5,0,1,0,10,4,5,4 };
-
-
 
 CScratchDisc::CScratchDisc( GE::CAudioBuffer *discSource )
 {
@@ -29,18 +19,17 @@ CScratchDisc::~CScratchDisc()
 }
 
 
-void CScratchDisc::setSpeed( float speed ) {
-    if (speed<-100.0f || speed > 100.0f){
-        return;
+void CScratchDisc::setSpeed(float speed)
+{
+    if(speed > -100.0f && speed < 100.0f) {
+        m_targetSpeed = speed;
     }
-
-    m_targetSpeed = speed;
 }
 
 
 int CScratchDisc::pullAudio( AUDIO_SAMPLE_TYPE *target, int bufferLength )
 {
-    if (!m_source) {
+    if(m_source == NULL) {
         return 0;
     }
 
@@ -79,7 +68,7 @@ int CScratchDisc::pullAudio( AUDIO_SAMPLE_TYPE *target, int bufferLength )
 }
 
 
-CTurnTable::CTurnTable()
+TurnTable::TurnTable()
 {
     m_discSample = GE::CAudioBuffer::loadWav(QString(":/sounds/melody.wav"));
 
@@ -87,22 +76,24 @@ CTurnTable::CTurnTable()
     m_audioMixer.addAudioSource(m_sdisc);
     m_audioOut = new GE::AudioOut(this, &m_audioMixer);
 
-    m_drumMachine = new CDrumMachine();
-    m_drumMachine->setBpm( 600 );
-    m_audioMixer.addAudioSource( m_drumMachine );
-
     m_audioMixer.setGeneralVolume(0.4999f);
     setDiscSpeed(1.0f);
 }
 
 
-void CTurnTable::setDiscSpeed(QVariant speed)
+void TurnTable::addAudioSource(GE::IAudioSource *source)
+{
+    m_audioMixer.addAudioSource(source);
+}
+
+
+void TurnTable::setDiscSpeed(QVariant speed)
 {
     m_sdisc->setSpeed(speed.toFloat());
 }
 
 
-CTurnTable::~CTurnTable()
+TurnTable::~TurnTable()
 {
     if (m_audioOut) {
         delete m_audioOut;
@@ -111,34 +102,4 @@ CTurnTable::~CTurnTable()
 
     m_audioOut = NULL;
     m_discSample = NULL;
-    m_drumMachine = NULL;
 }
-
-
-void CTurnTable::toggleBeat(QVariant index)
-{
-    switch (index.toInt() ) {
-    default:
-        m_drumMachine->setSeq(0,0);
-        break;
-    case 0:
-        m_drumMachine->setSeq(drum_seq0, 64);
-        break;
-    case 1:
-        m_drumMachine->setSeq(drum_seq1, 16);
-        break;
-    case 2:
-        m_drumMachine->setSeq(drum_seq2, 16);
-        break;
-    case 3:
-        m_drumMachine->setSeq(drum_seq3, 32);
-        break;
-    };
-
-    emit drumButtons(m_drumMachine->getSeqLen(), m_drumMachine->getSampleCount());
-
-
-};
-
-
-

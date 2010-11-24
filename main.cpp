@@ -5,6 +5,7 @@
 #include <QPointer>
 #include <QDesktopWidget>
 #include "TurnTable.h"
+#include "DrumMachine.h"
 
 // Lock orientation in Symbian
 #ifdef Q_OS_SYMBIAN
@@ -17,9 +18,6 @@
 #ifndef QT_NO_OPENGL
     #include <QGLWidget>
 #endif
-
-// Game Enabler namespace
-using namespace GE;
 
 int main(int argc, char *argv[])
 {
@@ -45,21 +43,23 @@ int main(int argc, char *argv[])
     view.setViewport(glWidget);     // ownership of glWidget is taken
 #endif
 
-    QPointer<CTurnTable> turnTable = new CTurnTable;
+    QPointer<TurnTable> turnTable = new TurnTable;
+    QPointer<CDrumMachine> drumMachine = new CDrumMachine;
+    turnTable->addAudioSource(drumMachine);
 
     QObject *rootObject = dynamic_cast<QObject*>(view.rootObject());
 
     QObject::connect(rootObject, SIGNAL(start()), turnTable, SLOT(start()));
     QObject::connect(rootObject, SIGNAL(stop()), turnTable, SLOT(stop()));
     QObject::connect(rootObject, SIGNAL(diskSpeed(QVariant)), turnTable, SLOT(setDiscSpeed(QVariant)));
-    QObject::connect(turnTable, SIGNAL(drumButtons(QVariant, QVariant)), rootObject, SLOT(setDrumGrid(QVariant, QVariant)));
-    QObject::connect(rootObject, SIGNAL(startBeat()), turnTable, SLOT(startBeat()));
-    QObject::connect(rootObject, SIGNAL(stopBeat()), turnTable, SLOT(stopBeat()));
-    QObject::connect(rootObject, SIGNAL(toggleBeat(QVariant)), turnTable, SLOT(toggleBeat(QVariant)));
+    QObject::connect(drumMachine, SIGNAL(drumButtons(QVariant, QVariant)), rootObject, SLOT(setDrumGrid(QVariant, QVariant)));
+    QObject::connect(rootObject, SIGNAL(startBeat()), drumMachine, SLOT(startBeat()));
+    QObject::connect(rootObject, SIGNAL(stopBeat()), drumMachine, SLOT(stopBeat()));
+    QObject::connect(rootObject, SIGNAL(toggleBeat(QVariant)), drumMachine, SLOT(setDemoBeat(QVariant)));
     QObject::connect((QObject*)view.engine(), SIGNAL(quit()), &app, SLOT(quit()));
 
     // Start with beat 0
-    turnTable->toggleBeat(0);
+    drumMachine->setDemoBeat(0);
 
 #if defined(Q_WS_MAEMO_5)|| defined(Q_OS_SYMBIAN)
     view.setGeometry(QApplication::desktop()->screenGeometry());

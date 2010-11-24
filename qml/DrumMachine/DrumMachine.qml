@@ -18,9 +18,17 @@ Rectangle {
     function createDrumButtons(columns, rows) {
         destroyDrumButtons()
         drumGrid.columns = columns; drumGrid.rows = rows
-        for(var i=0; i<drumGrid.rows * drumGrid.columns; i++) {
+        var count = drumGrid.rows * drumGrid.columns
+        for(var i=0; i<count; i++) {
             var button = Qt.createComponent("DrumButton.qml").createObject(drumGrid)
             button.index = i
+        }
+    }
+
+    function clearDrumButtons() {
+        var count = drumGrid.rows * drumGrid.columns
+        for(var i=0; i<count; i++) {
+            drumGrid.children[i].pressed = true
         }
     }
 
@@ -28,7 +36,11 @@ Rectangle {
         drumGrid.children[index].pressed = pressed
     }
 
-    width: 760; height: 480
+    Component.onCompleted: {
+        drumMachine.createDrumButtons(32, 6)
+    }
+
+    width: 580; height: 360
     color: "black"
 
     Column {
@@ -40,7 +52,7 @@ Rectangle {
 
             anchors.horizontalCenter: parent.horizontalCenter
 
-            font.pixelSize: 40; font.bold: true
+            font.pixelSize: 30; font.bold: true
             color: "white"
             text: "Drum Machine"
         }
@@ -52,7 +64,9 @@ Rectangle {
             contentWidth: drumGrid.width
 
             Grid {
+                // Holds dynamically created DrumButtons childern
                 id: drumGrid
+
                 spacing: 8
             }
         }
@@ -90,8 +104,7 @@ Rectangle {
 
                 Text {
                     anchors.centerIn: parent
-                    font.bold: true
-                    font.pixelSize: 20
+                    font.bold: true; font.pixelSize: 20
                     text: drumIndex.index
                     color: "white"
                 }
@@ -101,8 +114,7 @@ Rectangle {
                 id: beatup; width: beatselector.arrowbuttonwidth - beatselector.spacing; height: beatselector.height; pressedColor: "gray"
                 Text {
                     anchors.centerIn: parent
-                    font.bold: true
-                    font.pixelSize: 20
+                    font.bold: true; font.pixelSize: 20
                     text: ">"
                     color: "white"
                 }

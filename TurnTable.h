@@ -1,4 +1,3 @@
-
 #ifndef __CTURNTABLE__
 #define __CTURNTABLE__
 
@@ -7,18 +6,21 @@
 
 #include "ga_src/GEAudioOut.h"
 #include "ga_src/GEAudioBuffer.h"
-#include "DrumMachine.h"
 
 
 class CScratchDisc : public GE::IAudioSource
 {
 public:
-    CScratchDisc( GE::CAudioBuffer *discSource );
+    CScratchDisc(GE::CAudioBuffer *discSource);
     virtual ~CScratchDisc();
-    void setSpeed( float speed );
-    int pullAudio( AUDIO_SAMPLE_TYPE *target, int bufferLength );
 
-    inline void setHeadOn( bool set ) { m_headOn = set; }
+    float getSpeed() const { return m_speed; }
+    bool getHeadOn() const { return m_headOn; }
+
+    void setSpeed(float speed);
+    void setHeadOn(bool set) { m_headOn = set; }
+
+    int pullAudio(AUDIO_SAMPLE_TYPE *target, int bufferLength);
 
 protected:
     bool m_headOn;
@@ -32,34 +34,24 @@ protected:
 };
 
 
-class CTurnTable : public QObject
+class TurnTable : public QObject
 {
     Q_OBJECT
 
 public:
-    CTurnTable();
-    ~CTurnTable();
+    TurnTable();
+    ~TurnTable();
+
+    void addAudioSource(GE::IAudioSource *source);
 
 public slots:
-
     void setDiscSpeed(QVariant speed);
-
     void start() { m_sdisc->setHeadOn(true); }
     void stop() { m_sdisc->setHeadOn(false); }
-    void startBeat() { m_drumMachine->setRunning(true); }
-    void stopBeat() { m_drumMachine->setRunning(false); }
-    void setBeatSpeed( int speed ) { m_drumMachine->setBpm( speed ); } // good values are anything between 300 and 800.
-    void toggleBeat(QVariant index );               // -1 index means that there are no beat at all. indexes 0-3 are the according presets
-
-signals:
-    void drumButtons(QVariant ticks, QVariant samples);
-    void tick(QVariant tick);
 
 protected:
     CScratchDisc *m_sdisc;
-    CDrumMachine *m_drumMachine;
 
-    GE::CAudioBufferPlayInstance *m_beatInstance;
     GE::AudioOut *m_audioOut;
     GE::CAudioMixer m_audioMixer;
     GE::CAudioBuffer *m_discSample;

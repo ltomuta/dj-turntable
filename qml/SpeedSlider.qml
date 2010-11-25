@@ -31,6 +31,7 @@ Item {
             drag.target: parent
             drag.axis: "YAxis"; drag.minimumY: 0; drag.maximumY: handle.yMax
             onPositionChanged: { speed = maximum - (maximum - minimum) * (handle.y) / handle.yMax + minimum; }
+            onDoubleClicked: { speed = 1.0 }
         }
     }
 }

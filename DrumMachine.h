@@ -18,31 +18,31 @@ public:
 
     int pullAudio(AUDIO_SAMPLE_TYPE *target, int length);
 
-    int getSeqLen() const { return m_seqLen; }
-    int getSampleCount() const { return DRUM_MACHINE_SAMPLE_COUNT; }
-    int getBpm() const { return m_bpm; }
-    int getRunning() const { return m_running; }
-
     void setBpm(int bpm);
     void setSeq(const unsigned char *seq, int seqLen);
     void setRunning(bool running) { m_running = running; }
+
+    void setMaxTickAndSamples(int ticks, int samples);
 
 public slots:
     void startBeat() { setRunning(true); }
     void stopBeat() { setRunning(false); }
     void setBeatSpeed(int speed) { setBpm(speed); } // good values are anything between 300 and 800.
     void setDemoBeat(QVariant index);               // -1 index means that there are no beat at all. indexes 0-3 are the according presets
+    void drumButtonToggled(QVariant tick, QVariant sample, QVariant pressed);
 
 signals:
+    // Describes to QML the maximum values of ticks and samples
+    void maxSeqAndSamples(QVariant ticks, QVariant samples);
+
     // Describes the amount of ticks in sequence and count of samples
-    void drumButtons(QVariant ticks, QVariant samples);
+    void seqSize(QVariant ticks, QVariant samples);
 
     // Describes the current tick on the sequence
-    void tick(QVariant tick);
+    void tickChanged(QVariant tick);
 
-    // Describes the state of single DrumButton in sequence
-    // index is 0 based
-    void drumButton(QVariant index, QVariant pressed);
+    // Describes the state of single DrumButton in sequence of the sample
+    void drumButtonState(QVariant tick, QVariant sample, QVariant pressed);
 
 protected:
     unsigned char *m_seq;

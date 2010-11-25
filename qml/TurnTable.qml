@@ -9,20 +9,6 @@ Rectangle {
     signal start()
     signal stop()
 
-    // Signals for Drum Machine
-    signal startBeat()
-    signal stopBeat()
-    signal drumButtonToggled(int index, bool pressed)
-    signal toggleBeat(variant index)    //chooses the demo beats
-
-    function setDrumGrid(ticks, samples) {
-        drumMachine.createDrumButtons(ticks, samples)
-    }
-
-    function setDrumButton(index, pressed) {
-        drumMachine.setDrumButton(index, pressed)
-    }
-
     anchors.fill: parent
     width: 640; height: 360
     color: "black"
@@ -180,12 +166,6 @@ Rectangle {
                 sliderimage: "speedslider.png"
                 sliderhandleimage: "speedknob.png"
             }
-
-            Text {
-                // This is only debugging information, remove this!!!
-                text: disk.currentSpeed.toPrecision(2)
-                color: "white"
-            }
         }
 
         DrumMachine {
@@ -193,11 +173,6 @@ Rectangle {
 
             y: flickable.height
             width: flickable.width; height: flickable.height
-
-            onStartBeat: ui.startBeat()
-            onStopBeat: ui.stopBeat()
-            onDrumButtonToggled: ui.drumButtonToggled(index, pressed)
-            onToggleBeat: ui.toggleBeat(index)
         }
 
         states: State {

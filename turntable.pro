@@ -19,13 +19,8 @@ SOURCES += main.cpp \
            ga_src/GEInterfaces.cpp \
            ga_src/GEAudioOut.cpp
 
-OTHER_FILES += qml/TurnTable.qml \
-               qml/SpeedSlider.qml \
-               qml/Button.qml \
-               qml/Arm.qml \
-               qml/SidePanel.qml \
-               qml/DrumMachine/DrumMachine.qml \
-               qml/DrumMachine/DrumButton.qml
+OTHER_FILES += qml/*.qml \
+               qml/DrumMachine/*.qml
 
 RESOURCES +=   resources.qrc
 

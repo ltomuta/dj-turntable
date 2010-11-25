@@ -4,6 +4,7 @@
 #include <QGraphicsObject>
 #include <QPointer>
 #include <QDesktopWidget>
+#include <QObject>
 #include "TurnTable.h"
 #include "DrumMachine.h"
 
@@ -18,6 +19,26 @@
 #ifndef QT_NO_OPENGL
     #include <QGLWidget>
 #endif
+
+
+QObject* findQMLElement(QObject *rootElement, const QString &objectName)
+{
+    if(rootElement->objectName() == objectName) {
+        return rootElement;
+    }
+
+    const QObjectList list = rootElement->children();
+    for(QObjectList::const_iterator it=list.begin(); it!=list.end(); it++)
+    {
+        QObject *object = findQMLElement((*it), objectName);
+        if(object != NULL) {
+            return object;
+        }
+    }
+
+    return NULL;
+}
+
 
 int main(int argc, char *argv[])
 {
@@ -47,18 +68,30 @@ int main(int argc, char *argv[])
     QPointer<CDrumMachine> drumMachine = new CDrumMachine;
     turnTable->addAudioSource(drumMachine);
 
-    QObject *rootObject = dynamic_cast<QObject*>(view.rootObject());
+    QObject *turnTableQML = dynamic_cast<QObject*>(view.rootObject());
+    QObject *drumMachineQML = findQMLElement(turnTableQML, "drumMachine");
 
-    QObject::connect(rootObject, SIGNAL(start()), turnTable, SLOT(start()));
-    QObject::connect(rootObject, SIGNAL(stop()), turnTable, SLOT(stop()));
-    QObject::connect(rootObject, SIGNAL(diskSpeed(QVariant)), turnTable, SLOT(setDiscSpeed(QVariant)));
-    QObject::connect(drumMachine, SIGNAL(drumButtons(QVariant, QVariant)), rootObject, SLOT(setDrumGrid(QVariant, QVariant)));
-    QObject::connect(rootObject, SIGNAL(startBeat()), drumMachine, SLOT(startBeat()));
-    QObject::connect(rootObject, SIGNAL(stopBeat()), drumMachine, SLOT(stopBeat()));
-    QObject::connect(rootObject, SIGNAL(toggleBeat(QVariant)), drumMachine, SLOT(setDemoBeat(QVariant)));
+    //TurnTable connections
+    QObject::connect(turnTableQML, SIGNAL(start()), turnTable, SLOT(start()));
+    QObject::connect(turnTableQML, SIGNAL(stop()), turnTable, SLOT(stop()));
+    QObject::connect(turnTableQML, SIGNAL(diskSpeed(QVariant)), turnTable, SLOT(setDiscSpeed(QVariant)));
+
+    //DrumMachine connections
+    QObject::connect(drumMachineQML, SIGNAL(startBeat()), drumMachine, SLOT(startBeat()));
+    QObject::connect(drumMachineQML, SIGNAL(stopBeat()), drumMachine, SLOT(stopBeat()));
+    QObject::connect(drumMachineQML, SIGNAL(setDemoBeat(QVariant)), drumMachine, SLOT(setDemoBeat(QVariant)));
+    QObject::connect(drumMachineQML, SIGNAL(drumButtonToggled(QVariant, QVariant, QVariant)), drumMachine, SLOT(drumButtonToggled(QVariant, QVariant, QVariant)));
+
+    QObject::connect(drumMachine, SIGNAL(maxSeqAndSamples(QVariant, QVariant)), drumMachineQML, SLOT(maxSeqAndSamples(QVariant, QVariant)));
+    QObject::connect(drumMachine, SIGNAL(seqSize(QVariant, QVariant)), drumMachineQML, SLOT(seqSize(QVariant, QVariant)));
+    QObject::connect(drumMachine, SIGNAL(drumButtonState(QVariant, QVariant, QVariant)), drumMachineQML, SLOT(setDrumButton(QVariant, QVariant, QVariant)));
+    QObject::connect(drumMachine, SIGNAL(tickChanged(QVariant)), drumMachineQML, SLOT(highlightTick(QVariant)));
+
+    //Framework connections
     QObject::connect((QObject*)view.engine(), SIGNAL(quit()), &app, SLOT(quit()));
 
     // Start with beat 0
+    drumMachine->setMaxTickAndSamples(32, 6);
     drumMachine->setDemoBeat(0);
 
 #if defined(Q_WS_MAEMO_5)|| defined(Q_OS_SYMBIAN)

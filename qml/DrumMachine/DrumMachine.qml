@@ -3,42 +3,75 @@ import "../"
 
 Rectangle {
     id: drumMachine
+    objectName: "drumMachine"
 
     signal startBeat()
     signal stopBeat()
-    signal drumButtonToggled(int index, bool pressed)
-    signal toggleBeat(int index)
+    signal drumButtonToggled(variant tick, variant sample, variant pressed)
+    signal setDemoBeat(variant index)
 
-    function destroyDrumButtons() {
+    // Public slots
+    function maxSeqAndSamples(ticks, samples) {
         var count = drumGrid.children.length
-        for(var i=0;i<count;i++)
+        for(var i=0;i<count;i++) {
             drumGrid.children[i].destroy()
+        }
+
+        drumGrid.columns = ticks; drumGrid.rows = samples
+
+        for(var row=0; row<samples; row++) {
+            for(var col=0; col<ticks; col++) {
+                var button = Qt.createComponent("DrumButton.qml").createObject(drumGrid)
+                if((col % 4) == 0) {
+                    button.notPressedColor = "#505050"
+                }
+                else {
+                    button.notPressedColor = "#303030"
+                }
+                button.pressedColor = "white"
+                button.tick = col
+                button.sample = row
+            }
+        }
+
+        maxTicks = ticks
+        maxSamples = samples
     }
 
-    function createDrumButtons(columns, rows) {
-        destroyDrumButtons()
-        drumGrid.columns = columns; drumGrid.rows = rows
-        var count = drumGrid.rows * drumGrid.columns
-        for(var i=0; i<count; i++) {
-            var button = Qt.createComponent("DrumButton.qml").createObject(drumGrid)
-            button.index = i
+    function seqSize(ticks, samples) {
+        drumGrid.columns = ticks
+
+        var count = drumGrid.children.length
+        var column = 0
+
+        for(var i=0;i<count;i++) {
+            column = i % maxTicks
+            if(column >= ticks) {
+                drumGrid.children[i].visible = false
+            }
+            else {
+                drumGrid.children[i].visible = true
+            }
         }
     }
 
     function clearDrumButtons() {
         var count = drumGrid.rows * drumGrid.columns
         for(var i=0; i<count; i++) {
-            drumGrid.children[i].pressed = true
+            drumGrid.children[i].pressed = false
         }
     }
 
-    function setDrumButton(index, pressed) {
-        drumGrid.children[index].pressed = pressed
+    function setDrumButton(tick, sample, pressed) {
+        drumGrid.children[tick + drumGrid.columns * sample].pressed = pressed
     }
 
-    Component.onCompleted: {
-        drumMachine.createDrumButtons(32, 6)
+    function highlightTick(tick) {
+        highligher.x = tick * 38 - 3
     }
+
+    property int maxTicks: 0
+    property int maxSamples: 0
 
     width: 580; height: 360
     color: "black"
@@ -68,6 +101,15 @@ Rectangle {
                 id: drumGrid
 
                 spacing: 8
+            }
+
+            Rectangle {
+                id: highligher
+
+                width: 37
+                height: drumGrid.height
+                opacity: 0.3
+                color: "red"
             }
         }
 
@@ -100,7 +142,10 @@ Rectangle {
 
                 property int index: 0
 
-                onIndexChanged: drumMachine.toggleBeat(index)
+                onIndexChanged: {
+                    drumMachine.clearDrumButtons()
+                    drumMachine.setDemoBeat(index)
+                }
 
                 Text {
                     anchors.centerIn: parent

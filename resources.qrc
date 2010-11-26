@@ -7,6 +7,8 @@
         <file>qml/SidePanel.qml</file>
         <file>qml/DrumMachine/DrumMachine.qml</file>
         <file>qml/DrumMachine/DrumButton.qml</file>
+        <file>qml/DrumMachine/SlideSwitch.qml</file>
+        <file>qml/DrumMachine/BeatSelector.qml</file>
         <file>qml/disk.png</file>
         <file>qml/turntable.png</file>
         <file>qml/arm.png</file>

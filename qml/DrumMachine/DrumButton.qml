@@ -10,7 +10,7 @@ Rectangle {
     property color pressedColor
     property color notPressedColor
 
-    width: 30; height: 30
+    width: 30; height: 35
     color: pressed ? pressedColor : notPressedColor
 
     MouseArea {

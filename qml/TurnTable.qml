@@ -116,7 +116,8 @@ Rectangle {
                     else if(angledelta < -180) { angledelta += 360 }
 
                     disk.rotation = (disk.rotation + angledelta) % 360
-                    disk.currentSpeed = angledelta * 2.77778 / (now - previousTime)
+
+                    if(now - previousTime > 0) { disk.currentSpeed = angledelta * 2.77778 / (now - previousTime) }
 
                     previousX = mouse.x
                     previousY = mouse.y
@@ -178,13 +179,14 @@ Rectangle {
         states: State {
             name: "DrumMachine"
             PropertyChanges { target: flickable; contentY: ui.height }
+            PropertyChanges { target: turntable; opacity: 0 }
         }
 
         transitions: Transition {
             from: ""
             to: "DrumMachine"
             reversible: true
-            PropertyAnimation { properties: "contentY"; easing.type: Easing.InOutQuart }
+            PropertyAnimation { properties: "contentY, opacity"; easing.type: Easing.InOutQuart }
         }
     }
 

@@ -1,5 +1,4 @@
 import Qt 4.7
-import "../"
 
 Rectangle {
     id: drumMachine
@@ -85,7 +84,7 @@ Rectangle {
 
             anchors.horizontalCenter: parent.horizontalCenter
 
-            font.pixelSize: 30; font.bold: true
+            font.pixelSize: 40; font.bold: true
             color: "white"
             text: "Drum Machine"
         }
@@ -114,106 +113,27 @@ Rectangle {
         }
 
         Row {
-            id: beatselector
+            id: controlButtons
 
             property real arrowbuttonwidth: width / 4
 
             spacing: 20
-            width: parent.width
-            height: (parent.height - y) / 2 - parent.spacing
+            anchors.left: parent.left; anchors.leftMargin: 10
+            anchors.right: parent.right; anchors.rightMargin: 10
+            height: (parent.height - y) - parent.spacing
 
-            Button {
-                id: beatdown; width: beatselector.arrowbuttonwidth - beatselector.spacing; height: beatselector.height; pressedColor: "gray"
-                Text {
-                    anchors.centerIn: parent
-                    font.bold: true
-                    font.pixelSize: 20
-                    text: "<"
-                    color: "white"
-                }
-                onClicked: {
-                    if(drumIndex.index > 0)
-                        drumIndex.index -= 1
-                }
+            SlideSwitch {
+                width: parent.width / 2
+                height: parent.height
+
+                onOnChanged: on ? drumMachine.startBeat() : drumMachine.stopBeat()
             }
 
-            Button {
-                id: drumIndex; width: beatselector.arrowbuttonwidth * 2; height: beatselector.height; pressedColor: "lightgray"
+            BeatSelector {
+                width:  parent.width / 2 - 20
+                height: parent.height
 
-                property int index: 0
-
-                onIndexChanged: {
-                    drumMachine.clearDrumButtons()
-                    drumMachine.setDemoBeat(index)
-                }
-
-                Text {
-                    anchors.centerIn: parent
-                    font.bold: true; font.pixelSize: 20
-                    text: drumIndex.index
-                    color: "white"
-                }
-            }
-
-            Button {
-                id: beatup; width: beatselector.arrowbuttonwidth - beatselector.spacing; height: beatselector.height; pressedColor: "gray"
-                Text {
-                    anchors.centerIn: parent
-                    font.bold: true; font.pixelSize: 20
-                    text: ">"
-                    color: "white"
-                }
-                onClicked: {
-                    if(drumIndex.index < 3)
-                        drumIndex.index += 1
-                }
-            }
-        }
-
-        Row {
-            id: buttons
-
-            width: parent.width
-            height: beatselector.height
-            spacing: 20
-
-            Button {
-                id: startBeat
-                width: buttons.width / 2 - buttons.spacing; height: buttons.height; pressedColor: "gray"; pressedColorOpacity: 0.3
-
-                Text {
-                    anchors.centerIn: parent
-                    font.bold: true
-                    font.pixelSize: 20
-                    text: "Start"
-                    color: "white"
-                }
-
-                onClicked: {
-                    drumMachine.startBeat()
-                    startBeat.pressedColorOpacity = 1.0
-                    stopBeat.pressedColorOpacity = 0.3
-                }
-            }
-
-            Button {
-                id: stopBeat
-
-                width: buttons.width / 2; height: buttons.height; pressedColor: "gray"; pressedColorOpacity: 1.0
-
-                Text {
-                    anchors.centerIn: parent
-                    font.bold: true
-                    font.pixelSize: 20
-                    text: "Stop"
-                    color: "white"
-                }
-
-                onClicked: {
-                    drumMachine.stopBeat()
-                    startBeat.pressedColorOpacity = 0.3
-                    stopBeat.pressedColorOpacity = 1.0
-                }
+                onIndexChanged: drumMachine.setDemoBeat(index)
             }
         }
     }

@@ -20,6 +20,10 @@ public:
     void setSpeed(float speed);
     void setHeadOn(bool set) { m_headOn = set; }
 
+
+    void setCutoff( float cutoff ) { m_cutOffValue = cutoff; }
+    void setResonance( float resonance ) { m_resonanceValue = resonance; }
+
     int pullAudio(AUDIO_SAMPLE_TYPE *target, int bufferLength);
 
 protected:
@@ -31,6 +35,14 @@ protected:
     int m_cc;
     float m_speed;
     float m_targetSpeed;
+
+    float m_cutOffValue;
+    float m_resonanceValue;
+
+        // filters
+    int m_lp[2];
+    int m_hp[2];
+    int m_bp[2];
 };
 
 
@@ -48,6 +60,8 @@ public slots:
     void setDiscSpeed(QVariant speed);
     void start() { m_sdisc->setHeadOn(true); }
     void stop() { m_sdisc->setHeadOn(false); }
+    void cutoff(QVariant value) { m_sdisc->setCutoff(value.toFloat()); }
+    void resonance(QVariant value) { m_sdisc->setResonance(value.toFloat()); }
 
 protected:
     CScratchDisc *m_sdisc;

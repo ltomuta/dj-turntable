@@ -34,7 +34,7 @@ const unsigned char drum_seq3[] = { 5, 0, 1, 0,10, 4, 1, 0,
                                     5, 0, 1, 0,10, 4, 5, 4};
 
 
-CDrumMachine::CDrumMachine()
+CDrumMachine::CDrumMachine() : m_Settings("Nokia", "DJTurnTable")
 {
     m_mixer = new CAudioMixer();
 
@@ -65,6 +65,13 @@ CDrumMachine::~CDrumMachine()
     }
 
     setSeq(0,0);
+}
+
+
+QVector<unsigned char> CDrumMachine::getSeg()
+{
+    QVector<unsigned char> vec;
+    return vec;
 }
 
 
@@ -168,7 +175,7 @@ void CDrumMachine::setMaxTickAndSamples(int ticks, int samples)
 }
 
 
-void CDrumMachine::setDemoBeat(QVariant index)
+void CDrumMachine::setBeat(QVariant index)
 {
     switch (index.toInt()) {
     default:

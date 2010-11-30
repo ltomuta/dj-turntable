@@ -7,7 +7,7 @@ Rectangle {
     signal startBeat()
     signal stopBeat()
     signal drumButtonToggled(variant tick, variant sample, variant pressed)
-    signal setDemoBeat(variant index)
+    signal setBeat(variant index)
 
     // Public slots
     function maxSeqAndSamples(ticks, samples) {
@@ -133,7 +133,7 @@ Rectangle {
                 width:  parent.width / 2 - 20
                 height: parent.height
 
-                onIndexChanged: drumMachine.setDemoBeat(index)
+                onIndexChanged: drumMachine.setBeat(index)
             }
         }
     }

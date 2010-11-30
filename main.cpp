@@ -75,11 +75,13 @@ int main(int argc, char *argv[])
     QObject::connect(turnTableQML, SIGNAL(start()), turnTable, SLOT(start()));
     QObject::connect(turnTableQML, SIGNAL(stop()), turnTable, SLOT(stop()));
     QObject::connect(turnTableQML, SIGNAL(diskSpeed(QVariant)), turnTable, SLOT(setDiscSpeed(QVariant)));
+    QObject::connect(turnTableQML, SIGNAL(cutoff(QVariant)), turnTable, SLOT(cutoff(QVariant)));
+    QObject::connect(turnTableQML, SIGNAL(resonance(QVariant)), turnTable, SLOT(resonance(QVariant)));
 
     //DrumMachine connections
     QObject::connect(drumMachineQML, SIGNAL(startBeat()), drumMachine, SLOT(startBeat()));
     QObject::connect(drumMachineQML, SIGNAL(stopBeat()), drumMachine, SLOT(stopBeat()));
-    QObject::connect(drumMachineQML, SIGNAL(setDemoBeat(QVariant)), drumMachine, SLOT(setDemoBeat(QVariant)));
+    QObject::connect(drumMachineQML, SIGNAL(setBeat(QVariant)), drumMachine, SLOT(setBeat(QVariant)));
     QObject::connect(drumMachineQML, SIGNAL(drumButtonToggled(QVariant, QVariant, QVariant)), drumMachine, SLOT(drumButtonToggled(QVariant, QVariant, QVariant)));
 
     QObject::connect(drumMachine, SIGNAL(maxSeqAndSamples(QVariant, QVariant)), drumMachineQML, SLOT(maxSeqAndSamples(QVariant, QVariant)));
@@ -92,7 +94,7 @@ int main(int argc, char *argv[])
 
     // Start with beat 0
     drumMachine->setMaxTickAndSamples(32, 6);
-    drumMachine->setDemoBeat(0);
+    drumMachine->setBeat(0);
 
 #if defined(Q_WS_MAEMO_5)|| defined(Q_OS_SYMBIAN)
     view.setGeometry(QApplication::desktop()->screenGeometry());

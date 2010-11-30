@@ -1,12 +1,7 @@
-QT       += core gui declarative multimedia
+QT       += core gui
+QT       += declarative multimedia
+QT       += opengl
 
-maemo5 {
-    QT += opengl
-}
-
-win32:!simulator {
-    QT += opengl
-}
 
 TARGET   = turntable
 TEMPLATE = app

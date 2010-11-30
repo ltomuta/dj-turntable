@@ -9,6 +9,9 @@ Rectangle {
     signal start()
     signal stop()
 
+    signal cutoff(variant value)
+    signal resonance(variant value)
+
     anchors.fill: parent
     width: 640; height: 360
     color: "black"
@@ -63,7 +66,7 @@ Rectangle {
                             disk.currentSpeed = disk.targetSpeed
                         }
                         else {
-                            disk.currentSpeed += (disk.targetSpeed - disk.currentSpeed) * 0.03
+                            disk.currentSpeed += (disk.targetSpeed - disk.currentSpeed) * 0.05
                         }
                     }
                 }
@@ -167,6 +170,34 @@ Rectangle {
                 sliderimage: "speedslider.png"
                 sliderhandleimage: "speedknob.png"
             }
+
+            SpeedSlider {
+                id: resonance
+
+                width: speedslider.width; height: speedslider.height
+                y: speedslider.y
+                anchors.left: speedslider.right; anchors.leftMargin: 10
+
+                maximum: 1.0; minimum: 0.0; speed: 1.0
+                sliderimage: "speedslider.png"
+                sliderhandleimage: "speedknob.png"
+                onSpeedChanged: ui.resonance(speed)
+            }
+
+            SpeedSlider {
+                id: cutoff
+
+                width: speedslider.width; height: speedslider.height
+                y: speedslider.y
+                anchors.left: resonance.right; anchors.leftMargin: 10
+
+                maximum: 1.0; minimum: 0.0; speed: 1.0
+                sliderimage: "speedslider.png"
+                sliderhandleimage: "speedknob.png"
+                onSpeedChanged: ui.cutoff(speed)
+            }
+
+
         }
 
         DrumMachine {
@@ -193,7 +224,7 @@ Rectangle {
     SidePanel {
         id: sidepanel
 
-        width: 80; height: ui.height
+        width: 60; height: ui.height
         onTurnTableClicked: flickable.state = ""
         onDrumMachineClicked: flickable.state = "DrumMachine"
     }

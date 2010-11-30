@@ -2,8 +2,9 @@
 #ifndef __DRUMMACHINE__
 #define __DRUMMACHINE__
 
-#include <QObject>
+#include <QSettings>
 #include <QVariant>
+#include <QVector>
 #include "ga_src/GEAudioBuffer.h"
 
 #define DRUM_MACHINE_SAMPLE_COUNT 6
@@ -16,7 +17,7 @@ public:
     CDrumMachine();
     virtual ~CDrumMachine();
 
-    int pullAudio(AUDIO_SAMPLE_TYPE *target, int length);
+    QVector<unsigned char> getSeg();
 
     void setBpm(int bpm);
     void setSeq(const unsigned char *seq, int seqLen);
@@ -24,11 +25,13 @@ public:
 
     void setMaxTickAndSamples(int ticks, int samples);
 
+    int pullAudio(AUDIO_SAMPLE_TYPE *target, int length);
+
 public slots:
     void startBeat() { setRunning(true); }
     void stopBeat() { setRunning(false); }
     void setBeatSpeed(int speed) { setBpm(speed); } // good values are anything between 300 and 800.
-    void setDemoBeat(QVariant index);               // -1 index means that there are no beat at all. indexes 0-3 are the according presets
+    void setBeat(QVariant index);               // -1 index means that there are no beat at all. indexes 0-3 are the according presets
     void drumButtonToggled(QVariant tick, QVariant sample, QVariant pressed);
 
 signals:
@@ -45,6 +48,8 @@ signals:
     void drumButtonState(QVariant tick, QVariant sample, QVariant pressed);
 
 protected:
+
+    //QVector<unsigned char> m_seq;
     unsigned char *m_seq;
     int m_seqLen;
 
@@ -55,6 +60,8 @@ protected:
     int m_bpm;
     int m_samplesPerTick;
     int m_sampleCounter;
+
+    QSettings m_Settings;
 
     GE::CAudioMixer *m_mixer;           // internal mixer
     GE::CAudioBuffer *m_drumSamples[DRUM_MACHINE_SAMPLE_COUNT];

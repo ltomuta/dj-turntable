@@ -50,7 +50,14 @@ Rectangle {
     Text {
         anchors.centerIn: parent
         font.bold: true; font.pixelSize: 20
-        text: beatSelector.index
+        text: {
+            if(beatSelector.index < 4) {
+                return "Predef. " + beatSelector.index
+            }
+            else {
+                return "User. " + beatSelector.index
+            }
+        }
         color: "white"
     }
 
@@ -75,7 +82,7 @@ Rectangle {
             onPressed: beatSelector.angle = 15
             onReleased: beatSelector.angle = 0
             onClicked: {
-                if(beatSelector.index < 3)
+                if(beatSelector.index < 7)
                     beatSelector.index += 1
             }
         }

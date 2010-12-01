@@ -14,15 +14,14 @@ public:
     CScratchDisc(GE::CAudioBuffer *discSource);
     virtual ~CScratchDisc();
 
-    float getSpeed() const { return m_speed; }
-    bool getHeadOn() const { return m_headOn; }
+    bool headOn() const { return m_headOn; }
+    float speed() const { return m_speed; }
+    float cutOff() const { return m_cutOffValue; }
 
-    void setSpeed(float speed);
     void setHeadOn(bool set) { m_headOn = set; }
-
-
-    void setCutoff( float cutoff ) { m_cutOffValue = cutoff; }
-    void setResonance( float resonance ) { m_resonanceValue = resonance; }
+    void setSpeed(float speed);
+    void setCutOff(float cutoff) { m_cutOffValue = cutoff; }
+    void setResonance(float resonance) { m_resonanceValue = resonance; }
 
     int pullAudio(AUDIO_SAMPLE_TYPE *target, int bufferLength);
 
@@ -39,7 +38,7 @@ protected:
     float m_cutOffValue;
     float m_resonanceValue;
 
-        // filters
+    // Filters
     int m_lp[2];
     int m_hp[2];
     int m_bp[2];
@@ -58,9 +57,11 @@ public:
 
 public slots:
     void setDiscSpeed(QVariant speed);
+
     void start() { m_sdisc->setHeadOn(true); }
     void stop() { m_sdisc->setHeadOn(false); }
-    void cutoff(QVariant value) { m_sdisc->setCutoff(value.toFloat()); }
+
+    void cutOff(QVariant value) { m_sdisc->setCutOff(value.toFloat()); }
     void resonance(QVariant value) { m_sdisc->setResonance(value.toFloat()); }
 
 protected:

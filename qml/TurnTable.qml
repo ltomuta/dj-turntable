@@ -9,7 +9,7 @@ Rectangle {
     signal start()
     signal stop()
 
-    signal cutoff(variant value)
+    signal cutOff(variant value)
     signal resonance(variant value)
 
     anchors.fill: parent
@@ -194,7 +194,7 @@ Rectangle {
                 maximum: 1.0; minimum: 0.0; speed: 1.0
                 sliderimage: "speedslider.png"
                 sliderhandleimage: "speedknob.png"
-                onSpeedChanged: ui.cutoff(speed)
+                onSpeedChanged: ui.cutOff(speed)
             }
 
 

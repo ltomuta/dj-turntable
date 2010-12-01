@@ -1,4 +1,3 @@
-
 #ifndef __DRUMMACHINE__
 #define __DRUMMACHINE__
 
@@ -7,31 +6,43 @@
 #include <QVector>
 #include "ga_src/GEAudioBuffer.h"
 
-#define DRUM_MACHINE_SAMPLE_COUNT 6
-
 class CDrumMachine : public QObject, public GE::IAudioSource
 {
     Q_OBJECT
 
 public:
+    enum { SEQUENCE_LENGTH = 32 };
+
+    typedef QVector<unsigned char> TYPE_DRUM_SEQ;
+
     CDrumMachine();
     virtual ~CDrumMachine();
 
-    QVector<unsigned char> getSeg();
+    int bpm() const;
+    TYPE_DRUM_SEQ seq() const;
+    int currentSeqIndex() const { return m_currentSeqIndex; }
 
     void setBpm(int bpm);
-    void setSeq(const unsigned char *seq, int seqLen);
+    void setSeq(const TYPE_DRUM_SEQ &seq);
     void setRunning(bool running) { m_running = running; }
-
     void setMaxTickAndSamples(int ticks, int samples);
+
+    // Returns true is beat index is in range 4-7
+    bool isUserBeat() const;
 
     int pullAudio(AUDIO_SAMPLE_TYPE *target, int length);
 
 public slots:
     void startBeat() { setRunning(true); }
     void stopBeat() { setRunning(false); }
-    void setBeatSpeed(int speed) { setBpm(speed); } // good values are anything between 300 and 800.
-    void setBeat(QVariant index);               // -1 index means that there are no beat at all. indexes 0-3 are the according presets
+
+    // Sets the beats speep
+    void setBeatSpeed(QVariant speed) { setBpm(speed.toInt()); }
+
+    // Indexes 0-3 are predefined beats, 4-7 are user defined
+    void setBeat(QVariant index);
+
+    // Sets / unsets the drum the corresponding tick and sample
     void drumButtonToggled(QVariant tick, QVariant sample, QVariant pressed);
 
 signals:
@@ -49,23 +60,25 @@ signals:
 
 protected:
 
-    //QVector<unsigned char> m_seq;
-    unsigned char *m_seq;
-    int m_seqLen;
-
-    void tick();
-
-    bool m_running;
-    int m_tickCount;
-    int m_bpm;
-    int m_samplesPerTick;
-    int m_sampleCounter;
+    TYPE_DRUM_SEQ m_seq;
+    TYPE_DRUM_SEQ::size_type m_tickCount;
 
     QSettings m_Settings;
 
-    GE::CAudioMixer *m_mixer;           // internal mixer
-    GE::CAudioBuffer *m_drumSamples[DRUM_MACHINE_SAMPLE_COUNT];
-    GE::CAudioBufferPlayInstance *m_playInstances[DRUM_MACHINE_SAMPLE_COUNT];
+    bool m_running;
+    int m_samplesPerTick;
+    int m_sampleCounter;
+    int m_currentSeqIndex;
+
+    GE::CAudioMixer *m_mixer;
+    QVector<GE::CAudioBufferPlayInstance*> m_playInstances;
+    QVector<GE::CAudioBuffer*> m_drumSamples;
+
+    // Called when the sequence advances a tick
+    void tick();
+
+    TYPE_DRUM_SEQ readUserBeat(int index);
+    void saveUserBeat(int index, const TYPE_DRUM_SEQ &seq);
 };
 
 #endif

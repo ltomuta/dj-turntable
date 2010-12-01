@@ -21,6 +21,11 @@
 #endif
 
 
+/**
+ *
+ * Recursive function that finds object from QObject tree.
+ * Return NULL if element was not found.
+ */
 QObject* findQMLElement(QObject *rootElement, const QString &objectName)
 {
     if(rootElement->objectName() == objectName) {
@@ -75,7 +80,7 @@ int main(int argc, char *argv[])
     QObject::connect(turnTableQML, SIGNAL(start()), turnTable, SLOT(start()));
     QObject::connect(turnTableQML, SIGNAL(stop()), turnTable, SLOT(stop()));
     QObject::connect(turnTableQML, SIGNAL(diskSpeed(QVariant)), turnTable, SLOT(setDiscSpeed(QVariant)));
-    QObject::connect(turnTableQML, SIGNAL(cutoff(QVariant)), turnTable, SLOT(cutoff(QVariant)));
+    QObject::connect(turnTableQML, SIGNAL(cutOff(QVariant)), turnTable, SLOT(cutOff(QVariant)));
     QObject::connect(turnTableQML, SIGNAL(resonance(QVariant)), turnTable, SLOT(resonance(QVariant)));
 
     //DrumMachine connections

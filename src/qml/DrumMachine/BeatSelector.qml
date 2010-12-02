@@ -38,7 +38,7 @@ Rectangle {
         MouseArea {
             anchors.fill: parent
 
-            onPressed: beatSelector.angle = -15
+            onPressed: beatSelector.angle = -25
             onReleased: beatSelector.angle = 0
             onClicked: {
                 if(beatSelector.index > 0)
@@ -79,7 +79,7 @@ Rectangle {
         MouseArea {
             anchors.fill: parent
 
-            onPressed: beatSelector.angle = 15
+            onPressed: beatSelector.angle = 25
             onReleased: beatSelector.angle = 0
             onClicked: {
                 if(beatSelector.index < 7)

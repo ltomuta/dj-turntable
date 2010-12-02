@@ -13,6 +13,7 @@ class CDrumMachine : public QObject, public GE::IAudioSource
 public:
     enum { SEQUENCE_LENGTH = 32 };
 
+    // Shortens writing of the type later on
     typedef QVector<unsigned char> TYPE_DRUM_SEQ;
 
     CDrumMachine();
@@ -27,10 +28,13 @@ public:
     void setRunning(bool running) { m_running = running; }
     void setMaxTickAndSamples(int ticks, int samples);
 
-    // Returns true is beat index is in range 4-7
+    // Returns true if beat index is in range 4-7
     bool isUserBeat() const;
 
+    // Called when more is needed
     int pullAudio(AUDIO_SAMPLE_TYPE *target, int length);
+
+
 
 public slots:
     void startBeat() { setRunning(true); }
@@ -45,6 +49,8 @@ public slots:
     // Sets / unsets the drum the corresponding tick and sample
     void drumButtonToggled(QVariant tick, QVariant sample, QVariant pressed);
 
+
+
 signals:
     // Describes to QML the maximum values of ticks and samples
     void maxSeqAndSamples(QVariant ticks, QVariant samples);
@@ -57,6 +63,8 @@ signals:
 
     // Describes the state of single DrumButton in sequence of the sample
     void drumButtonState(QVariant tick, QVariant sample, QVariant pressed);
+
+
 
 protected:
 

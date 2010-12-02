@@ -35,7 +35,8 @@ Rectangle {
 
             property bool playing: false
 
-            width: flickable.width; height: flickable.height
+            width:  flickable.width - mixerpanel.width
+            height: flickable.height
             source: "turntable.png"
             fillMode: Image.PreserveAspectFit
 
@@ -66,7 +67,7 @@ Rectangle {
                             disk.currentSpeed = disk.targetSpeed
                         }
                         else {
-                            disk.currentSpeed += (disk.targetSpeed - disk.currentSpeed) * 0.05
+                            disk.currentSpeed += (disk.targetSpeed - disk.currentSpeed) * 0.10
                         }
                     }
                 }
@@ -128,24 +129,6 @@ Rectangle {
                 }
             }
 
-            Button {
-                id: powerbutton
-
-                width: parent.paintedWidth * 0.12; height: parent.paintedHeight * 0.07
-                anchors.centerIn: parent
-                anchors.horizontalCenterOffset: 0.2 * parent.paintedWidth
-                anchors.verticalCenterOffset: 0.41 * parent.paintedHeight
-
-                source: "powerbutton.png"
-                pressedColor: "green"
-                pressedColorOpacity: turntable.playing ? 0.8 : 0
-
-                onClicked: {
-                    turntable.playing = !turntable.playing
-                    if(turntable.playing) { arm.moveIn()  }
-                    else                  { arm.moveOut() }
-                }
-            }
 
             Arm {
                 id: arm
@@ -170,33 +153,56 @@ Rectangle {
                 sliderimage: "speedslider.png"
                 sliderhandleimage: "speedknob.png"
             }
+        }
 
-            SpeedSlider {
+        Rectangle {
+            id: mixerpanel
+
+            x: flickable.width - mixerpanel.width - 10
+            y: flickable.height - mixerpanel.height - 10
+            width: 130; height: flickable.height - 70
+            color: "#404040"
+            radius: 10
+
+            KnobDial {
                 id: resonance
 
-                width: speedslider.width; height: speedslider.height
-                y: speedslider.y
-                anchors.left: speedslider.right; anchors.leftMargin: 10
+                width: 90; height: 90
+                anchors.top: parent.top; anchors.topMargin: 20
+                anchors.horizontalCenter: parent.horizontalCenter
 
-                maximum: 1.0; minimum: 0.0; speed: 1.0
-                sliderimage: "speedslider.png"
-                sliderhandleimage: "speedknob.png"
-                onSpeedChanged: ui.resonance(speed)
+                maximumvalue: 1.0; minimumvalue: 0.0; value: 1.0
+                onValueChanged: ui.resonance(value)
             }
 
-            SpeedSlider {
+            KnobDial {
                 id: cutoff
 
-                width: speedslider.width; height: speedslider.height
-                y: speedslider.y
-                anchors.left: resonance.right; anchors.leftMargin: 10
+                width: 90; height: 90
+                anchors.top: resonance.bottom; anchors.topMargin: 20
+                anchors.horizontalCenter: parent.horizontalCenter
 
-                maximum: 1.0; minimum: 0.0; speed: 1.0
-                sliderimage: "speedslider.png"
-                sliderhandleimage: "speedknob.png"
-                onSpeedChanged: ui.cutOff(speed)
+                maximumvalue: 1.0; minimumvalue: 0.0; value: 1.0
+                onValueChanged: ui.cutOff(value)
             }
 
+            Button {
+                id: powerbutton
+
+                width: 70; height: 40
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.top: cutoff.bottom; anchors.topMargin: 20
+
+                source: "powerbutton.png"
+                pressedColor: "green"
+                pressedColorOpacity: turntable.playing ? 0.8 : 0
+
+                onClicked: {
+                    turntable.playing = !turntable.playing
+                    if(turntable.playing) { arm.moveIn()  }
+                    else                  { arm.moveOut() }
+                }
+            }
 
         }
 

@@ -4,7 +4,9 @@
 #include <QGraphicsObject>
 #include <QPointer>
 #include <QDesktopWidget>
+#include <QMessageBox>
 #include <QObject>
+
 #include "TurnTable.h"
 #include "DrumMachine.h"
 
@@ -60,7 +62,7 @@ int main(int argc, char *argv[])
     view.setResizeMode(QDeclarativeView::SizeRootObjectToView);
 
 #ifndef QT_NO_OPENGL
-    // Use QGLWidget to get the opengl support in Windows
+    // Use QGLWidget to get the opengl support if available
     QGLFormat format = QGLFormat::defaultFormat();
     format.setSampleBuffers(false);
 
@@ -75,6 +77,13 @@ int main(int argc, char *argv[])
 
     QObject *turnTableQML = dynamic_cast<QObject*>(view.rootObject());
     QObject *drumMachineQML = findQMLElement(turnTableQML, "drumMachine");
+
+    // If there are errors in QML code and the elements does not exist, they won't be found
+    // to Qt side either, check existance of the elements.
+    if(turnTableQML == NULL || drumMachineQML == NULL) {
+        QMessageBox::warning(NULL, "Warning", "Failed to resolve QML elements in main.cpp");
+        return -1;
+    }
 
     //TurnTable connections
     QObject::connect(turnTableQML, SIGNAL(start()), turnTable, SLOT(start()));
@@ -97,15 +106,16 @@ int main(int argc, char *argv[])
     //Framework connections
     QObject::connect((QObject*)view.engine(), SIGNAL(quit()), &app, SLOT(quit()));
 
-    // Start with beat 0
+    // Resizes QML drum machine to 32 ticks and 6 samples
     drumMachine->setMaxTickAndSamples(32, 6);
+    // Start with beat 0
     drumMachine->setBeat(0);
 
 #if defined(Q_WS_MAEMO_5)|| defined(Q_OS_SYMBIAN)
     view.setGeometry(QApplication::desktop()->screenGeometry());
     view.showFullScreen();
 #else
-    view.setGeometry(QRect(100, 100, 800, 480));
+    view.setGeometry(QRect(100, 100, 640, 360));
     view.show();
 #endif
 

@@ -5,6 +5,7 @@
         <file>qml/Button.qml</file>
         <file>qml/Arm.qml</file>
         <file>qml/SidePanel.qml</file>
+        <file>qml/KnobDial.qml</file>
         <file>qml/DrumMachine/DrumMachine.qml</file>
         <file>qml/DrumMachine/DrumButton.qml</file>
         <file>qml/DrumMachine/SlideSwitch.qml</file>
@@ -16,6 +17,7 @@
         <file>qml/speedslider.png</file>
         <file>qml/powerbutton.png</file>
         <file>qml/closemark.png</file>
+        <file>qml/knobdial.png</file>
         <file>sounds/melody.wav</file>
         <file>sounds/snare.wav</file>
         <file>sounds/hihat_open.wav</file>

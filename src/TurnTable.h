@@ -20,8 +20,10 @@ public:
 
     void setHeadOn(bool set) { m_headOn = set; }
     void setSpeed(float speed);
-    void setCutOff(float cutoff) { m_cutOffValue = cutoff; }
-    void setResonance(float resonance) { m_resonanceValue = resonance; }
+    // guides to speed towards attribute speed with a power of power (0-1), good values are below 0.1
+    void aimSpeed(float speed, float power = 0.05f);
+    void setCutOff(float cutoff);
+    void setResonance(float resonance);
 
     int pullAudio(AUDIO_SAMPLE_TYPE *target, int bufferLength);
 
@@ -37,6 +39,8 @@ protected:
 
     float m_cutOffValue;
     float m_resonanceValue;
+    float m_cutOffTarget;
+    float m_resonanceTarget;
 
     // Filters
     int m_lp[2];
@@ -56,6 +60,7 @@ public:
     void addAudioSource(GE::IAudioSource *source);
 
 public slots:
+    void setDiscAimSpeed(QVariant speed);
     void setDiscSpeed(QVariant speed);
 
     void start() { m_sdisc->setHeadOn(true); }

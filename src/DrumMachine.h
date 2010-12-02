@@ -23,6 +23,7 @@ public:
     TYPE_DRUM_SEQ seq() const;
     int currentSeqIndex() const { return m_currentSeqIndex; }
 
+    void setSpeedMultiplier( float speedMul = 1.0f );           // you must call setBpm after this one.
     void setBpm(int bpm);
     void setSeq(const TYPE_DRUM_SEQ &seq);
     void setRunning(bool running) { m_running = running; }
@@ -73,6 +74,7 @@ protected:
 
     QSettings m_Settings;
 
+    float m_speedMultiplier;
     bool m_running;
     int m_samplesPerTick;
     int m_sampleCounter;

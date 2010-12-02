@@ -17,8 +17,12 @@ CScratchDisc::CScratchDisc(GE::CAudioBuffer *discSource)
     memset(m_bp, 0, sizeof(int) * 2);
     memset(m_hp, 0, sizeof(int) * 2);
 
+
     setResonance(1.0f);
     setCutOff(1.0f);
+
+    m_cutOffValue = m_cutOffTarget;
+    m_resonanceValue = m_resonanceTarget;
 }
 
 
@@ -31,10 +35,30 @@ CScratchDisc::~CScratchDisc()
 }
 
 
+void CScratchDisc::setCutOff( float cutoff ) {
+    m_cutOffTarget = cutoff; //powf(cutoff, 2.0f );
+}
+
+
+void CScratchDisc::setResonance(float resonance) {
+
+    m_resonanceTarget = powf(resonance, 2.0f);
+}
+
+
+
 void CScratchDisc::setSpeed(float speed)
 {
     if(speed > -100.0f && speed < 100.0f) {
         m_targetSpeed = speed;
+    }
+}
+
+
+void CScratchDisc::aimSpeed(float speed, float power)
+{
+    if(speed > -100.0f && speed < 100.0f) {
+        m_targetSpeed = m_targetSpeed * (1.0f-power) + speed*power;
     }
 }
 
@@ -49,13 +73,13 @@ int CScratchDisc::pullAudio(AUDIO_SAMPLE_TYPE *target, int bufferLength)
     SAMPLE_FUNCTION_TYPE sfunc = m_source->getSampleFunction();
 
     int channelLength = ((m_source->getDataLength()) / (m_source->getNofChannels() * m_source->getBytesPerSample())) - 2;
-    channelLength <<= 12;
+    channelLength<<=11;
 
     int p;
     int fixedReso = (m_resonanceValue * 4096.0f);
     int fixedCutoff = (m_cutOffValue * 4096.0f);
 
-    float speedmul = (float)m_source->getSamplesPerSec() / (float)AUDIO_FREQUENCY * 4096.0f;
+    float speedmul = (float)m_source->getSamplesPerSec() / (float)AUDIO_FREQUENCY * 2048.0f;
     int inc = (int)(m_speed * speedmul);
 
     if (m_headOn == false) {
@@ -65,9 +89,13 @@ int CScratchDisc::pullAudio(AUDIO_SAMPLE_TYPE *target, int bufferLength)
 
     int input;
     while(target != t_target) {
-        if(m_cc > 128) {
+        if(m_cc > 64) {
             m_speed += (m_targetSpeed - m_speed) * 0.1f;
+            m_cutOffValue += (m_cutOffTarget - m_cutOffValue) * 0.1f;
+            m_resonanceValue += (m_resonanceTarget - m_resonanceValue) * 0.1f;
             inc = (int)(m_speed * speedmul);
+            fixedReso = (m_resonanceValue * 4096.0f);
+            fixedCutoff = (m_cutOffValue * 4096.0f);
             m_cc = 0;
         }
         else {
@@ -77,13 +105,16 @@ int CScratchDisc::pullAudio(AUDIO_SAMPLE_TYPE *target, int bufferLength)
         if(m_pos >= channelLength) {
             m_pos %= channelLength;
         }
+
         if(m_pos < 0) {
             m_pos = channelLength - 1 - ((-m_pos) % channelLength);
         }
-        p = m_pos >> 12;
+
+        p = (m_pos >> 11);
 
 
-        input = (((sfunc)(m_source, p, 0) * (4095^(m_pos & 4095)) + (sfunc)(m_source, p+1, 0) * (m_pos & 4095)) >> 12);
+
+        input = (((sfunc)(m_source, p, 0) * (2047^(m_pos & 2047)) + (sfunc)(m_source, p+1, 0) * (m_pos & 2047)) >> 11);
         m_lp[0] += ((m_bp[0] * fixedCutoff) >> 12);
         m_hp[0] = input - m_lp[0] - ((m_bp[0] * fixedReso) >> 12);
         m_bp[0] += ((m_hp[0] * fixedCutoff) >> 12);
@@ -99,7 +130,7 @@ int CScratchDisc::pullAudio(AUDIO_SAMPLE_TYPE *target, int bufferLength)
         target[0] = input;
 
 
-        input = (((sfunc)(m_source, p, 1) * (4095 ^ (m_pos & 4095)) + (sfunc)(m_source, p+1, 1) * (m_pos & 4095)) >> 12);
+        input = (((sfunc)(m_source, p, 1) * (2047 ^ (m_pos & 2047)) + (sfunc)(m_source, p+1, 1) * (m_pos & 2047)) >> 11);
         m_lp[1] += ((m_bp[1] * fixedCutoff) >> 12);
         m_hp[1] = input - m_lp[1] - ((m_bp[1] * fixedReso) >> 12);
         m_bp[1] += ((m_hp[1] * fixedCutoff) >> 12);
@@ -136,6 +167,12 @@ TurnTable::TurnTable()
 void TurnTable::addAudioSource(GE::IAudioSource *source)
 {
     m_audioMixer.addAudioSource(source);
+}
+
+
+void TurnTable::setDiscAimSpeed(QVariant speed)
+{
+    m_sdisc->aimSpeed(speed.toFloat());
 }
 
 

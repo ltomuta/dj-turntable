@@ -13,8 +13,6 @@
         <file>qml/disk.png</file>
         <file>qml/turntable.png</file>
         <file>qml/arm.png</file>
-        <file>qml/speedknob.png</file>
-        <file>qml/speedslider.png</file>
         <file>qml/powerbutton.png</file>
         <file>qml/closemark.png</file>
         <file>qml/knobdial.png</file>

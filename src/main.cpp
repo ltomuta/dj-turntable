@@ -88,6 +88,7 @@ int main(int argc, char *argv[])
     //TurnTable connections
     QObject::connect(turnTableQML, SIGNAL(start()), turnTable, SLOT(start()));
     QObject::connect(turnTableQML, SIGNAL(stop()), turnTable, SLOT(stop()));
+    QObject::connect(turnTableQML, SIGNAL(diskAimSpeed(QVariant)), turnTable, SLOT(setDiscAimSpeed(QVariant)));
     QObject::connect(turnTableQML, SIGNAL(diskSpeed(QVariant)), turnTable, SLOT(setDiscSpeed(QVariant)));
     QObject::connect(turnTableQML, SIGNAL(cutOff(QVariant)), turnTable, SLOT(cutOff(QVariant)));
     QObject::connect(turnTableQML, SIGNAL(resonance(QVariant)), turnTable, SLOT(resonance(QVariant)));

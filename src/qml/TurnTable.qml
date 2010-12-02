@@ -6,6 +6,7 @@ Rectangle {
 
     // Signals for TurnTable
     signal diskSpeed(variant speed)
+    signal diskAimSpeed(variant speed)
     signal start()
     signal stop()
 
@@ -44,7 +45,7 @@ Rectangle {
                 id: disk
 
                 // speed are Hz values of the disk
-                property real targetSpeed: turntable.playing ? speedslider.speed : 0.0
+                property real targetSpeed: turntable.playing ? speedslider.value : 0.0
                 property real currentSpeed: 0
 
                 width: parent.paintedWidth * 0.80; height: width
@@ -54,7 +55,7 @@ Rectangle {
                 anchors.horizontalCenterOffset: -0.095 * parent.paintedWidth
                 anchors.verticalCenterOffset: -0.0055 * parent.paintedHeight
 
-                onCurrentSpeedChanged: ui.diskSpeed(disk.currentSpeed)
+                onCurrentSpeedChanged: playTimer.running ? ui.diskSpeed(disk.currentSpeed) : ui.diskAimSpeed(disk.currentSpeed)
 
                 Timer {
                     id: playTimer
@@ -149,9 +150,8 @@ Rectangle {
                 anchors.centerIn: parent
                 anchors.horizontalCenterOffset: 0.4 * parent.paintedWidth
                 anchors.verticalCenterOffset: 0.25 * parent.paintedHeight
-                maximum: 1.5; minimum: 0.0; speed: 1.0
-                sliderimage: "speedslider.png"
-                sliderhandleimage: "speedknob.png"
+                maximum: 1.5; minimum: 0.0; value: 1.0; defaultValue: 1.0
+                mouseAreaScale: 2
             }
         }
 
@@ -161,49 +161,86 @@ Rectangle {
             x: flickable.width - mixerpanel.width - 10
             y: flickable.height - mixerpanel.height - 10
             width: 130; height: flickable.height - 70
-            color: "#404040"
-            radius: 10
+            color: "#858585"
+            radius: 12
+
+            Text {
+                text: "Resonance"
+                color: "#505050"
+                anchors.left: parent.left; anchors.leftMargin: 7
+                anchors.top: parent.top; anchors.topMargin: 6
+                font.pixelSize: 10
+            }
 
             KnobDial {
                 id: resonance
 
-                width: 90; height: 90
+                width: 95; height: 95
                 anchors.top: parent.top; anchors.topMargin: 20
                 anchors.horizontalCenter: parent.horizontalCenter
+                smooth: true
 
-                maximumvalue: 1.0; minimumvalue: 0.0; value: 1.0
-                onValueChanged: ui.resonance(value)
+                maximumvalue: 1.0; minimumvalue: 0; value: 0
+                onValueChanged: ui.resonance(maximumvalue - value)
+            }
+
+            Text {
+                text: "Cutoff"
+                color: "#505050"
+                anchors.left: parent.left; anchors.leftMargin: 7
+                anchors.top: resonance.bottom; anchors.topMargin: 3
+                font.pixelSize: 10
             }
 
             KnobDial {
                 id: cutoff
 
-                width: 90; height: 90
-                anchors.top: resonance.bottom; anchors.topMargin: 20
+                width: 95; height: 95
+                anchors.top: resonance.bottom; anchors.topMargin: 10
                 anchors.horizontalCenter: parent.horizontalCenter
+                smooth: true
 
-                maximumvalue: 1.0; minimumvalue: 0.0; value: 1.0
-                onValueChanged: ui.cutOff(value)
+                maximumvalue: 1.0; minimumvalue: 0.0; value: 0
+                onValueChanged: ui.cutOff(maximumvalue - value)
             }
 
-            Button {
+            Text {
+                text: "Power"
+                color: "#505050"
+                anchors.left: parent.left; anchors.leftMargin: 7
+                anchors.top: cutoff.bottom; anchors.topMargin: 3
+                font.pixelSize: 10
+            }
+
+            Item {
                 id: powerbutton
 
-                width: 70; height: 40
+                width: 50; height: 50
                 anchors.horizontalCenter: parent.horizontalCenter
-                anchors.top: cutoff.bottom; anchors.topMargin: 20
+                anchors.top: cutoff.bottom; anchors.topMargin: 10
 
-                source: "powerbutton.png"
-                pressedColor: "green"
-                pressedColorOpacity: turntable.playing ? 0.8 : 0
+                Rectangle {
+                    anchors.fill: parent; anchors.margins: 10
+                    color: turntable.playing ? "#AA00FF00" : "#AAFF0000"
+                }
 
-                onClicked: {
-                    turntable.playing = !turntable.playing
-                    if(turntable.playing) { arm.moveIn()  }
-                    else                  { arm.moveOut() }
+                Image {
+                    anchors.fill: parent
+                    source: "powerbutton.png"
+                    smooth: true
+                }
+
+                MouseArea {
+                    anchors.fill: parent
+                    onPressed: powerbutton.scale = 0.95
+                    onReleased: powerbutton.scale = 1.00
+                    onClicked: {
+                        turntable.playing = !turntable.playing
+                        if(turntable.playing) { arm.moveIn()  }
+                        else                  { arm.moveOut() }
+                    }
                 }
             }
-
         }
 
         DrumMachine {

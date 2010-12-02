@@ -50,6 +50,7 @@ CDrumMachine::CDrumMachine() : m_tickCount(0),
         m_playInstances.push_back(playInstance);
     }
 
+    m_speedMultiplier = 1.0f;
     setBpm(600);
 }
 
@@ -91,10 +92,14 @@ int CDrumMachine::bpm() const
     return (AUDIO_FREQUENCY * 60) / m_samplesPerTick;
 }
 
+void CDrumMachine::setSpeedMultiplier( float speedMul ) {
+    m_speedMultiplier = speedMul;
+};
 
 void CDrumMachine::setBpm(int bpm)
 {
-    m_samplesPerTick = (AUDIO_FREQUENCY * 60) / bpm;
+    float samplesPerTick  = (float)(AUDIO_FREQUENCY * 60.0f * m_speedMultiplier ) / (float)bpm;
+    m_samplesPerTick = (int)samplesPerTick;
     m_sampleCounter = 0;
 }
 

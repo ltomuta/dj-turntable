@@ -36,7 +36,7 @@ CScratchDisc::~CScratchDisc()
 
 
 void CScratchDisc::setCutOff( float cutoff ) {
-    m_cutOffTarget = cutoff; //powf(cutoff, 2.0f );
+    m_cutOffTarget = cutoff;
 }
 
 
@@ -160,7 +160,23 @@ TurnTable::TurnTable()
     m_audioMixer.addAudioSource(m_sdisc);
     m_audioOut = new GE::AudioOut(this, &m_audioMixer);
 
-    m_audioMixer.setGeneralVolume(0.4999f);
+    m_audioMixer.setGeneralVolume(0.999f);
+}
+
+
+TurnTable::~TurnTable()
+{
+    if(m_audioOut) {
+        delete m_audioOut;
+        m_audioOut = NULL;
+    }
+
+    if(m_sdisc != NULL) {
+        delete m_sdisc;
+        m_sdisc = NULL;
+    }
+
+    m_discSample = NULL;
 }
 
 
@@ -182,17 +198,23 @@ void TurnTable::setDiscSpeed(QVariant speed)
 }
 
 
-TurnTable::~TurnTable()
+void TurnTable::volumeUp()
 {
-    if(m_audioOut) {
-        delete m_audioOut;
-        m_audioOut = NULL;
+    float volume = m_audioMixer.getGeneralVolume() + 0.1f;
+    if(volume >= 5.0f) {
+        volume = 5.0f;
     }
 
-    if(m_sdisc != NULL) {
-        delete m_sdisc;
-        m_sdisc = NULL;
+    m_audioMixer.setGeneralVolume(volume);
+}
+
+
+void TurnTable::volumeDown()
+{
+    float volume = m_audioMixer.getGeneralVolume() - 0.1f;
+    if(volume < 0.1f) {
+        volume = 0.0;
     }
 
-    m_discSample = NULL;
+    m_audioMixer.setGeneralVolume(volume);
 }

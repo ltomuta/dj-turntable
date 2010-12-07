@@ -49,7 +49,7 @@ Item {
         anchors.fill: handle
         drag.target: handle
         drag.axis: "YAxis"; drag.minimumY: 0; drag.maximumY: handle.yMax
-        onPositionChanged: { value = maximum - (maximum - minimum) * (handle.y) / handle.yMax + minimum; }
-        onDoubleClicked: { value = defaultValue }
+        onPositionChanged: value = maximum - (maximum - minimum) * (handle.y) / handle.yMax + minimum
+        onDoubleClicked: value = defaultValue
     }
 }

@@ -1,7 +1,8 @@
 QT       += core gui
-QT       += declarative multimedia
-QT       += opengl
+QT       += declarative opengl
 
+CONFIG   += mobility
+MOBILITY += sensors multimedia
 
 TARGET   = turntable
 TEMPLATE = app
@@ -21,6 +22,7 @@ RESOURCES +=   resources.qrc
 
 HEADERS +=     TurnTable.h \
                DrumMachine.h \
+               accelerometerfilter.h \
                ga_src/GEAudioOut.h \
                ga_src/GEInterfaces.h \
                ga_src/GEAudioBuffer.h

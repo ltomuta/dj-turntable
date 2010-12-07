@@ -12,10 +12,30 @@ Rectangle {
 
     signal cutOff(variant value)
     signal resonance(variant value)
+    signal volumeUp()
+    signal volumeDown()
+
+    function inclination(deg) { diskReflection.rotation = -deg + 45}
 
     anchors.fill: parent
     width: 640; height: 360
     color: "black"
+
+    focus: true
+
+    Keys.onDownPressed: flickable.state = "DrumMachine"
+    Keys.onUpPressed: flickable.state = ""
+    Keys.onSpacePressed: powerbutton.press()
+    Keys.onVolumeUpPressed: ui.volumeUp()
+    Keys.onVolumeDownPressed: ui.volumeDown()
+
+    Text {
+        id: d
+        z: 100
+        font.bold: true
+        color: "white"
+
+    }
 
     Component.onCompleted: playTimer.start()
 
@@ -72,6 +92,16 @@ Rectangle {
                         }
                     }
                 }
+            }
+
+            Image {
+                id: diskReflection
+
+                anchors.top: disk.top; anchors.bottom: disk.bottom
+                anchors.horizontalCenter: disk.horizontalCenter
+                source: "diskreflection.png"
+                rotation: 45
+                Behavior on rotation { RotationAnimation {} }
             }
 
             MouseArea {
@@ -215,6 +245,12 @@ Rectangle {
             Item {
                 id: powerbutton
 
+                function press() {
+                    turntable.playing = !turntable.playing
+                    if(turntable.playing) { arm.moveIn()  }
+                    else                  { arm.moveOut() }
+                }
+
                 width: 50; height: 50
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.top: cutoff.bottom; anchors.topMargin: 10
@@ -234,11 +270,7 @@ Rectangle {
                     anchors.fill: parent
                     onPressed: powerbutton.scale = 0.95
                     onReleased: powerbutton.scale = 1.00
-                    onClicked: {
-                        turntable.playing = !turntable.playing
-                        if(turntable.playing) { arm.moveIn()  }
-                        else                  { arm.moveOut() }
-                    }
+                    onClicked: powerbutton.press()
                 }
             }
         }
@@ -253,14 +285,13 @@ Rectangle {
         states: State {
             name: "DrumMachine"
             PropertyChanges { target: flickable; contentY: ui.height }
-            PropertyChanges { target: turntable; opacity: 0 }
         }
 
         transitions: Transition {
             from: ""
             to: "DrumMachine"
             reversible: true
-            PropertyAnimation { properties: "contentY, opacity"; easing.type: Easing.InOutQuart }
+            PropertyAnimation { property: "contentY"; easing.type: Easing.InOutQuart }
         }
     }
 

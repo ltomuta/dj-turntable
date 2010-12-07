@@ -9,6 +9,7 @@
 
 #include "TurnTable.h"
 #include "DrumMachine.h"
+#include "accelerometerfilter.h"
 
 // Lock orientation in Symbian
 #ifdef Q_OS_SYMBIAN
@@ -21,6 +22,8 @@
 #ifndef QT_NO_OPENGL
     #include <QGLWidget>
 #endif
+
+QTM_USE_NAMESPACE
 
 
 /**
@@ -75,11 +78,15 @@ int main(int argc, char *argv[])
     QPointer<CDrumMachine> drumMachine = new CDrumMachine;
     turnTable->addAudioSource(drumMachine);
 
+    QAccelerometer sensor;
+    QPointer<AccelerometerFilter> filter = new AccelerometerFilter;
+    sensor.addFilter(filter);   // does not take the ownership of the filter
+
     QObject *turnTableQML = dynamic_cast<QObject*>(view.rootObject());
     QObject *drumMachineQML = findQMLElement(turnTableQML, "drumMachine");
 
     // If there are errors in QML code and the elements does not exist, they won't be found
-    // to Qt side either, check existance of the elements.
+    // in Qt side either, check existance of the elements.
     if(turnTableQML == NULL || drumMachineQML == NULL) {
         QMessageBox::warning(NULL, "Warning", "Failed to resolve QML elements in main.cpp");
         return -1;
@@ -92,6 +99,9 @@ int main(int argc, char *argv[])
     QObject::connect(turnTableQML, SIGNAL(diskSpeed(QVariant)), turnTable, SLOT(setDiscSpeed(QVariant)));
     QObject::connect(turnTableQML, SIGNAL(cutOff(QVariant)), turnTable, SLOT(cutOff(QVariant)));
     QObject::connect(turnTableQML, SIGNAL(resonance(QVariant)), turnTable, SLOT(resonance(QVariant)));
+    QObject::connect(turnTableQML, SIGNAL(volumeUp()), turnTable, SLOT(volumeUp()));
+    QObject::connect(turnTableQML, SIGNAL(volumeDown()), turnTable, SLOT(volumeDown()));
+    QObject::connect(filter, SIGNAL(rotationChanged(QVariant)), turnTableQML, SLOT(inclination(QVariant)));
 
     //DrumMachine connections
     QObject::connect(drumMachineQML, SIGNAL(startBeat()), drumMachine, SLOT(startBeat()));
@@ -111,6 +121,8 @@ int main(int argc, char *argv[])
     drumMachine->setMaxTickAndSamples(32, 6);
     // Start with beat 0
     drumMachine->setBeat(0);
+
+    sensor.start();
 
 #if defined(Q_WS_MAEMO_5)|| defined(Q_OS_SYMBIAN)
     view.setGeometry(QApplication::desktop()->screenGeometry());

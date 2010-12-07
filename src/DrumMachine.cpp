@@ -28,7 +28,7 @@ const unsigned char drum_seq3[] = { 5, 0, 1, 0,10, 4, 1, 0,
 
 
 CDrumMachine::CDrumMachine() : m_tickCount(0),
-                               m_Settings("Nokia", "DJTurnTable"),
+                               m_Settings("Nokia", "DJTurntable"),
                                m_running(false),
                                m_samplesPerTick(0),
                                m_sampleCounter(0),
@@ -51,6 +51,8 @@ CDrumMachine::CDrumMachine() : m_tickCount(0),
     }
 
     m_speedMultiplier = 1.0f;
+    m_mixer->setAbsoluteVolume(2.5f / m_drumSamples.size());
+
     setBpm(600);
 }
 
@@ -145,8 +147,6 @@ void CDrumMachine::tick()
 
 int CDrumMachine::pullAudio(AUDIO_SAMPLE_TYPE *target, int length)
 {
-    m_mixer->setGeneralVolume(2.5f / (float)m_drumSamples.size());
-
     int pos = 0;
     while (pos < length) {
         int sampleMixCount = ((length-pos) >> 1);

@@ -9,7 +9,7 @@
 //#include <QtMultimedia/qaudiooutput.h>
 //#include <QtMultimedia/qaudioformat.h>
 #include <QAudioOutput>
-
+#include <QDebug>
 #include "GEAudioOut.h"
 
 using namespace GE;
@@ -38,15 +38,15 @@ AudioOut::AudioOut( QObject *parent, GE::IAudioSource *source ) : QThread(parent
     format.setByteOrder(BYTEORDER);
     format.setSampleType(SAMTYPE);
 
+    foreach(const QAudioDeviceInfo &deviceInfo, QAudioDeviceInfo::availableDevices(QAudio::AudioOutput))
+        qDebug() << "Device name: " << deviceInfo.deviceName();
+
     QAudioDeviceInfo info(QAudioDeviceInfo::defaultOutputDevice());
     if (!info.isFormatSupported(format))
         format = info.nearestFormat(format);
 
 
-
-
-
-            // debug, check the error and the state
+    // debug, check the error and the state
     //QAudio::Error err = m_audioOutput->error();
     //QAudio::State state = m_audioOutput->state();
 

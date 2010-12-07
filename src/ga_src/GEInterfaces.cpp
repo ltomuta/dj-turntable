@@ -71,7 +71,23 @@ bool CAudioMixer::removeAudioSource( IAudioSource *source ) {
     return true;
 };
 
+int CAudioMixer::getAudioSourceCount() {
+    IAudioSource *l = m_sourceList;
+    int rval  = 0;
+    while (l) { rval ++; l = l->m_next;};
+    return rval;
+};
+
+
 void CAudioMixer::setGeneralVolume( float vol ) {
+    m_fixedGeneralVolume = (4096.0f/(float)getAudioSourceCount()*vol);
+};
+
+float CAudioMixer::getGeneralVolume() {
+    return (float)m_fixedGeneralVolume * (float)getAudioSourceCount() / 4096.0f;
+};
+
+void CAudioMixer::setAbsoluteVolume( float vol ) {
     m_fixedGeneralVolume = (4096.0f*vol);
 };
 

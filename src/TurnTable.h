@@ -20,8 +20,9 @@ public:
 
     void setHeadOn(bool set) { m_headOn = set; }
     void setSpeed(float speed);
-    // guides to speed towards attribute speed with a power of power (0-1), good values are below 0.1
+    // Guides to speed towards attribute speed with a power of power (0-1), good values are below 0.1
     void aimSpeed(float speed, float power = 0.05f);
+
     void setCutOff(float cutoff);
     void setResonance(float resonance);
 
@@ -29,7 +30,6 @@ public:
 
 protected:
     bool m_headOn;
-    int m_volume;
 
     GE::CAudioBuffer *m_source;
     int m_pos;
@@ -68,6 +68,9 @@ public slots:
 
     void cutOff(QVariant value) { m_sdisc->setCutOff(value.toFloat()); }
     void resonance(QVariant value) { m_sdisc->setResonance(value.toFloat()); }
+
+    void volumeUp();
+    void volumeDown();
 
 protected:
     CScratchDisc *m_sdisc;

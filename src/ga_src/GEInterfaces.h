@@ -34,9 +34,17 @@ namespace GE {
 
 
         IAudioSource* addAudioSource( IAudioSource *s );		// add new audio source to the list
+        int getAudioSourceCount();
         bool removeAudioSource( IAudioSource *s );	// remove an audio source from the list
         int pullAudio( AUDIO_SAMPLE_TYPE *target, int bufferLength );
-        void setGeneralVolume( float vol );
+
+        void setAbsoluteVolume( float vol );
+        float getAbsoluteVolume() { return (float)m_fixedGeneralVolume/4096.0f; };
+
+        void setGeneralVolume( float vol );         // relative to the channelcount (audiosourcecount)
+        float getGeneralVolume();
+
+
 
 
     protected:

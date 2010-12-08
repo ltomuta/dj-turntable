@@ -14,20 +14,14 @@ class AccelerometerFilter : public QObject, public QAccelerometerFilter
 {
     Q_OBJECT
 
+protected:
+    qreal m_PrevValue;
+
 public:
-    AccelerometerFilter() {}
+    AccelerometerFilter() : m_PrevValue(0.0f) {}
 
     bool filter(QAccelerometerReading *reading)
     {
-        static int counter = 0;
-        counter++;
-        if(counter < 10) {
-            return false;
-        }
-        else {
-            counter = 0;
-        }
-
         qreal rx = reading->x();
         qreal ry = reading->y();
         qreal rz = reading->z();
@@ -35,9 +29,17 @@ public:
         qreal divider = sqrt(rx * rx + ry * ry + rz * rz);
 
 #if defined(Q_OS_SYMBIAN)
-        emit rotationChanged(-(acos(ry / divider) * RADIANS_TO_DEGREES - 90));
+        ry = -(acos(ry / divider) * RADIANS_TO_DEGREES - 90);
+        if(fabs(ry - m_PrevValue) > 3.0f) {
+            emit rotationChanged(ry);
+            m_PrevValue = ry;
+        }
 #else
-        emit rotationChanged(acos(rx / divider) * RADIANS_TO_DEGREES - 90);
+        rx = acos(rx / divider) * RADIANS_TO_DEGREES - 90;
+        if(fabs(rx - m_PrevValue) > 3.0f) {
+            emit rotationChanged(rx);
+            m_PrevValue = rx;
+        }
 #endif
 
         return false; // don't store the reading in the sensor

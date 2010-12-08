@@ -15,15 +15,18 @@
 #include <QtCore/qtimer.h>
 #include <QtCore/qstring.h>
 #include <QThread>
+#include <QAudioOutput>
 
 #include "GEInterfaces.h"
 
 
 class QAudioOutput;
 
+
+
+
+
 namespace GE {
-
-
 
     class AudioOut : public QThread {
         Q_OBJECT

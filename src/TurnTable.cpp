@@ -160,7 +160,7 @@ TurnTable::TurnTable()
     m_audioMixer.addAudioSource(m_sdisc);
     m_audioOut = new GE::AudioOut(this, &m_audioMixer);
 
-    m_audioMixer.setGeneralVolume(0.999f);
+    m_audioMixer.setGeneralVolume(0.75f);
 }
 
 
@@ -200,9 +200,12 @@ void TurnTable::setDiscSpeed(QVariant speed)
 
 void TurnTable::volumeUp()
 {
-    float volume = m_audioMixer.getGeneralVolume() + 0.1f;
-    if(volume >= 5.0f) {
-        volume = 5.0f;
+    float volume = m_audioMixer.getGeneralVolume() * 1.333f;
+    if(volume == 0.0f) {
+        volume = 0.01;
+    }
+    else if(volume >= 0.95f) {
+        volume = 0.95f;
     }
 
     m_audioMixer.setGeneralVolume(volume);
@@ -211,9 +214,9 @@ void TurnTable::volumeUp()
 
 void TurnTable::volumeDown()
 {
-    float volume = m_audioMixer.getGeneralVolume() - 0.1f;
-    if(volume < 0.1f) {
-        volume = 0.0;
+    float volume = m_audioMixer.getGeneralVolume() * 0.75f;
+    if(volume < 0.01f) {
+        volume = 0.0f;
     }
 
     m_audioMixer.setGeneralVolume(volume);

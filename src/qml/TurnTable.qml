@@ -15,7 +15,7 @@ Rectangle {
     signal volumeUp()
     signal volumeDown()
 
-    function inclination(deg) { diskReflection.rotation = -deg + 45}
+    function inclination(deg) { diskReflection.rotation = -deg * 2 + 45}
 
     anchors.fill: parent
     width: 640; height: 360
@@ -28,14 +28,6 @@ Rectangle {
     Keys.onSpacePressed: powerbutton.press()
     Keys.onVolumeUpPressed: ui.volumeUp()
     Keys.onVolumeDownPressed: ui.volumeDown()
-
-    Text {
-        id: d
-        z: 100
-        font.bold: true
-        color: "white"
-
-    }
 
     Component.onCompleted: playTimer.start()
 

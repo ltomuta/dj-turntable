@@ -51,7 +51,7 @@ CDrumMachine::CDrumMachine() : m_tickCount(0),
     }
 
     m_speedMultiplier = 1.0f;
-    m_mixer->setAbsoluteVolume(2.5f / m_drumSamples.size());
+    m_mixer->setAbsoluteVolume(3.0f / m_drumSamples.size());
 
     setBpm(600);
 }

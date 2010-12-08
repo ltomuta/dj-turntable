@@ -38,6 +38,13 @@ unix:!symbian {
 
 
 symbian {
+
+    INCLUDEPATH += /epoc32/include/mmf/common
+    INCLUDEPATH += /epoc32/include/mmf/server
+
+    LIBS += -lmmfdevsound
+
+
     # To lock the application to landscape orientation
     LIBS += -lcone -leikcore -lavkon
 

@@ -117,11 +117,12 @@ int main(int argc, char *argv[])
     //Framework connections
     QObject::connect((QObject*)view.engine(), SIGNAL(quit()), &app, SLOT(quit()));
 
+
     // Resizes QML drum machine to 32 ticks and 6 samples
     drumMachine->setMaxTickAndSamples(32, 6);
     // Start with beat 0
     drumMachine->setBeat(0);
-
+    // Begins the measuring of accelerometer sensor
     sensor.start();
 
 #if defined(Q_WS_MAEMO_5)|| defined(Q_OS_SYMBIAN)

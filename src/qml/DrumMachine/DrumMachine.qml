@@ -66,8 +66,10 @@ Rectangle {
     }
 
     function highlightTick(tick) {
-        highligher.x = tick * 38 - 3
+        highligher.x = tick * 34 - 3
     }
+
+    //Component.onCompleted: maxSeqAndSamples(32, 6)
 
     property int maxTicks: 0
     property int maxSamples: 0
@@ -99,7 +101,7 @@ Rectangle {
                 // Holds dynamically created DrumButtons childern
                 id: drumGrid
 
-                spacing: 8
+                spacing: 0
             }
 
             Rectangle {

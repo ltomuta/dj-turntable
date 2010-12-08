@@ -1,12 +1,13 @@
 #ifndef __CTURNTABLE__
 #define __CTURNTABLE__
 
-#include <QObject>
 #include <QVariant>
+#include <QSystemDeviceInfo>
 
 #include "ga_src/GEAudioOut.h"
 #include "ga_src/GEAudioBuffer.h"
 
+QTM_USE_NAMESPACE
 
 class CScratchDisc : public GE::IAudioSource
 {
@@ -49,12 +50,14 @@ protected:
 };
 
 
+class QSettings;
+
 class TurnTable : public QObject
 {
     Q_OBJECT
 
 public:
-    TurnTable();
+    TurnTable(QSettings *settings);
     ~TurnTable();
 
     void addAudioSource(GE::IAudioSource *source);
@@ -72,8 +75,11 @@ public slots:
     void volumeUp();
     void volumeDown();
 
+    void profile(QSystemDeviceInfo::Profile profile);
+
 protected:
     CScratchDisc *m_sdisc;
+    QSettings *m_Settings;
 
     GE::AudioOut *m_audioOut;
     GE::CAudioMixer m_audioMixer;

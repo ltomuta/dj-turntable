@@ -5,7 +5,8 @@
 #include <QPointer>
 #include <QDesktopWidget>
 #include <QMessageBox>
-#include <QObject>
+#include <QSettings>
+#include <QSystemDeviceInfo>
 
 #include "TurnTable.h"
 #include "DrumMachine.h"
@@ -74,14 +75,24 @@ int main(int argc, char *argv[])
     view.setViewport(glWidget);     // ownership of glWidget is taken
 #endif
 
-    QPointer<TurnTable> turnTable = new TurnTable;
-    QPointer<CDrumMachine> drumMachine = new CDrumMachine;
+    // Create Qt settings object to load / store app settings
+    QPointer<QSettings> settings = new QSettings("Nokia", "DJTurntable");
+
+    // Create Qt objects to handle Turntable and Drum machine
+    QPointer<TurnTable> turnTable = new TurnTable(settings);
+    QPointer<CDrumMachine> drumMachine = new CDrumMachine(settings);
     turnTable->addAudioSource(drumMachine);
 
+    // Create Qt accelerometer objects
     QAccelerometer sensor;
     QPointer<AccelerometerFilter> filter = new AccelerometerFilter;
     sensor.addFilter(filter);   // does not take the ownership of the filter
 
+    // Create Qt objects for accessing profile information
+    QSystemDeviceInfo deviceInfo;
+    turnTable->profile(deviceInfo.currentProfile());
+
+    // Find out the interesting Qt objects of the QML elements
     QObject *turnTableQML = dynamic_cast<QObject*>(view.rootObject());
     QObject *drumMachineQML = findQMLElement(turnTableQML, "drumMachine");
 
@@ -92,7 +103,7 @@ int main(int argc, char *argv[])
         return -1;
     }
 
-    //TurnTable connections
+    // TurnTable connections
     QObject::connect(turnTableQML, SIGNAL(start()), turnTable, SLOT(start()));
     QObject::connect(turnTableQML, SIGNAL(stop()), turnTable, SLOT(stop()));
     QObject::connect(turnTableQML, SIGNAL(diskAimSpeed(QVariant)), turnTable, SLOT(setDiscAimSpeed(QVariant)));
@@ -102,6 +113,7 @@ int main(int argc, char *argv[])
     QObject::connect(turnTableQML, SIGNAL(volumeUp()), turnTable, SLOT(volumeUp()));
     QObject::connect(turnTableQML, SIGNAL(volumeDown()), turnTable, SLOT(volumeDown()));
     QObject::connect(filter, SIGNAL(rotationChanged(QVariant)), turnTableQML, SLOT(inclination(QVariant)));
+    QObject::connect(&deviceInfo, SIGNAL(currentProfileChanged(QSystemDeviceInfo::Profile)), turnTable, SLOT(profile(QSystemDeviceInfo::Profile)));
 
     //DrumMachine connections
     QObject::connect(drumMachineQML, SIGNAL(startBeat()), drumMachine, SLOT(startBeat()));

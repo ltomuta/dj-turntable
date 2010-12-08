@@ -1,5 +1,6 @@
-#include "TurnTable.h"
 #include <math.h>
+#include <QSettings>
+#include "TurnTable.h"
 
 using namespace GE;
 
@@ -152,7 +153,8 @@ int CScratchDisc::pullAudio(AUDIO_SAMPLE_TYPE *target, int bufferLength)
 }
 
 
-TurnTable::TurnTable()
+TurnTable::TurnTable(QSettings *settings)
+    : m_Settings(settings)
 {
     m_discSample = GE::CAudioBuffer::loadWav(QString(":/sounds/melody.wav"));
 
@@ -160,7 +162,8 @@ TurnTable::TurnTable()
     m_audioMixer.addAudioSource(m_sdisc);
     m_audioOut = new GE::AudioOut(this, &m_audioMixer);
 
-    m_audioMixer.setGeneralVolume(0.75f);
+    float volume = m_Settings->value("Volume", 0.75f).toFloat();
+    m_audioMixer.setGeneralVolume(volume);
 }
 
 
@@ -177,6 +180,7 @@ TurnTable::~TurnTable()
     }
 
     m_discSample = NULL;
+    m_Settings = NULL;
 }
 
 
@@ -209,6 +213,7 @@ void TurnTable::volumeUp()
     }
 
     m_audioMixer.setGeneralVolume(volume);
+    m_Settings->setValue("Volume", volume);
 }
 
 
@@ -220,4 +225,17 @@ void TurnTable::volumeDown()
     }
 
     m_audioMixer.setGeneralVolume(volume);
+    m_Settings->setValue("Volume", volume);
+}
+
+
+void TurnTable::profile(QSystemDeviceInfo::Profile profile)
+{
+    switch(profile) {
+    case QSystemDeviceInfo::SilentProfile:
+        m_audioMixer.setGeneralVolume(0.0f);
+        break;
+    default:
+        break;
+    }
 }

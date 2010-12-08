@@ -2,7 +2,7 @@ QT       += core gui
 QT       += declarative opengl
 
 CONFIG   += mobility
-MOBILITY += sensors multimedia
+MOBILITY += sensors multimedia systeminfo
 
 TARGET   = turntable
 TEMPLATE = app

@@ -1,10 +1,11 @@
 #ifndef __DRUMMACHINE__
 #define __DRUMMACHINE__
 
-#include <QSettings>
 #include <QVariant>
 #include <QVector>
 #include "ga_src/GEAudioBuffer.h"
+
+class QSettings;
 
 class CDrumMachine : public QObject, public GE::IAudioSource
 {
@@ -16,7 +17,7 @@ public:
     // Shortens writing of the type later on
     typedef QVector<unsigned char> TYPE_DRUM_SEQ;
 
-    CDrumMachine();
+    CDrumMachine(QSettings *settings);
     virtual ~CDrumMachine();
 
     int bpm() const;
@@ -72,7 +73,7 @@ protected:
     TYPE_DRUM_SEQ m_seq;
     TYPE_DRUM_SEQ::size_type m_tickCount;
 
-    QSettings m_Settings;
+    QSettings *m_Settings;
 
     float m_speedMultiplier;
     bool m_running;

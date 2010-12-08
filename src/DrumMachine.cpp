@@ -1,6 +1,7 @@
 
 #include <QStringList>
 #include <vector>
+#include <QSettings>
 #include "DrumMachine.h"
 
 using namespace GE;
@@ -27,8 +28,9 @@ const unsigned char drum_seq3[] = { 5, 0, 1, 0,10, 4, 1, 0,
                                     5, 0, 1, 0,10, 4, 5, 4};
 
 
-CDrumMachine::CDrumMachine() : m_tickCount(0),
-                               m_Settings("Nokia", "DJTurntable"),
+CDrumMachine::CDrumMachine(QSettings *settings) :
+                               m_tickCount(0),
+                               m_Settings(settings),
                                m_running(false),
                                m_samplesPerTick(0),
                                m_sampleCounter(0),
@@ -68,6 +70,8 @@ CDrumMachine::~CDrumMachine()
     foreach (GE::CAudioBufferPlayInstance* playInstance, m_playInstances) {
         delete playInstance;
     }
+
+    m_Settings = NULL;
 }
 
 
@@ -182,7 +186,7 @@ CDrumMachine::TYPE_DRUM_SEQ CDrumMachine::readUserBeat(int index)
     CDrumMachine::TYPE_DRUM_SEQ seq;
 
     QString key = QString("UserBeat_%1").arg(index);
-    QStringList list = m_Settings.value(key).toString().split(',');
+    QStringList list = m_Settings->value(key).toString().split(',');
     if(list.size() != SEQUENCE_LENGTH) {
         // There was no user saved beat yet or the beat was corrupter,
         // create an empty 32 item seq.
@@ -212,7 +216,7 @@ void CDrumMachine::saveUserBeat(int index, const CDrumMachine::TYPE_DRUM_SEQ &se
             data += ",";
     }
 
-    m_Settings.setValue(key, data);
+    m_Settings->setValue(key, data);
 }
 
 

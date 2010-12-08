@@ -1,6 +1,6 @@
 import Qt 4.7
 
-Rectangle {
+Item {
     id: button
 
     property int tick: -1
@@ -10,8 +10,15 @@ Rectangle {
     property color pressedColor
     property color notPressedColor
 
-    width: 30; height: 35
-    color: pressed ? pressedColor : notPressedColor
+    width: 34; height: 40
+
+    Rectangle {
+
+        anchors.fill: parent
+        anchors.margins: 3
+
+        color: button.pressed ? button.pressedColor : button.notPressedColor
+    }
 
     MouseArea {
         anchors.fill: parent

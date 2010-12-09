@@ -28,7 +28,7 @@ const unsigned char drum_seq3[] = { 5, 0, 1, 0,10, 4, 1, 0,
                                     5, 0, 1, 0,10, 4, 5, 4};
 
 
-CDrumMachine::CDrumMachine(QSettings *settings) :
+DrumMachine::DrumMachine(QSettings *settings) :
                                m_tickCount(0),
                                m_Settings(settings),
                                m_running(false),
@@ -36,7 +36,7 @@ CDrumMachine::CDrumMachine(QSettings *settings) :
                                m_sampleCounter(0),
                                m_currentSeqIndex(-1)
 {
-    m_mixer = new CAudioMixer();
+    m_mixer = new CAudioMixer;
 
     m_drumSamples << CAudioBuffer::loadWav(QString(":/sounds/hihat.wav"))
                   << CAudioBuffer::loadWav(QString(":/sounds/hihat_open.wav"))
@@ -59,10 +59,8 @@ CDrumMachine::CDrumMachine(QSettings *settings) :
 }
 
 
-CDrumMachine::~CDrumMachine()
+DrumMachine::~DrumMachine()
 {
-    delete m_mixer;
-
     foreach (GE::CAudioBuffer* sample, m_drumSamples) {
         delete sample;
     }
@@ -70,8 +68,6 @@ CDrumMachine::~CDrumMachine()
     foreach (GE::CAudioBufferPlayInstance* playInstance, m_playInstances) {
         delete playInstance;
     }
-
-    m_Settings = NULL;
 }
 
 
@@ -80,29 +76,31 @@ CDrumMachine::~CDrumMachine()
  * Returns copy of current sequence
  *
  */
-CDrumMachine::TYPE_DRUM_SEQ CDrumMachine::seq() const
+DrumMachine::TYPE_DRUM_SEQ DrumMachine::seq() const
 {
     return m_seq;
 }
 
 
-void CDrumMachine::setSeq(const TYPE_DRUM_SEQ &seq)
+void DrumMachine::setSeq(const TYPE_DRUM_SEQ &seq)
 {
     m_seq = seq;
     emit seqSize(m_seq.size(), m_drumSamples.size());
 }
 
 
-int CDrumMachine::bpm() const
+int DrumMachine::bpm() const
 {
     return (AUDIO_FREQUENCY * 60) / m_samplesPerTick;
 }
 
-void CDrumMachine::setSpeedMultiplier( float speedMul ) {
-    m_speedMultiplier = speedMul;
-};
 
-void CDrumMachine::setBpm(int bpm)
+void DrumMachine::setSpeedMultiplier( float speedMul ) {
+    m_speedMultiplier = speedMul;
+}
+
+
+void DrumMachine::setBpm(int bpm)
 {
     float samplesPerTick  = (float)(AUDIO_FREQUENCY * 60.0f * m_speedMultiplier ) / (float)bpm;
     m_samplesPerTick = (int)samplesPerTick;
@@ -110,7 +108,7 @@ void CDrumMachine::setBpm(int bpm)
 }
 
 
-bool CDrumMachine::isUserBeat() const
+bool DrumMachine::isUserBeat() const
 {
     if(m_currentSeqIndex >= 4 && m_currentSeqIndex <= 7) {
         return true;
@@ -125,7 +123,7 @@ bool CDrumMachine::isUserBeat() const
  * Run the drum machine.
  *
  */
-void CDrumMachine::tick()
+void DrumMachine::tick()
 {
     if(!m_running || m_seq.empty()) {
         return;
@@ -149,7 +147,7 @@ void CDrumMachine::tick()
 }
 
 
-int CDrumMachine::pullAudio(AUDIO_SAMPLE_TYPE *target, int length)
+int DrumMachine::pullAudio(AUDIO_SAMPLE_TYPE *target, int length)
 {
     int pos = 0;
     while (pos < length) {
@@ -181,14 +179,14 @@ int CDrumMachine::pullAudio(AUDIO_SAMPLE_TYPE *target, int length)
 }
 
 
-CDrumMachine::TYPE_DRUM_SEQ CDrumMachine::readUserBeat(int index)
+DrumMachine::TYPE_DRUM_SEQ DrumMachine::readUserBeat(int index)
 {
-    CDrumMachine::TYPE_DRUM_SEQ seq;
+    DrumMachine::TYPE_DRUM_SEQ seq;
 
     QString key = QString("UserBeat_%1").arg(index);
     QStringList list = m_Settings->value(key).toString().split(',');
     if(list.size() != SEQUENCE_LENGTH) {
-        // There was no user saved beat yet or the beat was corrupter,
+        // There was no user saved beat yet or the beat was corrupted,
         // create an empty 32 item seq.
         seq.fill(0, SEQUENCE_LENGTH);
         return seq;
@@ -203,12 +201,12 @@ CDrumMachine::TYPE_DRUM_SEQ CDrumMachine::readUserBeat(int index)
 }
 
 
-void CDrumMachine::saveUserBeat(int index, const CDrumMachine::TYPE_DRUM_SEQ &seq)
+void DrumMachine::saveUserBeat(int index, const DrumMachine::TYPE_DRUM_SEQ &seq)
 {
     QString key = QString("UserBeat_%1").arg(index);
     QString data;
 
-    CDrumMachine::TYPE_DRUM_SEQ::const_iterator it;
+    DrumMachine::TYPE_DRUM_SEQ::const_iterator it;
 
     for(it=seq.begin(); it != seq.end(); it++) {
         data += QString("%1").arg(*it);
@@ -220,13 +218,13 @@ void CDrumMachine::saveUserBeat(int index, const CDrumMachine::TYPE_DRUM_SEQ &se
 }
 
 
-void CDrumMachine::setMaxTickAndSamples(int ticks, int samples)
+void DrumMachine::setMaxTickAndSamples(int ticks, int samples)
 {
     emit maxSeqAndSamples(ticks, samples);
 }
 
 
-void CDrumMachine::setBeat(QVariant index)
+void DrumMachine::setBeat(QVariant index)
 {
     // We use STL vector to get predefined beats
     // easily from hard coded arrays to QVector
@@ -289,14 +287,15 @@ void CDrumMachine::setBeat(QVariant index)
  * User has changed the sequence, edit the change directly to the playing beat
  *
  */
-void CDrumMachine::drumButtonToggled(QVariant tick, QVariant sample, QVariant pressed)
+void DrumMachine::drumButtonToggled(QVariant tick, QVariant sample, QVariant pressed)
 {
     unsigned char iTick(tick.toUInt());
     int iSample(sample.toInt());
     bool bPressed(pressed.toBool());
 
     if(iTick >= m_seq.size()) {
-        // Something is wrong, bail out
+        // UI thinks the sequence is longer than the model
+        // There is nothing we can do.
         return;
     }
 

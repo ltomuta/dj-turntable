@@ -18,7 +18,7 @@ namespace GE {
     class CAudioBuffer;         // forward declaration
     typedef AUDIO_SAMPLE_TYPE(*SAMPLE_FUNCTION_TYPE)(CAudioBuffer *abuffer, int pos, int channel);
 
-    class CAudioBuffer {			// container for a sound
+    class CAudioBuffer : public QObject {			// container for a sound
     public:
         CAudioBuffer();
         virtual ~CAudioBuffer();

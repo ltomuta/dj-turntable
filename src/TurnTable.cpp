@@ -4,10 +4,10 @@
 
 using namespace GE;
 
-
-CScratchDisc::CScratchDisc(GE::CAudioBuffer *discSource)
+TurnTable::TurnTable(QSettings *settings)
+    : m_Settings(settings)
 {
-    m_source = discSource;
+    m_loops = 0;
     m_pos = 0;
     m_speed = 0.0f;
     m_targetSpeed = 0.0f;
@@ -18,58 +18,28 @@ CScratchDisc::CScratchDisc(GE::CAudioBuffer *discSource)
     memset(m_bp, 0, sizeof(int) * 2);
     memset(m_hp, 0, sizeof(int) * 2);
 
-
     setResonance(1.0f);
     setCutOff(1.0f);
 
     m_cutOffValue = m_cutOffTarget;
     m_resonanceValue = m_resonanceTarget;
+
+    m_source = CAudioBuffer::loadWav(QString(":/sounds/melody.wav"));
+    m_audioMixer = new CAudioMixer;
+    m_audioMixer->addAudioSource(this);
+    m_audioOut = new GE::AudioOut(this, m_audioMixer);
+
+    m_audioMixer->setGeneralVolume(m_Settings->value("Volume", 0.75f).toFloat());
 }
 
 
-CScratchDisc::~CScratchDisc()
+TurnTable::~TurnTable()
 {
-    if(m_source != NULL) {
-        delete m_source;
-        m_source = NULL;
-    }
 }
 
 
-void CScratchDisc::setCutOff( float cutoff ) {
-    m_cutOffTarget = cutoff;
-}
-
-
-void CScratchDisc::setResonance(float resonance) {
-
-    m_resonanceTarget = powf(resonance, 2.0f);
-}
-
-
-
-void CScratchDisc::setSpeed(float speed)
+int TurnTable::pullAudio(AUDIO_SAMPLE_TYPE *target, int bufferLength)
 {
-    if(speed > -100.0f && speed < 100.0f) {
-        m_targetSpeed = speed;
-    }
-}
-
-
-void CScratchDisc::aimSpeed(float speed, float power)
-{
-    if(speed > -100.0f && speed < 100.0f) {
-        m_targetSpeed = m_targetSpeed * (1.0f-power) + speed*power;
-    }
-}
-
-
-int CScratchDisc::pullAudio(AUDIO_SAMPLE_TYPE *target, int bufferLength)
-{
-    if(m_source == NULL) {
-        return 0;
-    }
-
     AUDIO_SAMPLE_TYPE *t_target = target + bufferLength;
     SAMPLE_FUNCTION_TYPE sfunc = m_source->getSampleFunction();
 
@@ -88,6 +58,8 @@ int CScratchDisc::pullAudio(AUDIO_SAMPLE_TYPE *target, int bufferLength)
         return 0;
     }
 
+    const int maxloops = 5;
+
     int input;
     while(target != t_target) {
         if(m_cc > 64) {
@@ -105,15 +77,23 @@ int CScratchDisc::pullAudio(AUDIO_SAMPLE_TYPE *target, int bufferLength)
 
         if(m_pos >= channelLength) {
             m_pos %= channelLength;
+            m_loops++;
+            if(m_loops >= maxloops) {
+                m_loops = 0;
+            }
         }
 
-        if(m_pos < 0) {
+        if(m_loops == 0 && m_pos < 0) {
+            m_pos = 0;
+        }
+        else if(m_pos < 0) {
             m_pos = channelLength - 1 - ((-m_pos) % channelLength);
+            if(m_loops > 0) {
+                m_loops--;
+            }
         }
 
         p = (m_pos >> 11);
-
-
 
         input = (((sfunc)(m_source, p, 0) * (2047^(m_pos & 2047)) + (sfunc)(m_source, p+1, 0) * (m_pos & 2047)) >> 11);
         m_lp[0] += ((m_bp[0] * fixedCutoff) >> 12);
@@ -129,7 +109,6 @@ int CScratchDisc::pullAudio(AUDIO_SAMPLE_TYPE *target, int bufferLength)
         }
 
         target[0] = input;
-
 
         input = (((sfunc)(m_source, p, 1) * (2047 ^ (m_pos & 2047)) + (sfunc)(m_source, p+1, 1) * (m_pos & 2047)) >> 11);
         m_lp[1] += ((m_bp[1] * fixedCutoff) >> 12);
@@ -149,62 +128,52 @@ int CScratchDisc::pullAudio(AUDIO_SAMPLE_TYPE *target, int bufferLength)
         m_pos += inc;
     }
 
+    // Emit signal about the audio position to draw advance the needle to correct position
+    emit audioPosition(1.0 / maxloops * (m_pos * 1.0f / channelLength + m_loops));
+
     return bufferLength;
-}
-
-
-TurnTable::TurnTable(QSettings *settings)
-    : m_Settings(settings)
-{
-    m_discSample = GE::CAudioBuffer::loadWav(QString(":/sounds/melody.wav"));
-
-    m_sdisc = new CScratchDisc(m_discSample);   // ownership is taken
-    m_audioMixer.addAudioSource(m_sdisc);
-    m_audioOut = new GE::AudioOut(this, &m_audioMixer);
-
-    float volume = m_Settings->value("Volume", 0.75f).toFloat();
-    m_audioMixer.setGeneralVolume(volume);
-}
-
-
-TurnTable::~TurnTable()
-{
-    if(m_audioOut) {
-        delete m_audioOut;
-        m_audioOut = NULL;
-    }
-
-    if(m_sdisc != NULL) {
-        delete m_sdisc;
-        m_sdisc = NULL;
-    }
-
-    m_discSample = NULL;
-    m_Settings = NULL;
 }
 
 
 void TurnTable::addAudioSource(GE::IAudioSource *source)
 {
-    m_audioMixer.addAudioSource(source);
+    m_audioMixer->addAudioSource(source);
 }
 
 
-void TurnTable::setDiscAimSpeed(QVariant speed)
+void TurnTable::setDiscAimSpeed(QVariant value)
 {
-    m_sdisc->aimSpeed(speed.toFloat());
+    float speed = value.toFloat();
+    if(speed > -100.0f && speed < 100.0f) {
+        m_targetSpeed = m_targetSpeed * (1.0f - 0.05f) + speed * 0.05f;
+    }
 }
 
 
-void TurnTable::setDiscSpeed(QVariant speed)
+void TurnTable::setDiscSpeed(QVariant value)
 {
-    m_sdisc->setSpeed(speed.toFloat());
+    float speed = value.toFloat();
+    if(speed > -100.0f && speed < 100.0f) {
+        m_targetSpeed = speed;
+    }
+}
+
+
+void TurnTable::setCutOff(QVariant value)
+{
+    m_cutOffTarget = value.toFloat();
+}
+
+
+void TurnTable::setResonance(QVariant value)
+{
+    m_resonanceTarget = powf(value.toFloat(), 2.0f);
 }
 
 
 void TurnTable::volumeUp()
 {
-    float volume = m_audioMixer.getGeneralVolume() * 1.333f;
+    float volume = m_audioMixer->getGeneralVolume() * 1.333f;
     if(volume == 0.0f) {
         volume = 0.01;
     }
@@ -212,19 +181,19 @@ void TurnTable::volumeUp()
         volume = 0.95f;
     }
 
-    m_audioMixer.setGeneralVolume(volume);
+    m_audioMixer->setGeneralVolume(volume);
     m_Settings->setValue("Volume", volume);
 }
 
 
 void TurnTable::volumeDown()
 {
-    float volume = m_audioMixer.getGeneralVolume() * 0.75f;
+    float volume = m_audioMixer->getGeneralVolume() * 0.75f;
     if(volume < 0.01f) {
         volume = 0.0f;
     }
 
-    m_audioMixer.setGeneralVolume(volume);
+    m_audioMixer->setGeneralVolume(volume);
     m_Settings->setValue("Volume", volume);
 }
 
@@ -233,7 +202,7 @@ void TurnTable::profile(QSystemDeviceInfo::Profile profile)
 {
     switch(profile) {
     case QSystemDeviceInfo::SilentProfile:
-        m_audioMixer.setGeneralVolume(0.0f);
+        m_audioMixer->setGeneralVolume(0.0f);
         break;
     default:
         break;

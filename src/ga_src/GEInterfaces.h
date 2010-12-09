@@ -8,13 +8,15 @@
 #ifndef __GE_IGA_INTERFACES__
 #define __GE_IGA_INTERFACES__
 
+#include <QObject>
+
 namespace GE {
 
 #define AUDIO_FREQUENCY 22050
 #define AUDIO_SAMPLE_TYPE short
 #define AUDIO_SAMPLE_BITS 16
 
-    class IAudioSource {
+    class IAudioSource : public QObject {
     public:
         IAudioSource();
         virtual ~IAudioSource();

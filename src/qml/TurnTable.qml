@@ -4,7 +4,6 @@ import "DrumMachine"
 Rectangle {
     id: ui
 
-    // Signals for TurnTable
     signal diskSpeed(variant speed)
     signal diskAimSpeed(variant speed)
     signal start()
@@ -15,7 +14,8 @@ Rectangle {
     signal volumeUp()
     signal volumeDown()
 
-    function inclination(deg) { diskReflection.rotation = -deg * 2 + 45}
+    function audioPosition(pos) { arm.positionOnDisk = pos }
+    function inclination(deg) { diskReflection.rotation = -deg * 2 + 45 }
 
     anchors.fill: parent
     width: 640; height: 360

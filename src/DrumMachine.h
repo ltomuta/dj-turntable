@@ -3,11 +3,12 @@
 
 #include <QVariant>
 #include <QVector>
+#include <QPointer>
 #include "ga_src/GEAudioBuffer.h"
 
 class QSettings;
 
-class CDrumMachine : public QObject, public GE::IAudioSource
+class DrumMachine : public GE::IAudioSource
 {
     Q_OBJECT
 
@@ -17,8 +18,8 @@ public:
     // Shortens writing of the type later on
     typedef QVector<unsigned char> TYPE_DRUM_SEQ;
 
-    CDrumMachine(QSettings *settings);
-    virtual ~CDrumMachine();
+    DrumMachine(QSettings *settings);
+    virtual ~DrumMachine();
 
     int bpm() const;
     TYPE_DRUM_SEQ seq() const;
@@ -81,7 +82,7 @@ protected:
     int m_sampleCounter;
     int m_currentSeqIndex;
 
-    GE::CAudioMixer *m_mixer;
+    QPointer<GE::CAudioMixer> m_mixer;
     QVector<GE::CAudioBufferPlayInstance*> m_playInstances;
     QVector<GE::CAudioBuffer*> m_drumSamples;
 

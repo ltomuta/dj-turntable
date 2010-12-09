@@ -23,9 +23,6 @@
 class QAudioOutput;
 
 
-
-
-
 namespace GE {
 
     class AudioOut : public QThread {

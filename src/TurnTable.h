@@ -2,6 +2,7 @@
 #define __CTURNTABLE__
 
 #include <QVariant>
+#include <QPointer>
 #include <QSystemDeviceInfo>
 
 #include "ga_src/GEAudioOut.h"
@@ -9,30 +10,44 @@
 
 QTM_USE_NAMESPACE
 
-class CScratchDisc : public GE::IAudioSource
+class QSettings;
+
+
+class TurnTable : public GE::IAudioSource
 {
+    Q_OBJECT
+
 public:
-    CScratchDisc(GE::CAudioBuffer *discSource);
-    virtual ~CScratchDisc();
+    TurnTable(QSettings *settings);
+    ~TurnTable();
 
-    bool headOn() const { return m_headOn; }
-    float speed() const { return m_speed; }
-    float cutOff() const { return m_cutOffValue; }
+    void addAudioSource(GE::IAudioSource *source);
 
-    void setHeadOn(bool set) { m_headOn = set; }
-    void setSpeed(float speed);
-    // Guides to speed towards attribute speed with a power of power (0-1), good values are below 0.1
-    void aimSpeed(float speed, float power = 0.05f);
+public slots:
 
-    void setCutOff(float cutoff);
-    void setResonance(float resonance);
+    void start() { m_headOn = true; }
+    void stop() { m_headOn = false; }
+
+    void setDiscAimSpeed(QVariant value);
+    void setDiscSpeed(QVariant value);
+
+    void setCutOff(QVariant value);
+    void setResonance(QVariant value);
+
+    void volumeUp();
+    void volumeDown();
+
+    void profile(QSystemDeviceInfo::Profile profile);
 
     int pullAudio(AUDIO_SAMPLE_TYPE *target, int bufferLength);
+
+signals:
+    void audioPosition(QVariant position);
 
 protected:
     bool m_headOn;
 
-    GE::CAudioBuffer *m_source;
+    int m_loops;
     int m_pos;
     int m_cc;
     float m_speed;
@@ -47,43 +62,12 @@ protected:
     int m_lp[2];
     int m_hp[2];
     int m_bp[2];
-};
 
-
-class QSettings;
-
-class TurnTable : public QObject
-{
-    Q_OBJECT
-
-public:
-    TurnTable(QSettings *settings);
-    ~TurnTable();
-
-    void addAudioSource(GE::IAudioSource *source);
-
-public slots:
-    void setDiscAimSpeed(QVariant speed);
-    void setDiscSpeed(QVariant speed);
-
-    void start() { m_sdisc->setHeadOn(true); }
-    void stop() { m_sdisc->setHeadOn(false); }
-
-    void cutOff(QVariant value) { m_sdisc->setCutOff(value.toFloat()); }
-    void resonance(QVariant value) { m_sdisc->setResonance(value.toFloat()); }
-
-    void volumeUp();
-    void volumeDown();
-
-    void profile(QSystemDeviceInfo::Profile profile);
-
-protected:
-    CScratchDisc *m_sdisc;
     QSettings *m_Settings;
 
-    GE::AudioOut *m_audioOut;
-    GE::CAudioMixer m_audioMixer;
-    GE::CAudioBuffer *m_discSample;
+    QPointer<GE::CAudioBuffer> m_source;
+    QPointer<GE::CAudioMixer> m_audioMixer;
+    QPointer<GE::AudioOut> m_audioOut;
 };
 
 

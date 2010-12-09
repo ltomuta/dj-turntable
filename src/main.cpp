@@ -80,7 +80,7 @@ int main(int argc, char *argv[])
 
     // Create Qt objects to handle Turntable and Drum machine
     QPointer<TurnTable> turnTable = new TurnTable(settings);
-    QPointer<CDrumMachine> drumMachine = new CDrumMachine(settings);
+    QPointer<DrumMachine> drumMachine = new DrumMachine(settings);
     turnTable->addAudioSource(drumMachine);
 
     // Create Qt accelerometer objects
@@ -108,12 +108,11 @@ int main(int argc, char *argv[])
     QObject::connect(turnTableQML, SIGNAL(stop()), turnTable, SLOT(stop()));
     QObject::connect(turnTableQML, SIGNAL(diskAimSpeed(QVariant)), turnTable, SLOT(setDiscAimSpeed(QVariant)));
     QObject::connect(turnTableQML, SIGNAL(diskSpeed(QVariant)), turnTable, SLOT(setDiscSpeed(QVariant)));
-    QObject::connect(turnTableQML, SIGNAL(cutOff(QVariant)), turnTable, SLOT(cutOff(QVariant)));
-    QObject::connect(turnTableQML, SIGNAL(resonance(QVariant)), turnTable, SLOT(resonance(QVariant)));
+    QObject::connect(turnTableQML, SIGNAL(cutOff(QVariant)), turnTable, SLOT(setCutOff(QVariant)));
+    QObject::connect(turnTableQML, SIGNAL(resonance(QVariant)), turnTable, SLOT(setResonance(QVariant)));
     QObject::connect(turnTableQML, SIGNAL(volumeUp()), turnTable, SLOT(volumeUp()));
     QObject::connect(turnTableQML, SIGNAL(volumeDown()), turnTable, SLOT(volumeDown()));
-    QObject::connect(filter, SIGNAL(rotationChanged(QVariant)), turnTableQML, SLOT(inclination(QVariant)));
-    QObject::connect(deviceInfo, SIGNAL(currentProfileChanged(QSystemDeviceInfo::Profile)), turnTable, SLOT(profile(QSystemDeviceInfo::Profile)));
+    QObject::connect(turnTable, SIGNAL(audioPosition(QVariant)), turnTableQML, SLOT(audioPosition(QVariant)));
 
     //DrumMachine connections
     QObject::connect(drumMachineQML, SIGNAL(startBeat()), drumMachine, SLOT(startBeat()));
@@ -128,6 +127,8 @@ int main(int argc, char *argv[])
 
     //Framework connections
     QObject::connect((QObject*)view.engine(), SIGNAL(quit()), &app, SLOT(quit()));
+    QObject::connect(filter, SIGNAL(rotationChanged(QVariant)), turnTableQML, SLOT(inclination(QVariant)));
+    QObject::connect(deviceInfo, SIGNAL(currentProfileChanged(QSystemDeviceInfo::Profile)), turnTable, SLOT(profile(QSystemDeviceInfo::Profile)));
 
 
     // Resizes QML drum machine to 32 ticks and 6 samples

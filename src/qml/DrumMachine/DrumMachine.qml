@@ -2,7 +2,7 @@ import Qt 4.7
 
 Rectangle {
     id: drumMachine
-    objectName: "drumMachine"
+    objectName: "drumMachine"   // used to identify this element in Qt side
 
     signal startBeat()
     signal stopBeat()
@@ -69,12 +69,9 @@ Rectangle {
         highligher.x = tick * 34 - 3
     }
 
-    //Component.onCompleted: maxSeqAndSamples(32, 6)
-
     property int maxTicks: 0
     property int maxSamples: 0
 
-    width: 580; height: 360
     color: "black"
 
     Column {

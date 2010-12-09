@@ -162,7 +162,6 @@ Rectangle {
                 anchors.verticalCenterOffset: -0.03 * parent.paintedHeight
 
                 onArmdownChanged: armdown ? ui.start() : ui.stop()
-                onAngleChanged: angle < 14 ? armdown = false : armdown = true
             }
 
             SpeedSlider {

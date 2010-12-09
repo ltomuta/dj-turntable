@@ -28,6 +28,7 @@ Rectangle {
             pressedColorOpacity = 1.0
             drumMachineButton.pressedColorOpacity = 0.3
             sidepanel.turnTableClicked()
+
         }
     }
 

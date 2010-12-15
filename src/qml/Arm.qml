@@ -7,6 +7,7 @@ Image {
     property real armOnDiskOffset: 0
     property bool armdown: false
     property real positionOnDisk: 0   // Values from 0.0 - 1.0
+    property bool liftedByUser: false
 
     function moveIn() { moveToStop.stop(); moveToDisk.start() }
     function moveOut() { moveToDisk.stop(); moveToStop.start() }
@@ -15,6 +16,13 @@ Image {
     source: "arm.png"
     smooth: true
     transform: Rotation { origin.x: arm.width * 0.82; origin.y: arm.height * 0.2; angle: arm.angle }
+
+    MouseArea {
+        width: 50; height: 50
+        anchors.bottom: parent.bottom
+        onPressed: arm.liftedByUser = true
+        onReleased: arm.liftedByUser = false
+    }
 
     SequentialAnimation {
         id: moveToDisk

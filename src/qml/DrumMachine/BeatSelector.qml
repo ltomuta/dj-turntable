@@ -1,6 +1,63 @@
 import Qt 4.7
 
 Rectangle {
+    property alias index: view.currentIndex
+
+    width: 400; height: 200
+    color: "#303030"
+    clip: true
+
+    radius: 8
+
+    ListModel {
+        id: model
+
+        ListElement { name: "Predefined 1" }
+        ListElement { name: "Predefined 2" }
+        ListElement { name: "Predefined 3" }
+        ListElement { name: "Predefined 4" }
+        ListElement { name: "User defined 1" }
+        ListElement { name: "User defined 2" }
+        ListElement { name: "User defined 3" }
+        ListElement { name: "User defined 4" }
+    }
+
+    PathView {
+        id: view
+
+        anchors.fill: parent
+
+        model: model
+        delegate: Text { font.pixelSize: 20; font.bold: true; text: name; width: view.width; color: "white" }
+
+        pathItemCount: 8
+        dragMargin: view.width / 2
+        interactive: false
+
+        path: Path {
+            startX: -view.width / 4; startY: view.height / 2
+            PathLine { x: view.pathItemCount * view.width + view.width / 4; y: view.height / 2}
+        }
+    }
+
+    MouseArea {
+        width: parent.width * 0.33; height: parent.height
+
+        onClicked: view.decrementCurrentIndex()
+    }
+
+    MouseArea {
+        width: parent.width * 0.33; height: parent.height
+        anchors.right: parent.right
+
+        onClicked: view.incrementCurrentIndex()
+    }
+}
+
+
+
+/*
+Rectangle {
     id: beatSelector
 
     property int index: 0
@@ -88,3 +145,4 @@ Rectangle {
         }
     }
 }
+*/

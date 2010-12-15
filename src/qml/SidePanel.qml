@@ -18,7 +18,7 @@ Rectangle {
 
         Text {
             anchors.centerIn: parent
-            rotation: 90
+            rotation: 270
             text: "Turntable"
             color: "white"
             font.pixelSize: 20
@@ -28,7 +28,6 @@ Rectangle {
             pressedColorOpacity = 1.0
             drumMachineButton.pressedColorOpacity = 0.3
             sidepanel.turnTableClicked()
-
         }
     }
 
@@ -42,7 +41,7 @@ Rectangle {
 
         Text {
             anchors.centerIn: parent
-            rotation: 90
+            rotation: 270
             text: "Drum Machine"
             color: "white"
             font.pixelSize: 20

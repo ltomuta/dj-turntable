@@ -12,12 +12,10 @@ Item {
 
     width: 34; height: 40
 
-    Rectangle {
-
+    Image {
         anchors.fill: parent
         anchors.margins: 3
-
-        color: button.pressed ? button.pressedColor : button.notPressedColor
+        source: button.pressed ? "drumbuttonselected.png" : "drumbutton.png"
     }
 
     MouseArea {

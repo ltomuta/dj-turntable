@@ -75,7 +75,10 @@ int TurnTable::pullAudio(AUDIO_SAMPLE_TYPE *target, int bufferLength)
             m_cc++;
         }
 
-        if(m_pos >= channelLength) {
+        if(m_loops >= maxloops && m_pos >= channelLength) {
+            m_pos = channelLength - 1;
+        }
+        else if(m_pos >= channelLength) {
             m_pos %= channelLength;
             m_loops++;
             if(m_loops >= maxloops) {

@@ -29,7 +29,10 @@ Rectangle {
     Keys.onVolumeUpPressed: ui.volumeUp()
     Keys.onVolumeDownPressed: ui.volumeDown()
 
-    Component.onCompleted: playTimer.start()
+    Component.onCompleted: {
+        playTimer.start()
+        drumMachine.maxSeqAndSamples(32, 6)
+    }
 
     Flickable {
         id: flickable
@@ -180,16 +183,27 @@ Rectangle {
             id: mixerpanel
 
             x: flickable.width - mixerpanel.width - 10
-            y: flickable.height - mixerpanel.height - 10
-            width: 130; height: flickable.height - 70
+            y: 3
+            width: 130; height: flickable.height - 10
             color: "#858585"
             radius: 12
+
+            Button {
+                id: closeButton
+
+                width: 40; height: 40
+                anchors.top: parent.top; anchors.topMargin: 10
+                anchors.right: parent.right; anchors.rightMargin: 10
+                source: "closemark.png"
+                smooth: true
+                onClicked: Qt.quit()
+            }
 
             Text {
                 text: "Resonance"
                 color: "#505050"
                 anchors.left: parent.left; anchors.leftMargin: 7
-                anchors.top: parent.top; anchors.topMargin: 6
+                anchors.top: closeButton.bottom; anchors.topMargin: 6
                 font.pixelSize: 10
             }
 
@@ -197,7 +211,7 @@ Rectangle {
                 id: resonance
 
                 width: 95; height: 95
-                anchors.top: parent.top; anchors.topMargin: 20
+                anchors.top: closeButton.bottom; anchors.topMargin: 20
                 anchors.horizontalCenter: parent.horizontalCenter
                 smooth: true
 
@@ -292,14 +306,5 @@ Rectangle {
         width: 60; height: ui.height
         onTurnTableClicked: flickable.state = ""
         onDrumMachineClicked: flickable.state = "DrumMachine"
-    }
-
-    Button {
-        width: 40; height: 40
-        anchors.top: parent.top; anchors.topMargin: 10
-        anchors.right: parent.right; anchors.rightMargin: 10
-        source: "closemark.png"
-        smooth: true
-        onClicked: Qt.quit()
     }
 }

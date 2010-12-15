@@ -21,11 +21,8 @@ Rectangle {
         for(var row=0; row<samples; row++) {
             for(var col=0; col<ticks; col++) {
                 var button = Qt.createComponent("DrumButton.qml").createObject(drumGrid)
-                if((col % 4) == 0) {
-                    button.notPressedColor = "#505050"
-                }
-                else {
-                    button.notPressedColor = "#303030"
+                if((col % 4) != 0) {
+                    button.opacity = 0.8
                 }
                 button.pressedColor = "white"
                 button.tick = col

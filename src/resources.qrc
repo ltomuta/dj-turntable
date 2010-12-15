@@ -17,6 +17,8 @@
         <file>qml/powerbutton.png</file>
         <file>qml/closemark.png</file>
         <file>qml/knobdial.png</file>
+        <file>qml/DrumMachine/drumbutton.png</file>
+        <file>qml/DrumMachine/drumbuttonselected.png</file>
         <file>sounds/melody.wav</file>
         <file>sounds/snare.wav</file>
         <file>sounds/hihat_open.wav</file>

@@ -1,5 +1,6 @@
 import Qt 4.7
 import "DrumMachine"
+import "HelpScreen"
 
 Rectangle {
     id: ui
@@ -20,18 +21,18 @@ Rectangle {
     anchors.fill: parent
     width: 640; height: 360
     color: "black"
-
     focus: true
 
     Keys.onDownPressed: flickable.state = "DrumMachine"
-    Keys.onUpPressed: flickable.state = ""
+    Keys.onUpPressed: flickable.state = "TurnTable"
     Keys.onSpacePressed: powerbutton.press()
     Keys.onVolumeUpPressed: ui.volumeUp()
     Keys.onVolumeDownPressed: ui.volumeDown()
 
     Component.onCompleted: {
+        flickable.state = "TurnTable"
         playTimer.start()
-        drumMachine.maxSeqAndSamples(32, 6)
+        //drumMachine.maxSeqAndSamples(32, 6)
     }
 
     Flickable {
@@ -43,8 +44,15 @@ Rectangle {
         anchors.top: parent.top
 
         contentWidth: parent.width
-        contentHeight: parent.height * 2
+        contentHeight: parent.height * 3
         interactive: false
+
+        HelpScreen {
+            id: helpScreen
+
+            width: flickable.width; height: flickable.height
+            y: -flickable.height
+        }
 
         Image {
             id: turntable
@@ -155,7 +163,6 @@ Rectangle {
                 }
             }
 
-
             Arm {
                 id: arm
 
@@ -193,10 +200,21 @@ Rectangle {
 
                 width: 40; height: 40
                 anchors.top: parent.top; anchors.topMargin: 10
-                anchors.right: parent.right; anchors.rightMargin: 10
+                anchors.right: parent.right; anchors.rightMargin: 20
                 source: "closemark.png"
                 smooth: true
                 onClicked: Qt.quit()
+            }
+
+            Button {
+                id: infoButton
+
+                width: 40; height: 40
+                anchors.top:  closeButton.top
+                anchors.right: closeButton.left; anchors.rightMargin: 10
+                source: "infobutton.png"
+                smooth: true
+                onClicked: flickable.state = "Help"
             }
 
             Text {
@@ -287,16 +305,32 @@ Rectangle {
             width: flickable.width; height: flickable.height
         }
 
-        states: State {
-            name: "DrumMachine"
-            PropertyChanges { target: flickable; contentY: ui.height }
-        }
+        states: [
+            State {
+                name: "TurnTable"
+                PropertyChanges { target: flickable; contentY: 0 }
+                PropertyChanges { target: sidepanel; turnTableButtonPressed: true }
+                PropertyChanges { target: drumMachine; opacity: 0 }
+                PropertyChanges { target: helpScreen; opacity: 0 }
+            },
+            State {
+                name: "DrumMachine"
+                PropertyChanges { target: flickable; contentY: ui.height }
+                PropertyChanges { target: sidepanel; drumMachineButtonPressed: true }
+                PropertyChanges { target: turntable; opacity: 0 }
+                PropertyChanges { target: helpScreen; opacity: 0 }
+            },
+            State {
+                name: "Help"
+                PropertyChanges { target: flickable; contentY: -ui.height }
+                PropertyChanges { target: turntable; opacity: 0 }
+                PropertyChanges { target: drumMachine; opacity: 0 }
+            }
+        ]
 
         transitions: Transition {
-            from: ""
-            to: "DrumMachine"
-            reversible: true
             PropertyAnimation { property: "contentY"; easing.type: Easing.InOutQuart }
+            PropertyAnimation { property: "opacity" }
         }
     }
 
@@ -304,7 +338,7 @@ Rectangle {
         id: sidepanel
 
         width: 60; height: ui.height
-        onTurnTableClicked: flickable.state = ""
+        onTurnTableClicked: flickable.state = "TurnTable"
         onDrumMachineClicked: flickable.state = "DrumMachine"
     }
 }

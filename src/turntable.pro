@@ -16,7 +16,8 @@ SOURCES += main.cpp \
            ga_src/GEAudioOut.cpp
 
 OTHER_FILES += qml/*.qml \
-               qml/DrumMachine/*.qml
+               qml/DrumMachine/*.qml \
+               qml/HelpScreen/*.qml
 
 RESOURCES +=   resources.qrc
 

@@ -69,6 +69,8 @@ Rectangle {
     property int maxTicks: 0
     property int maxSamples: 0
 
+    width: 600; height: 360
+
     color: "black"
 
     Column {
@@ -101,8 +103,7 @@ Rectangle {
             Rectangle {
                 id: highligher
 
-                width: 37
-                height: drumGrid.height
+                width: 37; height: drumGrid.height
                 opacity: 0.3
                 color: "red"
             }
@@ -119,16 +120,12 @@ Rectangle {
             height: (parent.height - y) - parent.spacing
 
             SlideSwitch {
-                width: parent.width / 2
-                height: parent.height
-
+                width: parent.width / 2; height: parent.height
                 onOnChanged: on ? drumMachine.startBeat() : drumMachine.stopBeat()
             }
 
             BeatSelector {
-                width:  parent.width / 2 - 20
-                height: parent.height
-
+                width:  parent.width / 2 - 20; height: parent.height
                 onIndexChanged: drumMachine.setBeat(index)
             }
         }

@@ -32,7 +32,6 @@ Rectangle {
     Component.onCompleted: {
         flickable.state = "TurnTable"
         playTimer.start()
-        //drumMachine.maxSeqAndSamples(32, 6)
     }
 
     Flickable {
@@ -340,5 +339,7 @@ Rectangle {
         width: 60; height: ui.height
         onTurnTableClicked: flickable.state = "TurnTable"
         onDrumMachineClicked: flickable.state = "DrumMachine"
+        turnTableLedOn: turntable.playing
+        drumMachineLedOn: drumMachine.ledOn
     }
 }

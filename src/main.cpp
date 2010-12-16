@@ -119,9 +119,6 @@ int main(int argc, char *argv[])
     QObject::connect(drumMachineQML, SIGNAL(stopBeat()), drumMachine, SLOT(stopBeat()));
     QObject::connect(drumMachineQML, SIGNAL(setBeat(QVariant)), drumMachine, SLOT(setBeat(QVariant)));
     QObject::connect(drumMachineQML, SIGNAL(drumButtonToggled(QVariant, QVariant, QVariant)), drumMachine, SLOT(drumButtonToggled(QVariant, QVariant, QVariant)));
-
-    QObject::connect(drumMachine, SIGNAL(maxSeqAndSamples(QVariant, QVariant)), drumMachineQML, SLOT(maxSeqAndSamples(QVariant, QVariant)));
-    QObject::connect(drumMachine, SIGNAL(seqSize(QVariant, QVariant)), drumMachineQML, SLOT(seqSize(QVariant, QVariant)));
     QObject::connect(drumMachine, SIGNAL(drumButtonState(QVariant, QVariant, QVariant)), drumMachineQML, SLOT(setDrumButton(QVariant, QVariant, QVariant)));
     QObject::connect(drumMachine, SIGNAL(tickChanged(QVariant)), drumMachineQML, SLOT(highlightTick(QVariant)));
 
@@ -131,8 +128,6 @@ int main(int argc, char *argv[])
     QObject::connect(deviceInfo, SIGNAL(currentProfileChanged(QSystemDeviceInfo::Profile)), turnTable, SLOT(profile(QSystemDeviceInfo::Profile)));
 
 
-    // Resizes QML drum machine to 32 ticks and 6 samples
-    drumMachine->setMaxTickAndSamples(32, 6);
     // Start with beat 0
     drumMachine->setBeat(0);
     // Begins the measuring of accelerometer sensor

@@ -29,7 +29,6 @@ public:
     void setBpm(int bpm);
     void setSeq(const TYPE_DRUM_SEQ &seq);
     void setRunning(bool running) { m_running = running; }
-    void setMaxTickAndSamples(int ticks, int samples);
 
     // Returns true if beat index is in range 4-7
     bool isUserBeat() const;
@@ -55,18 +54,11 @@ public slots:
 
 
 signals:
-    // Describes to QML the maximum values of ticks and samples
-    void maxSeqAndSamples(QVariant ticks, QVariant samples);
-
-    // Describes the amount of ticks in sequence and count of samples
-    void seqSize(QVariant ticks, QVariant samples);
-
     // Describes the current tick on the sequence
     void tickChanged(QVariant tick);
 
     // Describes the state of single DrumButton in sequence of the sample
     void drumButtonState(QVariant tick, QVariant sample, QVariant pressed);
-
 
 
 protected:

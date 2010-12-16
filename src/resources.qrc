@@ -10,6 +10,7 @@
         <file>qml/DrumMachine/DrumButton.qml</file>
         <file>qml/DrumMachine/SlideSwitch.qml</file>
         <file>qml/DrumMachine/BeatSelector.qml</file>
+        <file>qml/DrumMachine/TickGroupSelector.qml</file>
         <file>qml/disk.png</file>
         <file>qml/diskreflection.png</file>
         <file>qml/turntable.png</file>

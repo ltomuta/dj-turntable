@@ -10,43 +10,24 @@ Rectangle {
     signal setBeat(variant index)
 
     // Public slots
-    function maxSeqAndSamples(ticks, samples) {
-        var count = drumGrid.children.length
-        for(var i=0;i<count;i++) {
-            drumGrid.children[i].destroy()
-        }
+    function createDrumButtons() {
+        drumGrid.columns = 33; drumGrid.rows = 6
 
-        drumGrid.columns = ticks; drumGrid.rows = samples
-
-        for(var row=0; row<samples; row++) {
-            for(var col=0; col<ticks; col++) {
+        for(var row=0; row<6; row++) {
+            for(var col=0; col<33; col++) {
                 var button = Qt.createComponent("DrumButton.qml").createObject(drumGrid)
-                if((col % 4) != 0) {
-                    button.opacity = 0.8
+
+                if(col != 16) {
+                    // The column 16 is blank column, that column was made to leave
+                    // a empty column to the breaking point of two tick groups
+                    button.tick = col
+                    button.sample = row
+                    button.width = drumGrid.drumButtonWidth
+                    button.height = drumGrid.drumButtonHeight
+
+                    button.selectedSource = "drumbuttonselected.png"
+                    button.unselectedSource = "drumbutton.png"
                 }
-                button.pressedColor = "white"
-                button.tick = col
-                button.sample = row
-            }
-        }
-
-        maxTicks = ticks
-        maxSamples = samples
-    }
-
-    function seqSize(ticks, samples) {
-        drumGrid.columns = ticks
-
-        var count = drumGrid.children.length
-        var column = 0
-
-        for(var i=0;i<count;i++) {
-            column = i % maxTicks
-            if(column >= ticks) {
-                drumGrid.children[i].visible = false
-            }
-            else {
-                drumGrid.children[i].visible = true
             }
         }
     }
@@ -59,75 +40,120 @@ Rectangle {
     }
 
     function setDrumButton(tick, sample, pressed) {
-        drumGrid.children[tick + drumGrid.columns * sample].pressed = pressed
+        var offset = sample + Math.floor(tick / 16)
+        drumGrid.children[tick + 32 * sample + offset].pressed = pressed
     }
 
     function highlightTick(tick) {
-        highligher.x = tick * 34 - 3
+        if(tick % 8) {
+            ledOn = false
+        }
+        else {
+            ledOn = true
+        }
+
+        if(tick < 16) {
+            tickGroupSelector.selectedTickGroup = 1
+        }
+        else {
+            tickGroupSelector.selectedTickGroup = 2
+        }
+
+        highligher.x = drumGrid.width / 33 * (tick + Math.floor(tick / 16))
     }
 
-    property int maxTicks: 0
-    property int maxSamples: 0
+    property bool ledOn: false
 
     width: 600; height: 360
-
     color: "black"
+    Component.onCompleted: {
+        createDrumButtons()
+    }
 
-    Column {
-        anchors.fill: parent
-        spacing: 10
+    TickGroupSelector {
+        id: tickGroupSelector
 
-        Text {
-            id: titleText
+        anchors.top: parent.top; anchors.topMargin: 10
+        anchors.horizontalCenter: parent.horizontalCenter
+        width: 400; height: 40
+    }
 
-            anchors.horizontalCenter: parent.horizontalCenter
+    Flickable {
+        id: drumFlickable
 
-            font.pixelSize: 40; font.bold: true
-            color: "white"
-            text: "Drum Machine"
+        anchors.top: tickGroupSelector.bottom; anchors.topMargin: 10
+        anchors.left: parent.left; anchors.leftMargin: 10
+        anchors.right: parent.right; anchors.rightMargin: 10
+        anchors.bottom: controlButtons.top; anchors.bottomMargin: 10
+
+        contentWidth: drumGrid.width
+        interactive: false
+
+        Grid {
+            // Holds dynamically created DrumButtons childern
+            id: drumGrid
+
+            property real drumButtonWidth: drumFlickable.width / 16
+            property real drumButtonHeight: drumFlickable.height / 6
+
+            spacing: 0
         }
 
-        Flickable {
-            id: drumFlickable
+        Rectangle {
+            id: highligher
 
-            width: parent.width; height: drumGrid.height
-            contentWidth: drumGrid.width
+            width: 37; height: drumGrid.height
+            opacity: 0.3
+            color: "red"
+        }
 
-            Grid {
-                // Holds dynamically created DrumButtons childern
-                id: drumGrid
+        states: [
+            State {
+                name: "Ticks1"
+                when: tickGroupSelector.selectedTickGroup == 1
+                PropertyChanges { target: drumFlickable; contentX: 0 }
 
-                spacing: 0
+            },
+            State {
+                name: "Ticks2"
+                when: tickGroupSelector.selectedTickGroup == 2
+                PropertyChanges { target: drumFlickable; contentX: drumGrid.drumButtonWidth * 17 }
+
             }
+        ]
 
-            Rectangle {
-                id: highligher
+        transitions: Transition {
+            PropertyAnimation { property: "contentX"; easing.type: Easing.InOutQuart }
+        }
+    }
 
-                width: 37; height: drumGrid.height
-                opacity: 0.3
-                color: "red"
+    Row {
+        id: controlButtons
+
+        property real arrowbuttonwidth: width / 4
+
+        spacing: 20
+        anchors.left: parent.left; anchors.leftMargin: 10
+        anchors.right: parent.right; anchors.rightMargin: 10
+        anchors.bottom: parent.bottom; anchors.bottomMargin: 10
+        height: 40
+
+        SlideSwitch {
+            width: parent.width / 2; height: parent.height
+            onOnChanged: {
+                if(on) {
+                    startBeat()
+                }
+                else {
+                    stopBeat()
+                    ledOn = false
+                }
             }
         }
 
-        Row {
-            id: controlButtons
-
-            property real arrowbuttonwidth: width / 4
-
-            spacing: 20
-            anchors.left: parent.left; anchors.leftMargin: 10
-            anchors.right: parent.right; anchors.rightMargin: 10
-            height: (parent.height - y) - parent.spacing
-
-            SlideSwitch {
-                width: parent.width / 2; height: parent.height
-                onOnChanged: on ? drumMachine.startBeat() : drumMachine.stopBeat()
-            }
-
-            BeatSelector {
-                width:  parent.width / 2 - 20; height: parent.height
-                onIndexChanged: drumMachine.setBeat(index)
-            }
+        BeatSelector {
+            width:  parent.width / 2 - 20; height: parent.height
+            onIndexChanged: drumMachine.setBeat(index)
         }
     }
 }

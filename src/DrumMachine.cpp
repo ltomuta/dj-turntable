@@ -85,7 +85,6 @@ DrumMachine::TYPE_DRUM_SEQ DrumMachine::seq() const
 void DrumMachine::setSeq(const TYPE_DRUM_SEQ &seq)
 {
     m_seq = seq;
-    emit seqSize(m_seq.size(), m_drumSamples.size());
 }
 
 
@@ -217,11 +216,6 @@ void DrumMachine::saveUserBeat(int index, const DrumMachine::TYPE_DRUM_SEQ &seq)
     m_Settings->setValue(key, data);
 }
 
-
-void DrumMachine::setMaxTickAndSamples(int ticks, int samples)
-{
-    emit maxSeqAndSamples(ticks, samples);
-}
 
 
 void DrumMachine::setBeat(QVariant index)

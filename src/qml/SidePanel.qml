@@ -8,8 +8,10 @@ Rectangle {
 
     property bool turnTableButtonPressed: false
     property bool drumMachineButtonPressed: false
+    property bool turnTableLedOn: false
+    property bool drumMachineLedOn: false
 
-    width: 100; height: 200
+    width: 100; height: 400
     color: "black"
 
     Button {
@@ -25,6 +27,13 @@ Rectangle {
             text: "Turntable"
             color: "white"
             font.pixelSize: 20
+        }
+
+        Rectangle {
+            width: 10; height: 10; radius: 4
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.bottom: parent.bottom; anchors.bottomMargin: 10
+            color: sidepanel.turnTableLedOn ? "#00BB00" : "#004400"
         }
 
         onClicked: sidepanel.turnTableClicked()
@@ -44,6 +53,13 @@ Rectangle {
             text: "Drum Machine"
             color: "white"
             font.pixelSize: 20
+        }
+
+        Rectangle {
+            width: 10; height: 10; radius: 4
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.bottom: parent.bottom; anchors.bottomMargin: 10
+            color: sidepanel.drumMachineLedOn ? "#00BB00" : "#004400"
         }
 
         onClicked: sidepanel.drumMachineClicked()

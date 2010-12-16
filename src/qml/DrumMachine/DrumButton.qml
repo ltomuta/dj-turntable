@@ -7,22 +7,26 @@ Item {
     property int sample: -1
     property bool pressed: false
 
-    property color pressedColor
-    property color notPressedColor
+    property string selectedSource
+    property string unselectedSource
 
     width: 34; height: 40
 
     Image {
+        id: image
+
         anchors.fill: parent
         anchors.margins: 3
-        source: button.pressed ? "drumbuttonselected.png" : "drumbutton.png"
+        source: button.pressed ? selectedSource : unselectedSource
     }
 
     MouseArea {
         anchors.fill: parent
         onClicked: {
             button.pressed = !button.pressed
-            drumMachine.drumButtonToggled(button.tick, button.sample, button.pressed)
+            if(tick != -1 || sample != -1) {
+                drumMachine.drumButtonToggled(button.tick, button.sample, button.pressed)
+            }
         }
     }
 }

@@ -1,5 +1,7 @@
 #include <math.h>
 #include <QSettings>
+#include <QDesktopServices>
+#include <QUrl>
 #include "TurnTable.h"
 
 using namespace GE;
@@ -210,4 +212,10 @@ void TurnTable::profile(QSystemDeviceInfo::Profile profile)
     default:
         break;
     }
+}
+
+
+void TurnTable::linkActivated(QVariant link)
+{
+    QDesktopServices::openUrl(QUrl(link.toString(), QUrl::TolerantMode));
 }

@@ -41,6 +41,8 @@ public slots:
 
     int pullAudio(AUDIO_SAMPLE_TYPE *target, int bufferLength);
 
+    void linkActivated(QVariant link);
+
 signals:
     void audioPosition(QVariant position);
 

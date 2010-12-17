@@ -20,7 +20,12 @@ Rectangle {
                 if(col != 16) {
                     // The column 16 is blank column, that column was made to leave
                     // a empty column to the breaking point of two tick groups
-                    button.tick = col
+                    if(col < 15) {
+                        button.tick = col
+                    }
+                    else {
+                        button.tick = col - 1
+                    }
                     button.sample = row
                     button.width = drumGrid.drumButtonWidth
                     button.height = drumGrid.drumButtonHeight
@@ -63,12 +68,11 @@ Rectangle {
     }
 
     property bool ledOn: false
+    property alias selectedTickGroup: tickGroupSelector.selectedTickGroup
 
     width: 600; height: 360
     color: "black"
-    Component.onCompleted: {
-        createDrumButtons()
-    }
+    Component.onCompleted: { createDrumButtons() }
 
     TickGroupSelector {
         id: tickGroupSelector

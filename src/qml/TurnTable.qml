@@ -15,6 +15,8 @@ Rectangle {
     signal volumeUp()
     signal volumeDown()
 
+    signal linkActivated(variant link)
+
     function audioPosition(pos) { arm.positionOnDisk = pos }
     function inclination(deg) { diskReflection.rotation = -deg * 2 + 45 }
 
@@ -26,8 +28,11 @@ Rectangle {
     Keys.onDownPressed: flickable.state = "DrumMachine"
     Keys.onUpPressed: flickable.state = "TurnTable"
     Keys.onSpacePressed: powerbutton.press()
+    Keys.onLeftPressed: drumMachine.selectedTickGroup = 1
+    Keys.onRightPressed: drumMachine.selectedTickGroup = 2
     Keys.onVolumeUpPressed: ui.volumeUp()
     Keys.onVolumeDownPressed: ui.volumeDown()
+    Keys.onPressed: { if(event.key == 56 || event.key == Qt.Key_I) flickable.state = "Help" }
 
     Component.onCompleted: {
         flickable.state = "TurnTable"
@@ -51,6 +56,8 @@ Rectangle {
 
             width: flickable.width; height: flickable.height
             y: -flickable.height
+
+            onLinkActivated: ui.linkActivated(link)
         }
 
         Image {
@@ -70,11 +77,11 @@ Rectangle {
                 property real targetSpeed: turntable.playing ? speedslider.value : 0.0
                 property real currentSpeed: 0
 
-                width: parent.paintedWidth * 0.80; height: width
+                width: parent.paintedWidth * 0.73; height: width
                 source: "disk.png"
 
                 anchors.centerIn: parent
-                anchors.horizontalCenterOffset: -0.095 * parent.paintedWidth
+                anchors.horizontalCenterOffset: -0.060 * parent.paintedWidth
                 anchors.verticalCenterOffset: -0.0055 * parent.paintedHeight
 
                 onCurrentSpeedChanged: playTimer.running ? ui.diskSpeed(disk.currentSpeed) : ui.diskAimSpeed(disk.currentSpeed)
@@ -162,17 +169,6 @@ Rectangle {
                 }
             }
 
-            Arm {
-                id: arm
-
-                width: parent.paintedWidth * 0.1518; height: parent.paintedHeight * 0.8927
-                anchors.centerIn: parent
-                anchors.horizontalCenterOffset: 0.275 * parent.paintedWidth
-                anchors.verticalCenterOffset: -0.03 * parent.paintedHeight
-
-                onArmdownChanged: armdown ? ui.start() : ui.stop()
-            }
-
             SpeedSlider {
                 id: speedslider
 
@@ -183,37 +179,54 @@ Rectangle {
                 maximum: 1.5; minimum: 0.0; value: 1.0; defaultValue: 1.0
                 mouseAreaScale: 2
             }
+
+            Arm {
+                id: arm
+
+                width: parent.paintedWidth * 0.1518; height: parent.paintedHeight * 0.8927
+                anchors.centerIn: parent
+                anchors.horizontalCenterOffset: 0.34 * parent.paintedWidth
+                anchors.verticalCenterOffset: -0.03 * parent.paintedHeight
+
+                onArmdownChanged: armdown ? ui.start() : ui.stop()
+            }
         }
 
         Rectangle {
             id: mixerpanel
 
-            x: flickable.width - mixerpanel.width - 10
-            y: 3
-            width: 130; height: flickable.height - 10
+            x: flickable.width - mixerpanel.width - 5
+            y: 1
+            width: 130; height: flickable.height - 2
             color: "#858585"
-            radius: 12
+            radius: 4
 
             Button {
                 id: closeButton
 
                 width: 40; height: 40
                 anchors.top: parent.top; anchors.topMargin: 10
-                anchors.right: parent.right; anchors.rightMargin: 20
+                anchors.right: parent.right; anchors.rightMargin: 18
                 source: "closemark.png"
                 smooth: true
                 onClicked: Qt.quit()
             }
 
-            Button {
+            Image {
                 id: infoButton
 
                 width: 40; height: 40
                 anchors.top:  closeButton.top
-                anchors.right: closeButton.left; anchors.rightMargin: 10
+                anchors.right: closeButton.left; anchors.rightMargin: 14
                 source: "infobutton.png"
                 smooth: true
-                onClicked: flickable.state = "Help"
+
+                MouseArea {
+                    anchors.fill: parent
+                    onPressed: infoButton.scale = 0.95
+                    onReleased: infoButton.scale = 1.00
+                    onClicked: flickable.state = "Help"
+                }
             }
 
             Text {

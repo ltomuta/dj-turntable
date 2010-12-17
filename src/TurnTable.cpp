@@ -26,7 +26,7 @@ TurnTable::TurnTable(QSettings *settings)
     m_cutOffValue = m_cutOffTarget;
     m_resonanceValue = m_resonanceTarget;
 
-    m_source = CAudioBuffer::loadWav(QString(":/sounds/melody.wav"));
+    m_source = CAudioBuffer::loadWav(QString(":/sounds/ivory.wav"));
     m_audioMixer = new CAudioMixer;
     m_audioMixer->addAudioSource(this);
     m_audioOut = new GE::AudioOut(this, m_audioMixer);

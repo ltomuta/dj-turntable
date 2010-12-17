@@ -32,7 +32,16 @@ Rectangle {
     Keys.onRightPressed: drumMachine.selectedTickGroup = 2
     Keys.onVolumeUpPressed: ui.volumeUp()
     Keys.onVolumeDownPressed: ui.volumeDown()
-    Keys.onPressed: { if(event.key == 56 || event.key == Qt.Key_I) flickable.state = "Help" }
+    Keys.onPressed: {
+        if(event.key == 56 || event.key == Qt.Key_I) {
+            flickable.state = "Help"
+            event.accepted = true
+        }
+        else if(event.key == Qt.Key_Return || event.key == Qt.Key_Enter) {
+            drumMachine.running = !drumMachine.running
+            event.accepted = true
+        }
+    }
 
     Component.onCompleted: {
         flickable.state = "TurnTable"
@@ -177,7 +186,7 @@ Rectangle {
                 anchors.horizontalCenterOffset: 0.4 * parent.paintedWidth
                 anchors.verticalCenterOffset: 0.25 * parent.paintedHeight
                 maximum: 1.5; minimum: 0.0; value: 1.0; defaultValue: 1.0
-                mouseAreaScale: 2
+                mouseAreaScale: 3
             }
 
             Arm {

@@ -22,7 +22,7 @@
         <file>qml/DrumMachine/drumbutton.png</file>
         <file>qml/DrumMachine/drumbuttonselected.png</file>
         <file>qml/HelpScreen/HelpScreen.qml</file>
-        <file>sounds/melody.wav</file>
+        <file>sounds/ivory.wav</file>
         <file>sounds/snare.wav</file>
         <file>sounds/hihat_open.wav</file>
         <file>sounds/hihat.wav</file>

@@ -68,6 +68,7 @@ Rectangle {
     }
 
     property bool ledOn: false
+    property alias running: slideSwitch.on
     property alias selectedTickGroup: tickGroupSelector.selectedTickGroup
 
     width: 600; height: 360
@@ -82,16 +83,38 @@ Rectangle {
         width: 400; height: 40
     }
 
+    Column {
+        id: sampleIcons
+        anchors.left: parent.left; anchors.leftMargin: 6
+        anchors.top: tickGroupSelector.bottom; anchors.topMargin: 10
+        anchors.bottom: controlButtons.top
+
+        width: 30
+        spacing: 0
+
+        Repeater {
+            model: 6
+            Item {
+                width: sampleIcons.width; height: drumGrid.drumButtonHeight
+                Rectangle {
+                    anchors.fill: parent; anchors.margins: 2
+                    radius: 3
+                }
+            }
+        }
+    }
+
     Flickable {
         id: drumFlickable
 
         anchors.top: tickGroupSelector.bottom; anchors.topMargin: 10
-        anchors.left: parent.left; anchors.leftMargin: 10
+        anchors.left: sampleIcons.right; anchors.leftMargin: 5
         anchors.right: parent.right; anchors.rightMargin: 10
         anchors.bottom: controlButtons.top; anchors.bottomMargin: 10
 
         contentWidth: drumGrid.width
         interactive: false
+        clip: true
 
         Grid {
             // Holds dynamically created DrumButtons childern
@@ -106,7 +129,7 @@ Rectangle {
         Rectangle {
             id: highligher
 
-            width: 37; height: drumGrid.height
+            width: drumGrid.drumButtonWidth; height: drumGrid.height
             opacity: 0.3
             color: "red"
         }
@@ -121,8 +144,7 @@ Rectangle {
             State {
                 name: "Ticks2"
                 when: tickGroupSelector.selectedTickGroup == 2
-                PropertyChanges { target: drumFlickable; contentX: drumGrid.drumButtonWidth * 17 }
-
+                PropertyChanges { target: drumFlickable; contentX: drumFlickable.width + drumGrid.drumButtonWidth}
             }
         ]
 
@@ -143,7 +165,10 @@ Rectangle {
         height: 40
 
         SlideSwitch {
+            id: slideSwitch
+
             width: parent.width / 2; height: parent.height
+
             onOnChanged: {
                 if(on) {
                     startBeat()

@@ -38,6 +38,7 @@ Rectangle {
         border.color: "gray"
 
         Behavior on x { NumberAnimation { easing.type: Easing.InOutQuad; duration: 100 } }
+        x: toggleSwitch.on ? toggleSwitch.width / 2 : 0
 
         MouseArea {
             anchors.fill: parent
@@ -45,14 +46,13 @@ Rectangle {
             drag.axis: Drag.XAxis
             drag.minimumX: 0
             drag.maximumX: parent.width
-
             onReleased: {
                 if(knob.x > (toggleSwitch.width / 4)) {
-                    knob.x = toggleSwitch.width / 2
+                    toggleSwitch.on = false
                     toggleSwitch.on = true
                 }
                 else {
-                    knob.x = 0
+                    toggleSwitch.on = true
                     toggleSwitch.on = false
                 }
             }

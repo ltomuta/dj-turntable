@@ -39,24 +39,17 @@ unix:!symbian {
 
 
 symbian {
-
+    # For the very ugly hack to make the master volume control possible
     INCLUDEPATH += /epoc32/include/mmf/common
     INCLUDEPATH += /epoc32/include/mmf/server
-
     LIBS += -lmmfdevsound
 
+    # For the icon
+    ICON = icons/turntable.svg
 
     # To lock the application to landscape orientation
     LIBS += -lcone -leikcore -lavkon
 
-    # For QtMobility
-
-    #TARGET.CAPABILITY = NetworkServices \
-    #                    Location \
-    #                    ReadUserData \
-    #                    WriteUserData \
-    #                    LocalServices \
-    #                    UserEnvironment
 
     TARGET.EPOCHEAPSIZE = 0x100000 0x2000000
     TARGET.EPOCSTACKSIZE = 0x14000

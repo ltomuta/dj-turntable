@@ -13,10 +13,6 @@ Item {
     function createDrumButtons() {
         drumGrid.columns = 33; drumGrid.rows = 6
 
-        console.log(drumGrid.drumButtonWidth)
-        console.log(drumGrid.drumButtonHeight)
-
-
         for(var row=0; row<6; row++) {
             for(var col=0; col<33; col++) {
                 var button = Qt.createComponent("DrumButton.qml").createObject(drumGrid)

@@ -15,9 +15,9 @@ Image {
     Rectangle {
         id: pressed
 
-        anchors { fill: parent; margins: 2 }
+        anchors { fill: parent }
         color: "transparent"
-        radius: 2
+        radius: 3
         opacity: 1
         Behavior on opacity { NumberAnimation { } }
     }

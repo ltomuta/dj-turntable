@@ -96,15 +96,26 @@ There are two ways to install the application in the device.
 RUNNING THE APPLICATION
 -------------------------------------------------------------------------------
 
-Dj Turntable is demonstration of integrating Qt Quick application to Qt audio interface.
+Dj Turntable is demonstration of integrating Qt Quick application to Qt audio
+interface.
 
 Turntable
 
-Play the looping sample with a realistic turntable. The sample can be scratched by the finger, played faster, slower and backwards. The speed of the disk can be adjusted with the speed slider, the default 1x speed can be obtained by double clicking the speed slider knob. Dj Turntable offers Cutoff and Resonance to alternate the sample in real time. The knobs are rotated by moving the finger up and down on top of the knobs.
+Play the looping sample with a realistic turntable. The sample can be scratched
+by the finger, played faster, slower and backwards. The speed of the disk can
+be adjusted with the speed slider, the default 1x speed can be obtained by
+double clicking the speed slider knob. Dj Turntable offers Cutoff and Resonance
+to alternate the sample in real time. The knobs are rotated by moving the
+finger up and down on top of the knobs.
 
 Drum machine
                       
-Play and edit the drum beats. There are four predefined beats which can be played and edited but the edits are not stored. For the user there are four beats that are saved to the devices memory whenever they are edited. Use the beat selector on the bottom right corner of the view to iterate through the beats. All the beats are 32 ticks long and they accommondate 6 different drum samples: hi-hat, hi-hat open, bass drum, snare, cymbal and cow bell.
+Play and edit the drum beats. There are four predefined beats which can be
+played and edited but the edits are not stored. For the user there are four
+beats that are saved to the devices memory whenever they are edited. Use the
+beat selector on the bottom right corner of the view to iterate through the
+beats. All the beats are 32 ticks long and they accommondate 6 different drum
+samples: hi-hat, hi-hat open, bass drum, snare, cymbal and cow bell.
 
 Keyboard shortcuts
 
@@ -122,7 +133,9 @@ Key i = Go to info view
 
 Samples
 
-The turntable melody sample ivory.wav was created by nick Flick3r and it was downloaded from http://www.freesound.org. The sample follows the http://creativecommons.org/licenses/sampling+/1.0/ license.
+The turntable melody sample ivory.wav was created by nick Flick3r and it was
+downloaded from http://www.freesound.org. The sample follows the
+http://creativecommons.org/licenses/sampling+/1.0/ license.
 
 
 

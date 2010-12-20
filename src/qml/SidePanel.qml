@@ -17,7 +17,7 @@ Rectangle {
     Button {
         id: turnTableButton
 
-        width: parent.width; height: parent.height / 2
+        width: parent.width - 2; height: parent.height / 2 - 1
         pressedColor: "gray"
         pressedColorOpacity: turnTableButtonPressed ? 1.0 : 0.3
 
@@ -43,8 +43,8 @@ Rectangle {
     Button {
         id: drumMachineButton
 
-        width: parent.width; height: parent.height / 2
-        y: parent.height / 2
+        width: parent.width - 2; height: parent.height / 2 - 1
+        y: parent.height / 2 + 1
         pressedColor: "gray"
         pressedColorOpacity: drumMachineButtonPressed ? 1.0 : 0.3
 

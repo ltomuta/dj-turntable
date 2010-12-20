@@ -17,6 +17,7 @@ Item {
 
         anchors.fill: parent
         anchors.margins: 3
+
         source: button.pressed ? selectedSource : unselectedSource
     }
 

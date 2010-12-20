@@ -24,19 +24,20 @@ Rectangle {
         Text {
             anchors.centerIn: parent
             rotation: 270
-            text: "Turntable"
+            text: "    Turntable"
             color: "white"
             font.pixelSize: 20
         }
 
-        Rectangle {
-            width: 10; height: 10; radius: 4
+        Image {
+            width: 44; height: 44
             anchors.horizontalCenter: parent.horizontalCenter
-            anchors.bottom: parent.bottom; anchors.bottomMargin: 10
-            color: sidepanel.turnTableLedOn ? "#00BB00" : "#004400"
+            anchors.bottom: parent.bottom; anchors.bottomMargin: 0
+
+            source: sidepanel.turnTableLedOn ? "ledon.png" : "ledoff.png"
         }
 
-        onClicked: sidepanel.turnTableClicked()
+        onPressed: sidepanel.turnTableClicked()
     }
 
     Button {
@@ -50,18 +51,18 @@ Rectangle {
         Text {
             anchors.centerIn: parent
             rotation: 270
-            text: "Drum Machine"
+            text: "    Drum Machine"
             color: "white"
             font.pixelSize: 20
         }
 
-        Rectangle {
-            width: 10; height: 10; radius: 4
+        Image {
+            width: 44; height: 44
             anchors.horizontalCenter: parent.horizontalCenter
-            anchors.bottom: parent.bottom; anchors.bottomMargin: 10
-            color: sidepanel.drumMachineLedOn ? "#00BB00" : "#004400"
+            anchors.bottom: parent.bottom; anchors.bottomMargin: 0
+            source: sidepanel.drumMachineLedOn ? "ledon.png" : "ledoff.png"
         }
 
-        onClicked: sidepanel.drumMachineClicked()
+        onPressed: sidepanel.drumMachineClicked()
     }
 }

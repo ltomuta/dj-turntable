@@ -4,7 +4,13 @@
 #include <QUrl>
 #include "TurnTable.h"
 
+#ifdef Q_OS_SYMBIAN
+    #include <remconcoreapitarget.h>
+    #include <remconinterfaceselector.h>
+#endif
+
 using namespace GE;
+
 
 TurnTable::TurnTable(QSettings *settings)
     : m_Settings(settings)
@@ -32,11 +38,24 @@ TurnTable::TurnTable(QSettings *settings)
     m_audioOut = new GE::AudioOut(this, m_audioMixer);
 
     m_audioMixer->setGeneralVolume(m_Settings->value("Volume", 0.75f).toFloat());
+
+
+#ifdef Q_OS_SYMBIAN
+    Observer *m_Observer = new Observer(this);
+    m_Selector = CRemConInterfaceSelector::NewL();
+    m_Target = CRemConCoreApiTarget::NewL(*m_Selector, *m_Observer);
+    m_Selector->OpenTargetL();
+#endif
 }
 
 
 TurnTable::~TurnTable()
 {
+#ifdef Q_OS_SYMBIAN
+    delete m_Target;
+    delete m_Selector;
+    delete m_Observer;
+#endif
 }
 
 

@@ -3,6 +3,7 @@ import Qt 4.7
 Image {
     id: button
 
+    signal pressed()
     signal clicked()
 
     property alias pressedColor: pressed.color
@@ -16,14 +17,14 @@ Image {
 
         anchors { fill: parent; margins: 2 }
         color: "transparent"
-        radius: 8
+        radius: 2
         opacity: 1
         Behavior on opacity { NumberAnimation { } }
     }
 
     MouseArea {
         anchors.fill: parent
-        onPressed: button.scale = 0.9
+        onPressed: { button.scale = 0.9; button.pressed() }
         onReleased: button.scale = 1.0
         onClicked: button.clicked()
     }

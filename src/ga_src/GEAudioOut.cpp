@@ -22,37 +22,6 @@ const QString CODEC = "audio/pcm";
 const QAudioFormat::Endian BYTEORDER = QAudioFormat::LittleEndian;
 const QAudioFormat::SampleType SAMTYPE = QAudioFormat::SignedInt;
 
-/*
-void debugDumpMemory( void *start, int bytesToDump, const char *message ) {
-    char testr[128];
-    char line[256];
-    qDebug() << "-----------------------------------------------------";
-    sprintf(testr, "(%s): Dumping %d bytes from %x", message, bytesToDump, start );
-    qDebug() << testr;
-    line[0] = 0;
-    int l1=0;
-    int i1=0;
-    unsigned char *p = (unsigned char*)start;
-    for (int f=0; f<bytesToDump; f++) {
-        sprintf(testr, "%2x", p[f] );
-        strcat(line, testr );
-
-        i1++;
-        if (i1 > 3 && f<bytesToDump-1) { strcat(line, " - "); i1=0; l1++; }
-        else if (f<bytesToDump-1) strcat( line, ":");
-
-        if (l1>3) {
-            qDebug() << line;
-            line[0] = 0;
-            l1=0;
-        }
-
-
-    };
-    if (line[0]!=0) qDebug() << line;
-    qDebug() << "-----------------------------------------------------";
-}
-*/
 
 AudioOut::AudioOut( QObject *parent, GE::IAudioSource *source ) : QThread(parent) {         // qobject
     m_source = source;
@@ -79,24 +48,14 @@ AudioOut::AudioOut( QObject *parent, GE::IAudioSource *source ) : QThread(parent
 
 
 #ifdef Q_OS_SYMBIAN
-
-    //qDebug() << "sizeof qobject:" << sizeof(QObject);
+    // Really ugly hack is used as a last resort. This allows us to adjust the application volume
+    // in Symbian. The CMMFDevSound object which lies deep inside the QAudioOutput in Symbian
+    // implementation has the needed functions. So we get the needed object accessing directly
+    // from memory.
     unsigned int *pointer_to_abstract_audio = (unsigned int*)( (unsigned char*)m_audioOutput + 8 );
-
-    //debugDumpMemory(m_audioOutput, sizeof(QAudioOutput), "QAudioOut");
-    //qDebug() << "Error:"<<m_audioOutput->error()<<" State:" << m_audioOutput->state();
-    //debugDumpMemory((unsigned int*)(*pointer_to_abstract_audio), 128, "QAbstractAudioOutput");
-
-    //qDebug() << "QAudio::State size: " << sizeof(QAudio::State);
-
     unsigned int *dev_sound_wrapper = (unsigned int*)(*pointer_to_abstract_audio) + 13;
-    //debugDumpMemory((unsigned int*)(*dev_sound_wrapper), 32, "dev_sound_wrapper");
-
     unsigned int *temp = ((unsigned int*)(*dev_sound_wrapper) + 6);
-    CMMFDevSound *dev_sound = (CMMFDevSound*)(*temp); //(CMMFDevSound*)((unsigned char*)(*dev_sound_wrapper) + 6 * 4);
-
-    //debugDumpMemory(dev_sound, sizeof(CMMFDevSound), "dev_sound");
-
+    CMMFDevSound *dev_sound = (CMMFDevSound*)(*temp);
     dev_sound->SetVolume(dev_sound->MaxVolume());
 #endif
 

@@ -110,8 +110,6 @@ int main(int argc, char *argv[])
     QObject::connect(turnTableQML, SIGNAL(diskSpeed(QVariant)), turnTable, SLOT(setDiscSpeed(QVariant)));
     QObject::connect(turnTableQML, SIGNAL(cutOff(QVariant)), turnTable, SLOT(setCutOff(QVariant)));
     QObject::connect(turnTableQML, SIGNAL(resonance(QVariant)), turnTable, SLOT(setResonance(QVariant)));
-    QObject::connect(turnTableQML, SIGNAL(volumeUp()), turnTable, SLOT(volumeUp()));
-    QObject::connect(turnTableQML, SIGNAL(volumeDown()), turnTable, SLOT(volumeDown()));
     QObject::connect(turnTableQML, SIGNAL(linkActivated(QVariant)), turnTable, SLOT(linkActivated(QVariant)));
     QObject::connect(turnTable, SIGNAL(audioPosition(QVariant)), turnTableQML, SLOT(audioPosition(QVariant)));
 
@@ -128,13 +126,13 @@ int main(int argc, char *argv[])
     QObject::connect(filter, SIGNAL(rotationChanged(QVariant)), turnTableQML, SLOT(inclination(QVariant)));
     QObject::connect(deviceInfo, SIGNAL(currentProfileChanged(QSystemDeviceInfo::Profile)), turnTable, SLOT(profile(QSystemDeviceInfo::Profile)));
 
-
     // Start with beat 0
     drumMachine->setBeat(0);
+
+#if defined(Q_WS_MAEMO_5)|| defined(Q_OS_SYMBIAN)
     // Begins the measuring of accelerometer sensor
     sensor.start();
 
-#if defined(Q_WS_MAEMO_5)|| defined(Q_OS_SYMBIAN)
     view.setGeometry(QApplication::desktop()->screenGeometry());
     view.showFullScreen();
 #else

@@ -11,6 +11,7 @@
         <file>qml/DrumMachine/SlideSwitch.qml</file>
         <file>qml/DrumMachine/BeatSelector.qml</file>
         <file>qml/DrumMachine/TickGroupSelector.qml</file>
+        <file>qml/DrumMachine/beatselector.png</file>
         <file>qml/disk.png</file>
         <file>qml/diskreflection.png</file>
         <file>qml/turntable.png</file>
@@ -21,6 +22,8 @@
         <file>qml/infobutton.png</file>
         <file>qml/DrumMachine/drumbutton.png</file>
         <file>qml/DrumMachine/drumbuttonselected.png</file>
+        <file>qml/ledon.png</file>
+        <file>qml/ledoff.png</file>
         <file>qml/HelpScreen/HelpScreen.qml</file>
         <file>sounds/ivory.wav</file>
         <file>sounds/snare.wav</file>

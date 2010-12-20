@@ -12,8 +12,6 @@ Rectangle {
 
     signal cutOff(variant value)
     signal resonance(variant value)
-    signal volumeUp()
-    signal volumeDown()
 
     signal linkActivated(variant link)
 
@@ -30,8 +28,6 @@ Rectangle {
     Keys.onSpacePressed: powerbutton.press()
     Keys.onLeftPressed: drumMachine.selectedTickGroup = 1
     Keys.onRightPressed: drumMachine.selectedTickGroup = 2
-    Keys.onVolumeUpPressed: ui.volumeUp()
-    Keys.onVolumeDownPressed: ui.volumeDown()
     Keys.onPressed: {
         if(event.key == 56 || event.key == Qt.Key_I) {
             flickable.state = "Help"
@@ -75,7 +71,7 @@ Rectangle {
             property bool playing: false
 
             width:  flickable.width - mixerpanel.width
-            height: flickable.height
+            height: flickable.height - 1
             source: "turntable.png"
             fillMode: Image.PreserveAspectFit
 
@@ -204,7 +200,7 @@ Rectangle {
         Rectangle {
             id: mixerpanel
 
-            x: flickable.width - mixerpanel.width - 5
+            x: flickable.width - mixerpanel.width
             y: 1
             width: 130; height: flickable.height - 2
             color: "#858585"

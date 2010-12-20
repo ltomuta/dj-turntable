@@ -1,6 +1,6 @@
 import Qt 4.7
 
-Rectangle {
+Item {
     id: drumMachine
     objectName: "drumMachine"   // used to identify this element in Qt side
 
@@ -12,6 +12,10 @@ Rectangle {
     // Public slots
     function createDrumButtons() {
         drumGrid.columns = 33; drumGrid.rows = 6
+
+        console.log(drumGrid.drumButtonWidth)
+        console.log(drumGrid.drumButtonHeight)
+
 
         for(var row=0; row<6; row++) {
             for(var col=0; col<33; col++) {
@@ -68,19 +72,27 @@ Rectangle {
     }
 
     property bool ledOn: false
-    property alias running: slideSwitch.on
+    property alias running: powerbutton.on
     property alias selectedTickGroup: tickGroupSelector.selectedTickGroup
 
     width: 600; height: 360
-    color: "black"
     Component.onCompleted: { createDrumButtons() }
+
 
     TickGroupSelector {
         id: tickGroupSelector
 
         anchors.top: parent.top; anchors.topMargin: 10
         anchors.horizontalCenter: parent.horizontalCenter
-        width: 400; height: 40
+        width: 200; height: 40
+    }
+
+    Rectangle {
+        color: "gray"
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.top: tickGroupSelector.bottom
+        anchors.bottom: parent.bottom
     }
 
     Column {
@@ -92,16 +104,12 @@ Rectangle {
         width: 30
         spacing: 0
 
-        Repeater {
-            model: 6
-            Item {
-                width: sampleIcons.width; height: drumGrid.drumButtonHeight
-                Rectangle {
-                    anchors.fill: parent; anchors.margins: 2
-                    radius: 3
-                }
-            }
-        }
+        Item { width: sampleIcons.width; height: drumGrid.drumButtonHeight; Text { anchors.centerIn: parent; color: "white"; text: "HH" } }
+        Item { width: sampleIcons.width; height: drumGrid.drumButtonHeight; Text { anchors.centerIn: parent; color: "white"; text: "HHo" } }
+        Item { width: sampleIcons.width; height: drumGrid.drumButtonHeight; Text { anchors.centerIn: parent; color: "white"; text: "Bs" } }
+        Item { width: sampleIcons.width; height: drumGrid.drumButtonHeight; Text { anchors.centerIn: parent; color: "white"; text: "Sn" } }
+        Item { width: sampleIcons.width; height: drumGrid.drumButtonHeight; Text { anchors.centerIn: parent; color: "white"; text: "Cr" } }
+        Item { width: sampleIcons.width; height: drumGrid.drumButtonHeight; Text { anchors.centerIn: parent; color: "white"; text: "Cb" } }
     }
 
     Flickable {
@@ -153,36 +161,69 @@ Rectangle {
         }
     }
 
-    Row {
+    Item {
         id: controlButtons
 
         property real arrowbuttonwidth: width / 4
 
-        spacing: 20
         anchors.left: parent.left; anchors.leftMargin: 10
         anchors.right: parent.right; anchors.rightMargin: 10
-        anchors.bottom: parent.bottom; anchors.bottomMargin: 10
+        anchors.bottom: parent.bottom; anchors.bottomMargin: 5
         height: 40
 
-        SlideSwitch {
-            id: slideSwitch
-
-            width: parent.width / 2; height: parent.height
-
-            onOnChanged: {
-                if(on) {
-                    startBeat()
-                }
-                else {
-                    stopBeat()
-                    ledOn = false
-                }
-            }
+        Text {
+            id: patternText
+            anchors.right: beatSelector.left; anchors.rightMargin: -10
+            anchors.top: beatSelector.top; anchors.topMargin: -12
+            text: "Pattern"
+            color: "#505050"
+            font.pixelSize: 10
         }
 
         BeatSelector {
-            width:  parent.width / 2 - 20; height: parent.height
+            id: beatSelector
+
+            anchors.left: parent.left; anchors.leftMargin: 30
+            anchors.right: powerbutton.left; anchors.rightMargin: 30
+            height: parent.height
             onIndexChanged: drumMachine.setBeat(index)
+        }
+
+        Text {
+            anchors.right: powerbutton.left; anchors.rightMargin: -5
+            anchors.top: patternText.top
+            text: "Power"
+            color: "#505050"
+            font.pixelSize: 10
+        }
+
+        Item {
+            id: powerbutton
+
+            property bool on: false
+
+            width: parent.height; height: parent.height
+            anchors.right: parent.right; anchors.rightMargin: 10
+
+            onOnChanged: on ? drumMachine.startBeat() : drumMachine.stopBeat()
+
+            Rectangle {
+                anchors.fill: parent; anchors.margins: 10
+                color: powerbutton.on ? "#AA00FF00" : "#AAFF0000"
+            }
+
+            Image {
+                anchors.fill: parent
+                source: "../powerbutton.png"
+                smooth: true
+            }
+
+            MouseArea {
+                anchors.fill: parent
+                onPressed: powerbutton.scale = 0.95
+                onReleased: powerbutton.scale = 1.00
+                onClicked: powerbutton.on = !powerbutton.on
+            }
         }
     }
 }

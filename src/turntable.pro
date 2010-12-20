@@ -1,5 +1,4 @@
-QT       += core gui
-QT       += declarative opengl
+QT       += core gui declarative opengl
 
 CONFIG   += mobility
 MOBILITY += sensors multimedia systeminfo
@@ -28,6 +27,7 @@ HEADERS +=     TurnTable.h \
                ga_src/GEInterfaces.h \
                ga_src/GEAudioBuffer.h
 
+
 unix:!symbian {
     maemo5 {
         target.path = /opt/usr/bin
@@ -44,12 +44,15 @@ symbian {
     INCLUDEPATH += /epoc32/include/mmf/server
     LIBS += -lmmfdevsound
 
+    # To handle volume up / down keys on Symbian
+    LIBS += -lremconcoreapi
+    LIBS += -lremconinterfacebase
+
     # For the icon
     ICON = icons/turntable.svg
 
     # To lock the application to landscape orientation
     LIBS += -lcone -leikcore -lavkon
-
 
     TARGET.EPOCHEAPSIZE = 0x100000 0x2000000
     TARGET.EPOCSTACKSIZE = 0x14000

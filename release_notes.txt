@@ -1,0 +1,148 @@
+DJ Turntable v1.0.0
+===================
+
+Dj Turntable is demonstration of integrating Qt Quick application to Qt audio
+interface. Application is compatible with Symbian^3 devices with Qt 4.7.0 or
+higher.
+
+
+FILES
+-------------------------------------------------------------------------------
+
+src/main.cpp
+
+- Creates all needed Qt objects and initializes the Declarative runtime.
+  Integration of the QML and Qt code is done here.
+  
+src/TurnTable.h
+src/TurnTable.cpp
+
+- Represents the logic of the turntable section of the UI. Turntable object
+  contains the main audio mixer to which the drum beats and the the disc sample
+  is mixed.
+  
+src/DrumMachine.h
+src/DrumMachine.cpp
+
+- Represents the logic of the drum machine section of the UI. Signals of the 
+  drum machine QML are mapped directly to this objects slots. Storing / loading
+  of the drum sequences are done here.
+
+src/accelerometerfilter.h
+
+- Handles the accelerometer information from the devices sensor. The signals
+  about the accelerometer data change are mapped directly to the QML slots to
+  rotate the reflection on turntables disc.
+  
+src/sounds/*
+
+- Contains all of the samples used by Dj Turntable.
+  
+src/qml/DrumMachine/*
+
+- QML files containing UI controls of the Drum Machine.
+
+src/qml/InfoScreen/*
+
+- QML files containing UI controls of the Info Screen.
+
+src/qml/TurnTable.qml
+
+- The main qml file that represents as the whole UI of the application.
+  All else qml files / elements are children of this file.
+
+install/
+
+- The compiled binaries.
+
+
+KNOWN ISSUES
+-------------------------------------------------------------------------------
+
+- The application is not yet optimized for the Maemo devices. Maemo support
+  will be published later.
+
+DESIGN CONSIDERATIONS
+-------------------------------------------------------------------------------
+
+
+  
+INSTALLATION INSTRUCTIONS
+-------------------------------------------------------------------------------
+
+Mobile device (S60 5th Edition and Symbian^3)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+There are two ways to install the application in the device.
+
+0. The Qt 4.7.0 or higher libraries must be installed, see COMPATIBILITY
+   chapter for more information about the install.
+
+1. a) Drag the install/qtquickplayground.sis file to the Nokia Ovi Suite when
+      phone is connected with the USB cable.
+   
+   OR
+   
+   b) Send the application directly to the Messaging Inbox (for example,
+      through Bluetooth).
+
+2. After the installation is complete, return to the Application menu and
+   select the Applications folder.
+   
+3. Locate the qtquickplayground icon and select it to launch the application.
+
+
+
+RUNNING THE APPLICATION
+-------------------------------------------------------------------------------
+
+Dj Turntable is demonstration of integrating Qt Quick application to Qt audio interface.
+
+Turntable
+
+Play the looping sample with a realistic turntable. The sample can be scratched by the finger, played faster, slower and backwards. The speed of the disk can be adjusted with the speed slider, the default 1x speed can be obtained by double clicking the speed slider knob. Dj Turntable offers Cutoff and Resonance to alternate the sample in real time. The knobs are rotated by moving the finger up and down on top of the knobs.
+
+Drum machine
+                      
+Play and edit the drum beats. There are four predefined beats which can be played and edited but the edits are not stored. For the user there are four beats that are saved to the devices memory whenever they are edited. Use the beat selector on the bottom right corner of the view to iterate through the beats. All the beats are 32 ticks long and they accommondate 6 different drum samples: hi-hat, hi-hat open, bass drum, snare, cymbal and cow bell.
+
+Keyboard shortcuts
+
+There exists following keyboard shortcuts:
+Camera zoom up = Volume up
+Camera zoom down = Volume down
+Space = Start / stop turntable
+Return = Start / stop drum machine
+Key up = Go to turntable view
+Key down = Go to drum machine view
+Key left = View the 1st tick group in drum machine
+Key right = View the 2nd tick group in drum machine
+Key i = Go to info view
+
+
+Samples
+
+The turntable melody sample ivory.wav was created by nick Flick3r and it was downloaded from http://www.freesound.org. The sample follows the http://creativecommons.org/licenses/sampling+/1.0/ license.
+
+
+
+COMPATIBILITY
+-------------------------------------------------------------------------------
+
+- Symbian^3 with Qt version 4.7.0 or higher.
+
+  1. Download the Qt 4.7.0 or higher for Symbian from qt.nokia.com
+  
+  2. Drag the qt_installer.sis on top of the device in Nokia Ovi Suite while
+     the device is connected. The sis package is found from the installation
+     folder of the Qt 4.7.0 or higher for Symbian.
+
+     
+    
+Tested on:
+
+- Nokia N8
+- Nokia E7
+
+RELATED RESOURCES
+-------------------------------------------------------------------------------

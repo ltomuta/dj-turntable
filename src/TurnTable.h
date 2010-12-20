@@ -8,6 +8,14 @@
 #include "ga_src/GEAudioOut.h"
 #include "ga_src/GEAudioBuffer.h"
 
+#ifdef Q_OS_SYMBIAN
+    #include <remconcoreapitargetobserver.h>
+
+    class Observer;
+    class CRemConInterfaceSelector;
+    class CRemConCoreApiTarget;
+#endif
+
 QTM_USE_NAMESPACE
 
 class QSettings;
@@ -70,7 +78,37 @@ protected:
     QPointer<GE::CAudioBuffer> m_source;
     QPointer<GE::CAudioMixer> m_audioMixer;
     QPointer<GE::AudioOut> m_audioOut;
+
+#ifdef Q_OS_SYMBIAN
+    Observer *m_Observer;
+    CRemConInterfaceSelector *m_Selector;
+    CRemConCoreApiTarget *m_Target;
+#endif
 };
+
+#ifdef Q_OS_SYMBIAN
+
+    class Observer : public MRemConCoreApiTargetObserver
+    {
+    public:
+        Observer(TurnTable *turnTable) : m_TurnTable(turnTable) {}
+        virtual void MrccatoCommand(TRemConCoreApiOperationId aOperationId, TRemConCoreApiButtonAction /*aButtonAct*/)
+        {
+            switch( aOperationId ) {
+            case ERemConCoreApiVolumeDown:
+                m_TurnTable->volumeDown();
+                break;
+            case ERemConCoreApiVolumeUp:
+                m_TurnTable->volumeUp();
+                break;
+            default:
+                break;
+            }
+        }
+    protected:
+        TurnTable *m_TurnTable;
+    };
+#endif
 
 
 #endif

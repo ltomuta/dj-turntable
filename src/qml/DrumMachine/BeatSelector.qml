@@ -1,12 +1,13 @@
 import Qt 4.7
 
-Rectangle {
+Image {
     property alias index: view.currentIndex
 
-    width: 400; height: 200
-    color: "#303030"
+    width: 400; height: 40
+    //color: "#303030"
+    source: "beatselector.png"
     clip: true
-    radius: 8
+
 
     ListModel {
         id: model
@@ -16,7 +17,7 @@ Rectangle {
         // the elements in model to backwards by one element, this is lame...
 
         ListElement { name: "User defined 4" }
-        ListElement { name: "Predefined 1" }
+        ListElement { name: "Predefined 1" }    // this is the first element
         ListElement { name: "Predefined 2" }
         ListElement { name: "Predefined 3" }
         ListElement { name: "Predefined 4" }
@@ -39,7 +40,7 @@ Rectangle {
                 font.pixelSize: 20
                 font.bold: true
                 text: name
-                color: "white"
+                color: "#404040"
             }
         }
 

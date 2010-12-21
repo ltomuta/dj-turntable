@@ -6,6 +6,7 @@ MOBILITY += sensors multimedia systeminfo
 TARGET   = turntable
 TEMPLATE = app
 
+VERSION = 1.0.0
 
 SOURCES += main.cpp \
            TurnTable.cpp \

@@ -8,12 +8,14 @@ Image {
     property int index: -1
     property bool pressed: false
     property alias buttonCenterImage: buttonCenter.source
+    property alias glowColor: glowColor.color
 
     width: 50; height: 50
     smooth: true
     source: "buttonedge.png"
 
     Rectangle {
+        id: glowColor
         anchors.fill: parent; anchors.margins: 10
         z: -1
         color: button.pressed ? "#AAFF0000" : "#AA202020"

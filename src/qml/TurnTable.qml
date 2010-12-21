@@ -335,6 +335,7 @@ Rectangle {
                     else                  { arm.moveOut() }
                 }
 
+                glowColor: pressed ? "#AA00FF00" : "#AAFF0000"
                 pressed: turntable.playing
 
                 onClicked: press()

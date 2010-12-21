@@ -189,6 +189,7 @@ Item {
             buttonCenterImage: "../powerbutton.png"
             width: parent.height; height: parent.height
             anchors.right: parent.right; anchors.rightMargin: 10
+            glowColor: pressed ? "#AA00FF00" : "#AAFF0000"
 
             onPressedChanged: pressed ? drumMachine.startBeat() : drumMachine.stopBeat()
 

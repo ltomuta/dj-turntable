@@ -14,55 +14,49 @@ Rectangle {
     width: 100; height: 400
     color: "black"
 
-    Button {
+    Image {
         id: turnTableButton
 
         width: parent.width - 2; height: parent.height / 2 - 1
-        pressedColor: "gray"
-        pressedColorOpacity: turnTableButtonPressed ? 1.0 : 0.3
-
-        Text {
-            anchors.centerIn: parent
-            rotation: 270
-            text: "    Turntable"
-            color: "white"
-            font.pixelSize: 20
+        smooth: true
+        source: {
+            if(turnTableButtonPressed) {
+                if(turnTableLedOn) { return "turntable_on_play.png" }
+                else {return "turntable_on_noplay.png" }
+            }
+            else {
+                if(turnTableLedOn) { return "turntable_off_play.png" }
+                else { return "turntable_off_noplay.png" }
+            }
         }
 
-        Image {
-            width: 44; height: 44
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.bottom: parent.bottom; anchors.bottomMargin: 0
-
-            source: sidepanel.turnTableLedOn ? "ledon.png" : "ledoff.png"
+        MouseArea {
+            anchors.fill: parent
+            onPressed: sidepanel.turnTableClicked()
         }
 
-        onPressed: sidepanel.turnTableClicked()
     }
 
-    Button {
+    Image {
         id: drumMachineButton
 
         width: parent.width - 2; height: parent.height / 2 - 1
         y: parent.height / 2 + 1
-        pressedColor: "gray"
-        pressedColorOpacity: drumMachineButtonPressed ? 1.0 : 0.3
-
-        Text {
-            anchors.centerIn: parent
-            rotation: 270
-            text: "    Drum Machine"
-            color: "white"
-            font.pixelSize: 20
+        smooth: true
+        source: {
+            if(drumMachineButtonPressed) {
+                if(drumMachineLedOn) { return "drummachine_on_play.png" }
+                else {return "drummachine_on_noplay.png" }
+            }
+            else {
+                if(drumMachineLedOn) { return "drummachine_off_play.png" }
+                else { return "drummachine_off_noplay.png" }
+            }
         }
 
-        Image {
-            width: 44; height: 44
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.bottom: parent.bottom; anchors.bottomMargin: 0
-            source: sidepanel.drumMachineLedOn ? "ledon.png" : "ledoff.png"
+        MouseArea {
+            anchors.fill: parent
+            onPressed: sidepanel.drumMachineClicked()
         }
-
-        onPressed: sidepanel.drumMachineClicked()
     }
 }

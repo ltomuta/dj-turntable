@@ -22,11 +22,6 @@ const unsigned char drum_seq2[] = { 5, 0, 1, 0,33, 0, 5, 0,
                                     5, 0, 1, 0,33, 0, 5, 0,
                                     5, 0, 1, 0,33, 0, 2, 0};
 
-const unsigned char drum_seq3[] = { 5, 0, 1, 0,10, 4, 1, 0,
-                                    5, 0, 1, 0,10, 4, 5, 4,
-                                    5, 0, 1, 0,10, 4, 1, 0,
-                                    5, 0, 1, 0,10, 4, 5, 4};
-
 
 DrumMachine::DrumMachine(QSettings *settings) :
                                m_tickCount(0),
@@ -109,7 +104,7 @@ void DrumMachine::setBpm(int bpm)
 
 bool DrumMachine::isUserBeat() const
 {
-    if(m_currentSeqIndex >= 4 && m_currentSeqIndex <= 7) {
+    if(m_currentSeqIndex >= 3 && m_currentSeqIndex <= 5) {
         return true;
     }
 
@@ -239,17 +234,11 @@ void DrumMachine::setBeat(QVariant index)
         tempvec.assign(drum_seq2, drum_seq2 + SEQUENCE_LENGTH);
         m_seq = QVector<unsigned char>::fromStdVector(tempvec);
         break;
-    case 3:
-        tempvec.assign(drum_seq3, drum_seq3 + SEQUENCE_LENGTH);
-        m_seq = QVector<unsigned char>::fromStdVector(tempvec);
-        break;
-
     // User defined sequences
     //
+    case 3:
     case 4:
     case 5:
-    case 6:
-    case 7:
         m_seq = readUserBeat(index.toInt());
         break;
 

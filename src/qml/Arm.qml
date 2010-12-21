@@ -1,9 +1,9 @@
 import Qt 4.7
 
-Image {
+Item {
     id: arm
 
-    property real angle: armdown ? positionOnDisk * 22 + armOnDiskOffset : armOnDiskOffset
+    property real angle: armdown ? positionOnDisk * 20 + armOnDiskOffset : armOnDiskOffset
     property real armOnDiskOffset: 0
     property bool armdown: false
     property real positionOnDisk: 0   // Values from 0.0 - 1.0
@@ -12,10 +12,20 @@ Image {
     function moveIn() { moveToStop.stop(); moveToDisk.start() }
     function moveOut() { moveToDisk.stop(); moveToStop.start() }
 
-    x: 100; y: 300
-    source: "arm.png"
-    smooth: true
-    transform: Rotation { origin.x: arm.width * 0.82; origin.y: arm.height * 0.1; angle: arm.angle }
+    transform: Rotation { origin.x: arm.width * 0.25; origin.y: -5; angle: arm.angle }
+
+    Image {
+        source: "armshadow.png"
+        anchors.fill: parent
+        anchors.leftMargin: 10
+        anchors.topMargin: -5
+    }
+
+    Image {
+        source: "arm.png"
+        smooth: true
+        anchors.fill: parent
+    }
 
     MouseArea {
         width: 50; height: 50
@@ -27,7 +37,7 @@ Image {
     SequentialAnimation {
         id: moveToDisk
 
-        PropertyAnimation { target: arm; property: "armOnDiskOffset"; to: 12; duration: 2000 }
+        PropertyAnimation { target: arm; property: "armOnDiskOffset"; to: 26; duration: 2000 }
         ScriptAction { script: { arm.armdown = true } }
     }
 

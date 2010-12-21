@@ -14,13 +14,13 @@ Rectangle {
         radius: 8
 
         Behavior on color { ColorAnimation {} }
-        color: selector.selectedTickGroup == 1 ? "gray" : "#303030"
+        color: selector.selectedTickGroup == 1 ? "#999999" : "#303030"
 
         Text {
             anchors.centerIn: parent
             font.pixelSize: 20
             font.bold: true
-            text: "1"
+            text: "1-16"
             color: "white"
         }
 
@@ -32,13 +32,13 @@ Rectangle {
         radius: 8
 
         Behavior on color { ColorAnimation {} }
-        color: selector.selectedTickGroup == 2 ? "gray" : "#303030"
+        color: selector.selectedTickGroup == 2 ? "#999999" : "#303030"
 
         Text {
             anchors.centerIn: parent
             font.pixelSize: 20
             font.bold: true
-            text: "2"
+            text: "17-32"
             color: "white"
         }
 

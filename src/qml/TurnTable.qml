@@ -70,10 +70,19 @@ Rectangle {
 
             property bool playing: false
 
-            width:  flickable.width - mixerpanel.width
-            height: flickable.height - 1
+            width:  flickable.width - mixerpanel.width - 2
+            height: flickable.height
             source: "turntable.png"
-            fillMode: Image.PreserveAspectFit
+            fillMode: Image.Stretch// Image.PreserveAspectFit
+
+            Image {
+                id: discPlate
+
+                x: 15; y: 7
+                width:  340; height: 340
+                source: "discplate.png"
+                smooth: true
+            }
 
             Image {
                 id: disk
@@ -84,9 +93,10 @@ Rectangle {
 
                 width: parent.paintedWidth * 0.73; height: width
                 source: "disk.png"
+                smooth: true
 
                 anchors.centerIn: parent
-                anchors.horizontalCenterOffset: -0.060 * parent.paintedWidth
+                anchors.horizontalCenterOffset: -0.085 * parent.paintedWidth
                 anchors.verticalCenterOffset: -0.0055 * parent.paintedHeight
 
                 onCurrentSpeedChanged: playTimer.running ? ui.diskSpeed(disk.currentSpeed) : ui.diskAimSpeed(disk.currentSpeed)
@@ -174,6 +184,14 @@ Rectangle {
                 }
             }
 
+            Text {
+                text: "Disk speed"
+                color: "#505050"
+                anchors.right: speedslider.left; anchors.rightMargin: 15
+                anchors.bottom: speedslider.bottom; anchors.bottomMargin: 10
+                font.pixelSize: 10
+            }
+
             SpeedSlider {
                 id: speedslider
 
@@ -185,15 +203,40 @@ Rectangle {
                 mouseAreaScale: 3
             }
 
+            Image {
+                id: pedal
+                x: 345; y: 10
+                width: 90; height: 90
+                smooth: true
+                source: "pedal.png"
+            }
+
             Arm {
                 id: arm
 
-                width: parent.paintedWidth * 0.1518; height: parent.paintedHeight * 0.8927
+                width: parent.paintedWidth * 0.13; height: parent.paintedHeight * 0.83
                 anchors.centerIn: parent
-                anchors.horizontalCenterOffset: 0.34 * parent.paintedWidth
-                anchors.verticalCenterOffset: -0.03 * parent.paintedHeight
+                anchors.horizontalCenterOffset: 0.405 * parent.paintedWidth
+                anchors.verticalCenterOffset: 0.075 * parent.paintedHeight
 
                 onArmdownChanged: armdown ? ui.start() : ui.stop()
+            }
+
+            Image {
+                anchors.fill: pedal
+                anchors.leftMargin: 10
+                anchors.topMargin: 10
+
+
+                smooth: true
+                source: "armcasingshadow.png"
+            }
+
+            Image {
+
+                anchors.fill: pedal; anchors.margins: 15
+                smooth: true
+                source: "armcasing.png"
             }
         }
 
@@ -201,18 +244,17 @@ Rectangle {
             id: mixerpanel
 
             x: flickable.width - mixerpanel.width
-            y: 1
-            width: 130; height: flickable.height - 2
-            color: "#858585"
+            width: 130; height: flickable.height
+            color: "#999999"
             radius: 4
 
             Button {
                 id: closeButton
 
-                width: 40; height: 40
+                width: 53; height: 42
                 anchors.top: parent.top; anchors.topMargin: 10
-                anchors.right: parent.right; anchors.rightMargin: 18
-                source: "closemark.png"
+                anchors.right: parent.right; anchors.rightMargin: 4
+                source: pressed ? "exit_on.png" : "exit.png"
                 smooth: true
                 onClicked: Qt.quit()
             }
@@ -220,16 +262,18 @@ Rectangle {
             Image {
                 id: infoButton
 
-                width: 40; height: 40
+                property bool pressed: false
+
+                width: 53; height: 42
                 anchors.top:  closeButton.top
-                anchors.right: closeButton.left; anchors.rightMargin: 14
-                source: "infobutton.png"
+                anchors.right: closeButton.left; anchors.rightMargin: 10
+                source: pressed ? "info_on.png" : "info.png"
                 smooth: true
 
                 MouseArea {
                     anchors.fill: parent
-                    onPressed: infoButton.scale = 0.95
-                    onReleased: infoButton.scale = 1.00
+                    onPressed: { infoButton.pressed = true; infoButton.scale = 0.9 }
+                    onReleased: { infoButton.pressed = false; infoButton.scale = 1.00 }
                     onClicked: flickable.state = "Help"
                 }
             }
@@ -278,11 +322,11 @@ Rectangle {
                 text: "Power"
                 color: "#505050"
                 anchors.left: parent.left; anchors.leftMargin: 7
-                anchors.top: cutoff.bottom; anchors.topMargin: 3
+                anchors.top: cutoff.bottom; anchors.topMargin: 10
                 font.pixelSize: 10
             }
 
-            Item {
+            ImageButton {
                 id: powerbutton
 
                 function press() {
@@ -291,27 +335,14 @@ Rectangle {
                     else                  { arm.moveOut() }
                 }
 
+                pressed: turntable.playing
+
+                onClicked: press()
+
                 width: 50; height: 50
                 anchors.horizontalCenter: parent.horizontalCenter
-                anchors.top: cutoff.bottom; anchors.topMargin: 10
-
-                Rectangle {
-                    anchors.fill: parent; anchors.margins: 10
-                    color: turntable.playing ? "#AA00FF00" : "#AAFF0000"
-                }
-
-                Image {
-                    anchors.fill: parent
-                    source: "powerbutton.png"
-                    smooth: true
-                }
-
-                MouseArea {
-                    anchors.fill: parent
-                    onPressed: powerbutton.scale = 0.95
-                    onReleased: powerbutton.scale = 1.00
-                    onClicked: powerbutton.press()
-                }
+                anchors.top: cutoff.bottom; anchors.topMargin: 23
+                buttonCenterImage: "powerbutton.png"
             }
         }
 

@@ -11,19 +11,47 @@
         <file>qml/DrumMachine/SlideSwitch.qml</file>
         <file>qml/DrumMachine/BeatSelector.qml</file>
         <file>qml/DrumMachine/TickGroupSelector.qml</file>
+        <file>qml/DrumMachine/ImageButton.qml</file>
         <file>qml/DrumMachine/beatselector.png</file>
+        <file>qml/DrumMachine/buttonedge.png</file>
+        <file>qml/DrumMachine/button1.png</file>
+        <file>qml/DrumMachine/button2.png</file>
+        <file>qml/DrumMachine/button3.png</file>
+        <file>qml/DrumMachine/dr_icon_hihat.png</file>
+        <file>qml/DrumMachine/dr_icon_hihat_open.png</file>
+        <file>qml/DrumMachine/dr_icon_kick.png</file>
+        <file>qml/DrumMachine/dr_icon_snare.png</file>
+        <file>qml/DrumMachine/dr_icon_crash.png</file>
+        <file>qml/DrumMachine/dr_icon_cowbell.png</file>
+        <file>qml/discplate.png</file>
         <file>qml/disk.png</file>
         <file>qml/diskreflection.png</file>
         <file>qml/turntable.png</file>
         <file>qml/arm.png</file>
+        <file>qml/pedal.png</file>
+        <file>qml/armcasing.png</file>
+        <file>qml/armcasingshadow.png</file>
+        <file>qml/armshadow.png</file>
+        <file>qml/arrowdown.png</file>
+        <file>qml/arrowup.png</file>
         <file>qml/powerbutton.png</file>
-        <file>qml/closemark.png</file>
+        <file>qml/exit.png</file>
+        <file>qml/exit_on.png</file>
         <file>qml/knobdial.png</file>
-        <file>qml/infobutton.png</file>
+        <file>qml/info.png</file>
+        <file>qml/info_on.png</file>
+        <file>qml/speed.png</file>
+        <file>qml/speedslider.png</file>
         <file>qml/DrumMachine/drumbutton.png</file>
         <file>qml/DrumMachine/drumbuttonselected.png</file>
-        <file>qml/ledon.png</file>
-        <file>qml/ledoff.png</file>
+        <file>qml/drummachine_off_noplay.png</file>
+        <file>qml/drummachine_off_play.png</file>
+        <file>qml/drummachine_on_noplay.png</file>
+        <file>qml/drummachine_on_play.png</file>
+        <file>qml/turntable_off_noplay.png</file>
+        <file>qml/turntable_off_play.png</file>
+        <file>qml/turntable_on_noplay.png</file>
+        <file>qml/turntable_on_play.png</file>
         <file>qml/HelpScreen/HelpScreen.qml</file>
         <file>sounds/ivory.wav</file>
         <file>sounds/snare.wav</file>

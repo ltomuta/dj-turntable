@@ -96,8 +96,8 @@ There are two ways to install the application in the device.
 RUNNING THE APPLICATION
 -------------------------------------------------------------------------------
 
-Dj Turntable is demonstration of integrating Qt Quick application to Qt audio
-interface.
+Dj Turntable is Forum Nokia example of integrating Qt Quick application to Qt
+audio interface.
 
 Turntable
 
@@ -110,11 +110,11 @@ finger up and down on top of the knobs.
 
 Drum machine
                       
-Play and edit the drum beats. There are four predefined beats which can be
-played and edited but the edits are not stored. For the user there are four
+Play and edit the drum beats. There are three predefined beats which can be
+played and edited but the edits are not stored. For the user there are three
 beats that are saved to the devices memory whenever they are edited. Use the
-beat selector on the bottom right corner of the view to iterate through the
-beats. All the beats are 32 ticks long and they accommondate 6 different drum
+beat selector buttons on the bottom of the view to switch between the beats.
+All the beats are 32 ticks long and they accommondate 6 different drum
 samples: hi-hat, hi-hat open, bass drum, snare, cymbal and cow bell.
 
 Keyboard shortcuts

@@ -1,55 +1,43 @@
 import Qt 4.7
 
-Image {
-    property alias index: view.currentIndex
+Item {
+    id: selector
 
-    width: 400; height: 40
-    //color: "#303030"
-    source: "beatselector.png"
-    clip: true
+    property int index
+    property variant pressedButton: -1
 
-
-    ListModel {
-        id: model
-
-        // There is something wrong on the view, the indexes of the current showing
-        // element has offset of a one indes, so we correct this by shifting
-        // the elements in model to backwards by one element, this is lame...
-
-        ListElement { name: "User defined 4" }
-        ListElement { name: "Predefined 1" }    // this is the first element
-        ListElement { name: "Predefined 2" }
-        ListElement { name: "Predefined 3" }
-        ListElement { name: "Predefined 4" }
-        ListElement { name: "User defined 1" }
-        ListElement { name: "User defined 2" }
-        ListElement { name: "User defined 3" }
+    function buttonPressed(button, i) {
+        if(pressedButton != -1) { pressedButton.pressed = false }
+        pressedButton = button
+        index = i
+        pressedButton.pressed = true
     }
 
-    PathView {
-        id: view
+    Component.onCompleted: selector.buttonPressed(first, 0)
 
-        anchors.fill: parent
-        model: model
+    width: 450
+    height: 50
 
-        delegate: Item {
-            width: view.width; height: view.height
+    Row {
+        id: predefined
 
-            Text {
-                anchors.centerIn: parent
-                font.pixelSize: 20
-                font.bold: true
-                text: name
-                color: "#404040"
-            }
-        }
+        spacing: 5
 
-        pathItemCount: 8
-        dragMargin: view.width
+        Text { text: "Predefined"; color: "#505050"; font.pixelSize: 10 }
+        ImageButton { id: first; buttonCenterImage: "button1.png"; index: 0; onClicked: selector.buttonPressed(button, index) }
+        ImageButton { buttonCenterImage: "button2.png"; index: 1; onClicked: selector.buttonPressed(button, index) }
+        ImageButton { buttonCenterImage: "button3.png"; index: 2; onClicked: selector.buttonPressed(button, index) }
+    }
 
-        path: Path {
-            startX: -view.width / 2; startY: view.height / 2
-            PathLine { x: model.count * view.width - view.width / 2; y: view.height / 2 }
-        }
+    Row {
+        id: userDefined
+
+        spacing: 5
+        anchors.left: predefined.right; anchors.leftMargin: 10
+
+        Text { text: "User defined"; color: "#505050"; font.pixelSize: 10 }
+        ImageButton { buttonCenterImage: "button1.png"; index: 3; onClicked: selector.buttonPressed(button, index) }
+        ImageButton { buttonCenterImage: "button2.png"; index: 4; onClicked: selector.buttonPressed(button, index) }
+        ImageButton { buttonCenterImage: "button3.png"; index: 5; onClicked: selector.buttonPressed(button, index) }
     }
 }

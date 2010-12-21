@@ -22,6 +22,18 @@ Item {
         rotation: knob.value / knob.maximumvalue * knob.maximumrotation
     }
 
+    Image {
+        source: "arrowup.png"
+        anchors.centerIn: parent
+        anchors.verticalCenterOffset: parent.height / -6
+    }
+
+    Image {
+        source: "arrowdown.png"
+        anchors.centerIn: parent
+        anchors.verticalCenterOffset: parent.height / 6
+    }
+
     Text {
         anchors.centerIn: parent
         color: "white"

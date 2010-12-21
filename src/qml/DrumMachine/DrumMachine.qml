@@ -68,7 +68,7 @@ Item {
     }
 
     property bool ledOn: false
-    property alias running: powerbutton.on
+    property alias running: powerbutton.pressed
     property alias selectedTickGroup: tickGroupSelector.selectedTickGroup
 
     width: 600; height: 360
@@ -80,14 +80,14 @@ Item {
 
         anchors.top: parent.top; anchors.topMargin: 10
         anchors.horizontalCenter: parent.horizontalCenter
-        width: 200; height: 40
+        width: 300; height: 45
     }
 
     Rectangle {
-        color: "gray"
+        color: "#999999"
         anchors.left: parent.left
         anchors.right: parent.right
-        anchors.top: tickGroupSelector.bottom
+        anchors.top: tickGroupSelector.bottom; anchors.topMargin: -5
         anchors.bottom: parent.bottom
     }
 
@@ -98,14 +98,14 @@ Item {
         anchors.bottom: controlButtons.top
 
         width: 30
-        spacing: 0
+        spacing: 3
 
-        Item { width: sampleIcons.width; height: drumGrid.drumButtonHeight; Text { anchors.centerIn: parent; color: "white"; text: "HH" } }
-        Item { width: sampleIcons.width; height: drumGrid.drumButtonHeight; Text { anchors.centerIn: parent; color: "white"; text: "HHo" } }
-        Item { width: sampleIcons.width; height: drumGrid.drumButtonHeight; Text { anchors.centerIn: parent; color: "white"; text: "Bs" } }
-        Item { width: sampleIcons.width; height: drumGrid.drumButtonHeight; Text { anchors.centerIn: parent; color: "white"; text: "Sn" } }
-        Item { width: sampleIcons.width; height: drumGrid.drumButtonHeight; Text { anchors.centerIn: parent; color: "white"; text: "Cr" } }
-        Item { width: sampleIcons.width; height: drumGrid.drumButtonHeight; Text { anchors.centerIn: parent; color: "white"; text: "Cb" } }
+        Image { width: sampleIcons.width; height: drumGrid.drumButtonHeight; source: "dr_icon_hihat.png"; smooth: true }
+        Image { width: sampleIcons.width; height: drumGrid.drumButtonHeight; source: "dr_icon_hihat_open.png"; smooth: true }
+        Image { width: sampleIcons.width; height: drumGrid.drumButtonHeight; source: "dr_icon_kick.png"; smooth: true }
+        Image { width: sampleIcons.width; height: drumGrid.drumButtonHeight; source: "dr_icon_snare.png"; smooth: true }
+        Image { width: sampleIcons.width; height: drumGrid.drumButtonHeight; source: "dr_icon_crash.png"; smooth: true }
+        Image { width: sampleIcons.width; height: drumGrid.drumButtonHeight; source: "dr_icon_cowbell.png"; smooth: true }
     }
 
     Flickable {
@@ -114,7 +114,7 @@ Item {
         anchors.top: tickGroupSelector.bottom; anchors.topMargin: 10
         anchors.left: sampleIcons.right; anchors.leftMargin: 5
         anchors.right: parent.right; anchors.rightMargin: 10
-        anchors.bottom: controlButtons.top; anchors.bottomMargin: 10
+        anchors.bottom: controlButtons.top; anchors.bottomMargin: 3
 
         contentWidth: drumGrid.width
         interactive: false
@@ -164,62 +164,35 @@ Item {
 
         anchors.left: parent.left; anchors.leftMargin: 10
         anchors.right: parent.right; anchors.rightMargin: 10
-        anchors.bottom: parent.bottom; anchors.bottomMargin: 5
-        height: 40
-
-        Text {
-            id: patternText
-            anchors.right: beatSelector.left; anchors.rightMargin: -10
-            anchors.top: beatSelector.top; anchors.topMargin: -12
-            text: "Pattern"
-            color: "#505050"
-            font.pixelSize: 10
-        }
+        anchors.bottom: parent.bottom; anchors.bottomMargin: 3
+        height: 50
 
         BeatSelector {
             id: beatSelector
 
-            anchors.left: parent.left; anchors.leftMargin: 30
+            anchors.left: parent.left
             anchors.right: powerbutton.left; anchors.rightMargin: 30
             height: parent.height
             onIndexChanged: drumMachine.setBeat(index)
         }
 
         Text {
-            anchors.right: powerbutton.left; anchors.rightMargin: -5
-            anchors.top: patternText.top
+            anchors.right: powerbutton.left; anchors.rightMargin: 0
             text: "Power"
             color: "#505050"
             font.pixelSize: 10
         }
 
-        Item {
+        ImageButton {
             id: powerbutton
 
-            property bool on: false
-
+            buttonCenterImage: "../powerbutton.png"
             width: parent.height; height: parent.height
             anchors.right: parent.right; anchors.rightMargin: 10
 
-            onOnChanged: on ? drumMachine.startBeat() : drumMachine.stopBeat()
+            onPressedChanged: pressed ? drumMachine.startBeat() : drumMachine.stopBeat()
 
-            Rectangle {
-                anchors.fill: parent; anchors.margins: 10
-                color: powerbutton.on ? "#AA00FF00" : "#AAFF0000"
-            }
-
-            Image {
-                anchors.fill: parent
-                source: "../powerbutton.png"
-                smooth: true
-            }
-
-            MouseArea {
-                anchors.fill: parent
-                onPressed: powerbutton.scale = 0.95
-                onReleased: powerbutton.scale = 1.00
-                onClicked: powerbutton.on = !powerbutton.on
-            }
+            onClicked: pressed = !pressed
         }
     }
 }

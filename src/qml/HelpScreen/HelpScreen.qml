@@ -7,7 +7,7 @@ Rectangle {
 
     width: 500; height: 360
     radius: 5
-    color: "gray"
+    color: "#999999"
     clip: true
 
     Flickable {
@@ -32,7 +32,7 @@ Rectangle {
                 textFormat: Text.RichText
 
                 text: "<b><h2>Dj Turntable</b></h2>" +
-                      "Dj Turntable is demonstration of integrating Qt Quick application to Qt audio interface. " +
+                      "Dj Turntable is a Forum Nokia example that demonstrates integrating a Qt Quick application to Qt audio interface. " +
                       "See more information about the project at " +
                       "<a href=\"https://projects.forum.nokia.com/turntable\">https://projects.forum.nokia.com/turntable</a>.<br>"
             }
@@ -47,16 +47,16 @@ Rectangle {
 
                 text: "<b><h3>Turntable</h3></b>" +
                       "Play the looping sample with a realistic turntable. " +
-                      "The sample can be scratched by the finger, played faster, slower and backwards. " +
+                      "The sample can be scratched with finger, played faster, slower and backwards. " +
                       "The speed of the disk can be adjusted with the speed slider, the default 1x speed can be " +
                       "obtained by double clicking the speed slider knob. Dj Turntable offers Cutoff and Resonance " +
                       "to alternate the sample in real time. The knobs are rotated by moving the finger up and down " +
                       "on top of the knobs." +
                       "<b><h3>Drum machine</h3></b>" +
-                      "Play and edit the drum beats. There are four predefined beats which can be played and edited but the " +
-                      "edits are not stored. For the user there are four beats that are saved to the devices memory " +
-                      "whenever they are edited. Use the beat selector on the bottom right corner of the view to " +
-                      "iterate through the beats. All the beats are 32 ticks long and they accommondate 6 different " +
+                      "Play and edit the drum beats. There are three predefined beats which can be played and edited but the " +
+                      "edits are not stored. For the user there are three beats that are saved to the devices memory " +
+                      "whenever they are edited. Use the beat selector buttons on the bottom of the view to " +
+                      "switch between the beats. All the beats are 32 ticks long and they contain 6 different " +
                       "drum samples: hi-hat, hi-hat open, bass drum, snare, cymbal and cow bell.<br>"
             }
 
@@ -69,16 +69,16 @@ Rectangle {
                 textFormat: Text.RichText
 
                 text: "<b><h3>Keyboard shortcuts</h3></b>" +
-                      "There exists following keyboard shortcuts:<br><br>" +
+                      "The following keyboard shortcuts exist:<br><br>" +
                       "Camera zoom up = Volume up<br>" +
                       "Camera zoom down = Volume down<br>" +
-                      "Space = Start / stop turntable<br>" +
-                      "Return = Start / stop drum machine<br>" +
-                      "Key up = Go to turntable view<br>" +
-                      "Key down = Go to drum machine view<br>" +
-                      "Key left = View the 1st tick group in drum machine<br>" +
-                      "Key right = View the 2nd tick group in drum machine<br>" +
-                      "Key i = Go to info view<br>"
+                      "Space = Start / stop the turntable<br>" +
+                      "Return = Start / stop the drum machine<br>" +
+                      "Key up = Go to the turntable view<br>" +
+                      "Key down = Go to the drum machine view<br>" +
+                      "Key left = View the 1st tick group in the drum machine<br>" +
+                      "Key right = View the 2nd tick group in the drum machine<br>" +
+                      "Key i = Go to the info view<br>"
             }
 
             Text {

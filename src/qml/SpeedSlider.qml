@@ -11,30 +11,18 @@ Item {
 
     width: 50; height: 200
 
-    Rectangle {
+    Image {
         id: sliderimage
 
         anchors.fill: parent
-        radius: 3
-        color: "gray"
+        source: "speed.png"
+
     }
 
-    Rectangle {
-        width: 2
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.top: parent.top; anchors.topMargin: 6
-        anchors.bottom: parent.bottom; anchors.bottomMargin: 6
-        color: "#404040"
-    }
-
-    Rectangle {
+    Image {
         id: handle
+        source: "speedslider.png"
 
-        color: "#CCCCCC"
-        radius: 3
-
-        border.width: 2
-        border.color: "#303030"
 
         property int yMax: slider.height - handle.height
 

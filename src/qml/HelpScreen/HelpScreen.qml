@@ -92,7 +92,7 @@ Rectangle {
                 text: "<b><h3>Samples</h3></b>" +
                       "The turntable melody sample <i>ivory.wav</i> was created by nick <i>Flick3r</i> " +
                       "and it was downloaded from <a href=\"http://www.freesound.org\">freesound.org</a>. The sample follows the " +
-                      "<a href=\"http://creativecommons.org/licenses/sampling+/1.0/\">Creative Commons Sampling Plus 1.0 license</a>.<br>"
+                      "<a href=\"http://creativecommons.org/licenses/sampling+/1.0/\">Creative Commons Sampling Plus 1.0</a> license.<br>"
 
                 onLinkActivated: helpScreen.linkActivated(link)
             }

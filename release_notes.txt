@@ -1,7 +1,7 @@
 DJ Turntable v1.0.0
 ===================
 
-Dj Turntable demonstrates of integrating a Qt Quick application to Qt audio
+Dj Turntable demonstrates integrating a Qt Quick application to Qt audio
 interface. The application is compatible with Symbian^3 devices with Qt 4.7.0
 or higher.
 
@@ -30,9 +30,9 @@ src/DrumMachine.cpp
 
 src/accelerometerfilter.h
 
-- Handles the accelerometer information from the devices sensor. The signals
+- Handles the accelerometer information from the device's sensor. The signals
   about the accelerometer data change are mapped directly to the QML slots to
-  rotate the reflection on the turntables disc.
+  rotate the reflection on the turntable's disc.
   
 src/sounds/*
 
@@ -96,13 +96,13 @@ There are two ways to install the application into the device.
 RUNNING THE APPLICATION
 -------------------------------------------------------------------------------
 
-Dj Turntable is Forum Nokia example of integrating Qt Quick application to Qt
-audio interface.
+Dj Turntable is a Forum Nokia example that demonstrates integrating a Qt Quick
+application to Qt audio interface.
 
 Turntable
 
 Play the looping sample with a realistic turntable. The sample can be scratched
-by the finger, played faster, slower and backwards. The speed of the disk can
+with the finger, played faster, slower and backwards. The speed of the disk can
 be adjusted with the speed slider, the default 1x speed can be obtained by
 double clicking the speed slider knob. Dj Turntable offers Cutoff and Resonance
 to alternate the sample in real time. The knobs are rotated by moving the
@@ -112,23 +112,23 @@ Drum machine
                       
 Play and edit the drum beats. There are three predefined beats which can be
 played and edited but the edits are not stored. For the user there are three
-beats that are saved to the devices memory whenever they are edited. Use the
+beats that are saved to the device memory whenever they are edited. Use the
 beat selector buttons on the bottom of the view to switch between the beats.
-All the beats are 32 ticks long and they accommondate 6 different drum
+All the beats are 32 ticks long and they contain 6 different drum
 samples: hi-hat, hi-hat open, bass drum, snare, cymbal and cow bell.
 
 Keyboard shortcuts
 
-There exists following keyboard shortcuts:
+The following keyboard shortcuts exist:
 Camera zoom up = Volume up
 Camera zoom down = Volume down
-Space = Start / stop turntable
-Return = Start / stop drum machine
-Key up = Go to turntable view
-Key down = Go to drum machine view
-Key left = View the 1st tick group in drum machine
-Key right = View the 2nd tick group in drum machine
-Key i = Go to info view
+Space = Start / stop the turntable
+Return = Start / stop the drum machine
+Key up = Go to the turntable view
+Key down = Go to the drum machine view
+Key left = View the 1st tick group in the drum machine
+Key right = View the 2nd tick group in the drum machine
+Key i = Go to the info view
 
 
 Samples

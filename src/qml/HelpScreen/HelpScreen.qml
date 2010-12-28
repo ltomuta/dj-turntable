@@ -13,15 +13,13 @@ Rectangle {
     Flickable {
         id: flickable
 
-        anchors.fill: parent
-        anchors.margins: 20
+        anchors { fill: parent; margins: 20 }
         contentHeight: column.height
 
         Column {
             id: column
 
-            x: 10
-            width: parent.width - 20
+            width: parent.width
 
             Text {
                 id: projectInfo

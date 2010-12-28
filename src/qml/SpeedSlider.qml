@@ -16,27 +16,24 @@ Item {
 
         anchors.fill: parent
         source: "speed.png"
-
     }
 
     Image {
         id: handle
-        source: "speedslider.png"
 
+        property int yMax: slider.height - handle.height + handle.height * 0.14
 
-        property int yMax: slider.height - handle.height
-
-        anchors.horizontalCenter: parent.horizontalCenter
+        anchors { horizontalCenter: parent.horizontalCenter; horizontalCenterOffset: 1 }
         y: handle.yMax - (value - minimum) * handle.yMax / (maximum - minimum)
-        width: parent.width * 1.4; height: parent.height * 0.2
+        width: parent.width * 1.4; height: parent.height * 0.3
+        source: "speedslider.png"
     }
 
     MouseArea {
         id: ma
 
         anchors.fill: handle
-        drag.target: handle
-        drag.axis: "YAxis"; drag.minimumY: 0; drag.maximumY: handle.yMax
+        drag { target: handle; axis: "YAxis"; minimumY: 0; maximumY: handle.yMax }
         onPositionChanged: value = maximum - (maximum - minimum) * (handle.y) / handle.yMax + minimum
         onDoubleClicked: value = defaultValue
     }

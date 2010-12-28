@@ -7,37 +7,57 @@ Item {
     property real armOnDiskOffset: 0
     property bool armdown: false
     property real positionOnDisk: 0   // Values from 0.0 - 1.0
-    property bool liftedByUser: false
 
     function moveIn() { moveToStop.stop(); moveToDisk.start() }
     function moveOut() { moveToDisk.stop(); moveToStop.start() }
 
-    transform: Rotation { origin.x: arm.width * 0.25; origin.y: -5; angle: arm.angle }
-
     Image {
-        source: "armshadow.png"
-        anchors.fill: parent
-        anchors.leftMargin: 10
-        anchors.topMargin: -5
-    }
-
-    Image {
-        source: "arm.png"
+        id: pedal
+        width: parent.width; height: width
         smooth: true
-        anchors.fill: parent
+        source: "pedal.png"
     }
 
-    MouseArea {
-        width: 50; height: 50
-        anchors.bottom: parent.bottom
-        onPressed: arm.liftedByUser = true
-        onReleased: arm.liftedByUser = false
+    Item {
+        anchors { top: pedal.verticalCenter; bottom: parent.bottom; left: parent.left; right: parent.right }
+
+        transform: Rotation { origin.x: width / 2; origin.y: 0; angle: arm.angle }
+
+        Image {
+            anchors { fill: armImage; leftMargin: parent.width * 0.15; topMargin: parent.height * 0.02 }
+            smooth: true
+            source: "armshadow.png"
+        }
+
+        Image {
+            id: armImage
+            anchors { fill: parent; leftMargin: parent.width * 0.3 }
+
+            source: "arm.png"
+            smooth: true
+        }
     }
+
+    Image {
+        anchors.fill: pedal
+        anchors.leftMargin: pedal.width * 0.15
+        anchors.topMargin: anchors.leftMargin
+
+        smooth: true
+        source: "armcasingshadow.png"
+    }
+
+    Image {
+        anchors.fill: pedal; anchors.margins: pedal.width * 0.15
+        smooth: true
+        source: "armcasing.png"
+    }
+
 
     SequentialAnimation {
         id: moveToDisk
 
-        PropertyAnimation { target: arm; property: "armOnDiskOffset"; to: 26; duration: 2000 }
+        PropertyAnimation { target: arm; property: "armOnDiskOffset"; to: 23; duration: 2000 }
         ScriptAction { script: { arm.armdown = true } }
     }
 

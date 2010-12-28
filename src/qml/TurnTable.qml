@@ -20,6 +20,7 @@ Rectangle {
 
     anchors.fill: parent
     width: 640; height: 360
+    //width: 800; height: 480
     color: "black"
     focus: true
 
@@ -73,13 +74,17 @@ Rectangle {
             width:  flickable.width - mixerpanel.width - 2
             height: flickable.height
             source: "turntable.png"
-            fillMode: Image.Stretch// Image.PreserveAspectFit
+            fillMode: Image.Stretch
 
             Image {
                 id: discPlate
 
-                x: 15; y: 7
-                width:  340; height: 340
+                width: parent.paintedWidth * 0.79; height: width
+                anchors.centerIn: parent
+                anchors.horizontalCenterOffset: -0.085 * parent.paintedWidth
+                anchors.verticalCenterOffset: -0.0055 * parent.paintedHeight
+
+                //anchors.fill: disk; anchors.margins: -15
                 source: "discplate.png"
                 smooth: true
             }
@@ -121,8 +126,7 @@ Rectangle {
             Image {
                 id: diskReflection
 
-                anchors.top: disk.top; anchors.bottom: disk.bottom
-                anchors.horizontalCenter: disk.horizontalCenter
+                anchors.fill: disk
                 source: "diskreflection.png"
                 rotation: 45
                 Behavior on rotation { RotationAnimation {} }
@@ -203,40 +207,15 @@ Rectangle {
                 mouseAreaScale: 3
             }
 
-            Image {
-                id: pedal
-                x: 345; y: 10
-                width: 90; height: 90
-                smooth: true
-                source: "pedal.png"
-            }
-
             Arm {
                 id: arm
 
-                width: parent.paintedWidth * 0.13; height: parent.paintedHeight * 0.83
+                width: parent.paintedWidth * 0.20; height: parent.paintedHeight * 0.93
                 anchors.centerIn: parent
-                anchors.horizontalCenterOffset: 0.405 * parent.paintedWidth
-                anchors.verticalCenterOffset: 0.075 * parent.paintedHeight
+                anchors.horizontalCenterOffset: 0.38 * parent.paintedWidth
+                anchors.verticalCenterOffset: -0.025 * parent.paintedHeight
 
                 onArmdownChanged: armdown ? ui.start() : ui.stop()
-            }
-
-            Image {
-                anchors.fill: pedal
-                anchors.leftMargin: 10
-                anchors.topMargin: 10
-
-
-                smooth: true
-                source: "armcasingshadow.png"
-            }
-
-            Image {
-
-                anchors.fill: pedal; anchors.margins: 15
-                smooth: true
-                source: "armcasing.png"
             }
         }
 
@@ -244,7 +223,8 @@ Rectangle {
             id: mixerpanel
 
             x: flickable.width - mixerpanel.width
-            width: 130; height: flickable.height
+            //width: 130
+            width: 0.203125 * ui.width; height: flickable.height
             color: "#999999"
             radius: 4
 
@@ -386,7 +366,8 @@ Rectangle {
     SidePanel {
         id: sidepanel
 
-        width: 60; height: ui.height
+        //width: 60
+        width: 0.09375 * ui.width; height: ui.height
         onTurnTableClicked: flickable.state = "TurnTable"
         onDrumMachineClicked: flickable.state = "DrumMachine"
         turnTableLedOn: turntable.playing

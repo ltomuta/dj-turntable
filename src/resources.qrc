@@ -12,7 +12,6 @@
         <file>qml/DrumMachine/BeatSelector.qml</file>
         <file>qml/DrumMachine/TickGroupSelector.qml</file>
         <file>qml/DrumMachine/ImageButton.qml</file>
-        <file>qml/DrumMachine/beatselector.png</file>
         <file>qml/DrumMachine/buttonedge.png</file>
         <file>qml/DrumMachine/button1.png</file>
         <file>qml/DrumMachine/button2.png</file>

@@ -222,18 +222,6 @@ void TurnTable::volumeDown()
 }
 
 
-void TurnTable::profile(QSystemDeviceInfo::Profile profile)
-{
-    switch(profile) {
-    case QSystemDeviceInfo::SilentProfile:
-        m_audioMixer->setGeneralVolume(0.0f);
-        break;
-    default:
-        break;
-    }
-}
-
-
 void TurnTable::linkActivated(QVariant link)
 {
     QDesktopServices::openUrl(QUrl(link.toString(), QUrl::TolerantMode));

@@ -6,11 +6,10 @@
 #include <QDesktopWidget>
 #include <QMessageBox>
 #include <QSettings>
-#include <QSystemDeviceInfo>
 
 #include "TurnTable.h"
 #include "DrumMachine.h"
-#include "accelerometerfilter.h"
+
 
 // Lock orientation in Symbian
 #ifdef Q_OS_SYMBIAN
@@ -24,7 +23,13 @@
     #include <QGLWidget>
 #endif
 
-QTM_USE_NAMESPACE
+
+#if defined(Q_OS_SYMBIAN) || defined(Q_WS_MAEMO_5)
+    #include <QSystemDeviceInfo>
+    #include "accelerometerfilter.h"
+
+    QTM_USE_NAMESPACE
+#endif
 
 
 /**
@@ -83,6 +88,7 @@ int main(int argc, char *argv[])
     QPointer<DrumMachine> drumMachine = new DrumMachine(settings);
     turnTable->addAudioSource(drumMachine);
 
+#if defined(Q_OS_SYMBIAN) || defined(Q_WS_MAEMO_5)
     // Create Qt accelerometer objects
     QAccelerometer sensor;
     QPointer<AccelerometerFilter> filter = new AccelerometerFilter;
@@ -91,6 +97,7 @@ int main(int argc, char *argv[])
     // Create Qt objects for accessing profile information
     QPointer<QSystemDeviceInfo> deviceInfo = new QSystemDeviceInfo;
     turnTable->profile(deviceInfo->currentProfile());
+#endif
 
     // Find out the interesting Qt objects of the QML elements
     QObject *turnTableQML = dynamic_cast<QObject*>(view.rootObject());
@@ -123,8 +130,10 @@ int main(int argc, char *argv[])
 
     //Framework connections
     QObject::connect((QObject*)view.engine(), SIGNAL(quit()), &app, SLOT(quit()));
+#if defined(Q_OS_SYMBIAN) || defined(Q_WS_MAEMO_5)
     QObject::connect(filter, SIGNAL(rotationChanged(QVariant)), turnTableQML, SLOT(inclination(QVariant)));
     QObject::connect(deviceInfo, SIGNAL(currentProfileChanged(QSystemDeviceInfo::Profile)), turnTable, SLOT(profile(QSystemDeviceInfo::Profile)));
+#endif
 
     // Start with beat 0
     drumMachine->setBeat(0);

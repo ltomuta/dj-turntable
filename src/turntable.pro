@@ -1,8 +1,5 @@
 QT       += core gui declarative opengl
 
-CONFIG   += mobility
-MOBILITY += sensors multimedia systeminfo
-
 TARGET   = turntable
 TEMPLATE = app
 
@@ -21,16 +18,24 @@ OTHER_FILES += qml/*.qml \
 
 RESOURCES +=   resources.qrc
 
-HEADERS +=     TurnTable.h \
+HEADERS   +=   TurnTable.h \
                DrumMachine.h \
-               accelerometerfilter.h \
                ga_src/GEAudioOut.h \
                ga_src/GEInterfaces.h \
                ga_src/GEAudioBuffer.h
 
+win32 {
+    QT += multimedia
+}
+
 
 unix:!symbian {
     maemo5 {
+        CONFIG   += mobility
+        MOBILITY += sensors multimedia systeminfo
+
+        HEADERS  += accelerometerfilter.h
+
         target.path = /opt/usr/bin
     } else {
         target.path = /usr/local/bin
@@ -40,6 +45,11 @@ unix:!symbian {
 
 
 symbian {
+    CONFIG   += mobility
+    MOBILITY += sensors multimedia systeminfo
+
+    HEADERS  += accelerometerfilter.h
+
     # For the very ugly hack to make the master volume control possible
     INCLUDEPATH += /epoc32/include/mmf/common
     INCLUDEPATH += /epoc32/include/mmf/server

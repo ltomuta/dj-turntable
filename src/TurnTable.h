@@ -3,10 +3,14 @@
 
 #include <QVariant>
 #include <QPointer>
-#include <QSystemDeviceInfo>
 
 #include "ga_src/GEAudioOut.h"
 #include "ga_src/GEAudioBuffer.h"
+
+#if defined(Q_OS_SYMBIAN) || defined(Q_WS_MAEMO_5)
+    #include <QSystemDeviceInfo>
+    QTM_USE_NAMESPACE
+#endif
 
 #ifdef Q_OS_SYMBIAN
     #include <remconcoreapitargetobserver.h>
@@ -16,7 +20,7 @@
     class CRemConCoreApiTarget;
 #endif
 
-QTM_USE_NAMESPACE
+
 
 class QSettings;
 
@@ -45,7 +49,17 @@ public slots:
     void volumeUp();
     void volumeDown();
 
-    void profile(QSystemDeviceInfo::Profile profile);
+#if defined(Q_OS_SYMBIAN) || defined(Q_WS_MAEMO_5)
+    void profile(QSystemDeviceInfo::Profile profile) {
+        switch(profile) {
+        case QSystemDeviceInfo::SilentProfile:
+            m_audioMixer->setGeneralVolume(0.0f);
+            break;
+        default:
+            break;
+        }
+    }
+#endif
 
     int pullAudio(AUDIO_SAMPLE_TYPE *target, int bufferLength);
 

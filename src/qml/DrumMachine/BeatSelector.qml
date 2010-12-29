@@ -5,6 +5,7 @@ Item {
 
     property int index
     property variant pressedButton: -1
+    property alias buttonWidth: predefined.buttonWidth
 
     function buttonPressed(button, i) {
         if(pressedButton != -1) { pressedButton.pressed = false }
@@ -15,29 +16,80 @@ Item {
 
     Component.onCompleted: selector.buttonPressed(first, 0)
 
-    width: 450
-    height: 50
+    width: 450; height: 50
+
+    Text {
+        id: predefinedText
+
+        text: "Predefined"
+        color: "#505050"
+        font.pixelSize: 10
+    }
 
     Row {
         id: predefined
 
+        property real buttonWidth: Math.min(width / 3 - spacing, height)
+
+        anchors { left: predefinedText.right; right: parent.horizontalCenter }
+        anchors { top: parent.top; bottom: parent.bottom }
+        anchors { leftMargin: 10; rightMargin: 10 }
+
         spacing: 5
 
-        Text { text: "Predefined"; color: "#505050"; font.pixelSize: 10 }
-        ImageButton { id: first; buttonCenterImage: "button1.png"; index: 0; onClicked: selector.buttonPressed(button, index) }
-        ImageButton { buttonCenterImage: "button2.png"; index: 1; onClicked: selector.buttonPressed(button, index) }
-        ImageButton { buttonCenterImage: "button3.png"; index: 2; onClicked: selector.buttonPressed(button, index) }
+        ImageButton {
+            id: first;
+            width: predefined.buttonWidth; height: width
+            index: 0; buttonCenterImage: "button1.png"
+            onClicked: selector.buttonPressed(button, index)
+        }
+
+        ImageButton {
+            width: predefined.buttonWidth; height: width
+            index: 1; buttonCenterImage: "button2.png"
+            onClicked: selector.buttonPressed(button, index)
+        }
+
+        ImageButton {
+            width: predefined.buttonWidth; height: width
+            index: 2; buttonCenterImage: "button3.png"
+            onClicked: selector.buttonPressed(button, index)
+        }
+    }
+
+    Text {
+        id: userDefinedText
+
+        anchors.left: parent.horizontalCenter
+        text: "User defined"
+        color: "#505050"
+        font.pixelSize: 10
     }
 
     Row {
         id: userDefined
 
+        anchors { left: userDefinedText.right; right: parent.right }
+        anchors { top: parent.top; bottom: parent.bottom }
+        anchors { leftMargin: 10; rightMargin: 10 }
         spacing: 5
-        anchors.left: predefined.right; anchors.leftMargin: 10
 
-        Text { text: "User defined"; color: "#505050"; font.pixelSize: 10 }
-        ImageButton { buttonCenterImage: "button1.png"; index: 3; onClicked: selector.buttonPressed(button, index) }
-        ImageButton { buttonCenterImage: "button2.png"; index: 4; onClicked: selector.buttonPressed(button, index) }
-        ImageButton { buttonCenterImage: "button3.png"; index: 5; onClicked: selector.buttonPressed(button, index) }
+        ImageButton {
+            width: predefined.buttonWidth; height: width
+            index: 3; buttonCenterImage: "button1.png"
+            onClicked: selector.buttonPressed(button, index)
+        }
+
+        ImageButton {
+            width: predefined.buttonWidth; height: width
+            index: 4; buttonCenterImage: "button2.png"
+            onClicked: selector.buttonPressed(button, index)
+        }
+
+        ImageButton {
+            width: predefined.buttonWidth; height: width
+            index: 5; buttonCenterImage: "button3.png"
+            onClicked: selector.buttonPressed(button, index)
+        }
     }
 }

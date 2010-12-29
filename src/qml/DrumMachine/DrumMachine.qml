@@ -78,17 +78,17 @@ Item {
     TickGroupSelector {
         id: tickGroupSelector
 
-        anchors.top: parent.top; anchors.topMargin: 10
-        anchors.horizontalCenter: parent.horizontalCenter
-        width: 300; height: 45
+        anchors { top: parent.top; topMargin: 5; horizontalCenter: parent.horizontalCenter }
+        width: parent.width / 2; height: parent.height / 7
     }
 
     Rectangle {
         color: "#999999"
         anchors.left: parent.left
         anchors.right: parent.right
-        anchors.top: tickGroupSelector.bottom; anchors.topMargin: -5
+        anchors.top: tickGroupSelector.bottom; anchors.topMargin: -10
         anchors.bottom: parent.bottom
+        radius: 4
     }
 
     Column {
@@ -160,40 +160,44 @@ Item {
     Item {
         id: controlButtons
 
-        property real arrowbuttonwidth: width / 4
-
-        anchors.left: parent.left; anchors.leftMargin: 10
-        anchors.right: parent.right; anchors.rightMargin: 10
-        anchors.bottom: parent.bottom; anchors.bottomMargin: 3
-        height: 50
+        anchors { left: parent.left; right: parent.right; bottom: parent.bottom }
+        anchors { leftMargin: 10; rightMargin: 10; bottomMargin: 3 }
+        height: parent.height / 7
 
         BeatSelector {
             id: beatSelector
 
             anchors.left: parent.left
-            anchors.right: powerbutton.left; anchors.rightMargin: 30
+            anchors.right: powerButtonArea.left; anchors.rightMargin: 30
             height: parent.height
             onIndexChanged: drumMachine.setBeat(index)
         }
 
-        Text {
-            anchors.right: powerbutton.left; anchors.rightMargin: 0
-            text: "Power"
-            color: "#505050"
-            font.pixelSize: 10
-        }
+        Item {
+            id: powerButtonArea
 
-        ImageButton {
-            id: powerbutton
+            anchors { top: parent.top; bottom: parent.bottom; right: parent.right }
+            width: parent.width / 7
 
-            buttonCenterImage: "../powerbutton.png"
-            width: parent.height; height: parent.height
-            anchors.right: parent.right; anchors.rightMargin: 10
-            glowColor: pressed ? "#AA00FF00" : "#AAFF0000"
+            Text {
+                anchors.right: powerbutton.left
+                text: "Power"
+                color: "#505050"
+                font.pixelSize: 10
+            }
 
-            onPressedChanged: pressed ? drumMachine.startBeat() : drumMachine.stopBeat()
+            ImageButton {
+                id: powerbutton
 
-            onClicked: pressed = !pressed
+                buttonCenterImage: "../powerbutton.png"
+                width: beatSelector.buttonWidth; height: width
+                anchors { right: parent.right; rightMargin: 10 }
+                glowColor: pressed ? "#AA00FF00" : "#AAFF0000"
+
+                onPressedChanged: pressed ? drumMachine.startBeat() : drumMachine.stopBeat()
+
+                onClicked: pressed = !pressed
+            }
         }
     }
 }

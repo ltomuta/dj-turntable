@@ -223,107 +223,139 @@ Rectangle {
             id: mixerpanel
 
             x: flickable.width - mixerpanel.width
-            //width: 130
             width: 0.203125 * ui.width; height: flickable.height
             color: "#999999"
             radius: 4
 
-            Button {
-                id: closeButton
+            Item {
+                id: buttonPanel
 
-                width: 53; height: 42
-                anchors.top: parent.top; anchors.topMargin: 10
-                anchors.right: parent.right; anchors.rightMargin: 4
-                source: pressed ? "exit_on.png" : "exit.png"
-                smooth: true
-                onClicked: Qt.quit()
-            }
+                anchors { left: parent.left; right: parent.right; top: parent.top }
+                height: parent.height / 6
 
-            Image {
-                id: infoButton
+                Image {
+                    id: closeButton
 
-                property bool pressed: false
+                    property bool pressed: false
 
-                width: 53; height: 42
-                anchors.top:  closeButton.top
-                anchors.right: closeButton.left; anchors.rightMargin: 10
-                source: pressed ? "info_on.png" : "info.png"
-                smooth: true
+                    anchors { left: parent.horizontalCenter; right: parent.right }
+                    anchors { top: parent.top; bottom: parent.bottom; margins: 5 }
 
-                MouseArea {
-                    anchors.fill: parent
-                    onPressed: { infoButton.pressed = true; infoButton.scale = 0.9 }
-                    onReleased: { infoButton.pressed = false; infoButton.scale = 1.00 }
-                    onClicked: flickable.state = "Help"
+                    source: pressed ? "exit_on.png" : "exit.png"
+                    smooth: true
+
+                    MouseArea {
+                        anchors.fill: parent
+                        onPressed: { closeButton.pressed = true; closeButton.scale = 0.9 }
+                        onReleased: { closeButton.pressed = false; closeButton.scale = 1.0 }
+                        onClicked: Qt.quit()
+                    }
+                }
+
+                Image {
+                    id: infoButton
+
+                    property bool pressed: false
+
+                    anchors { left: parent.left; right: parent.horizontalCenter }
+                    anchors { top: parent.top; bottom: parent.bottom; margins: 5 }
+
+                    source: pressed ? "info_on.png" : "info.png"
+                    smooth: true
+
+                    MouseArea {
+                        anchors.fill: parent
+                        onPressed: { infoButton.pressed = true; infoButton.scale = 0.9 }
+                        onReleased: { infoButton.pressed = false; infoButton.scale = 1.00 }
+                        onClicked: flickable.state = "Help"
+                    }
                 }
             }
 
-            Text {
-                text: "Resonance"
-                color: "#505050"
-                anchors.left: parent.left; anchors.leftMargin: 7
-                anchors.top: closeButton.bottom; anchors.topMargin: 6
-                font.pixelSize: 10
-            }
+            Item {
+                anchors { left: parent.left; right: parent.right }
+                anchors { top: buttonPanel.bottom; bottom: powerButtonArea.top }
 
-            KnobDial {
-                id: resonance
-
-                width: 95; height: 95
-                anchors.top: closeButton.bottom; anchors.topMargin: 20
-                anchors.horizontalCenter: parent.horizontalCenter
-                smooth: true
-
-                maximumvalue: 1.0; minimumvalue: 0; value: 0
-                onValueChanged: ui.resonance(maximumvalue - value)
-            }
-
-            Text {
-                text: "Cutoff"
-                color: "#505050"
-                anchors.left: parent.left; anchors.leftMargin: 7
-                anchors.top: resonance.bottom; anchors.topMargin: 3
-                font.pixelSize: 10
-            }
-
-            KnobDial {
-                id: cutoff
-
-                width: 95; height: 95
-                anchors.top: resonance.bottom; anchors.topMargin: 10
-                anchors.horizontalCenter: parent.horizontalCenter
-                smooth: true
-
-                maximumvalue: 1.0; minimumvalue: 0.0; value: 0
-                onValueChanged: ui.cutOff(maximumvalue - value)
-            }
-
-            Text {
-                text: "Power"
-                color: "#505050"
-                anchors.left: parent.left; anchors.leftMargin: 7
-                anchors.top: cutoff.bottom; anchors.topMargin: 10
-                font.pixelSize: 10
-            }
-
-            ImageButton {
-                id: powerbutton
-
-                function press() {
-                    turntable.playing = !turntable.playing
-                    if(turntable.playing) { arm.moveIn()  }
-                    else                  { arm.moveOut() }
+                Text {
+                    text: "Resonance"
+                    color: "#505050"
+                    anchors { left: parent.left; leftMargin: 7; top: parent.top }
+                    font.pixelSize: 10
                 }
 
-                glowColor: pressed ? "#AA00FF00" : "#AAFF0000"
-                pressed: turntable.playing
+                Item {
+                    anchors { left: parent.left; right: parent.right }
+                    anchors { top: parent.top; bottom: parent.verticalCenter; margins: 10 }
 
-                onClicked: press()
+                    KnobDial {
+                        id: resonance
 
-                width: 50; height: 50
-                anchors.horizontalCenter: parent.horizontalCenter
-                anchors.top: cutoff.bottom; anchors.topMargin: 23
-                buttonCenterImage: "powerbutton.png"
+                        width: Math.min(parent.width, parent.height); height: width
+                        anchors.centerIn: parent
+                        smooth: true
+
+                        maximumvalue: 1.0; minimumvalue: 0; value: 0
+                        onValueChanged: ui.resonance(maximumvalue - value)
+                    }
+                }
+
+                Text {
+                    text: "Cutoff"
+                    color: "#505050"
+                    anchors { left: parent.left; leftMargin: 7; top: parent.verticalCenter }
+                    font.pixelSize: 10
+                }
+
+                Item {
+                    anchors { left: parent.left; right: parent.right }
+                    anchors { top: parent.verticalCenter; bottom: parent.bottom; margins: 10 }
+
+                    KnobDial {
+                        id: cutoff
+
+                        width: Math.min(parent.width, parent.height); height: width
+                        anchors.centerIn: parent
+                        smooth: true
+
+                        maximumvalue: 1.0; minimumvalue: 0.0; value: 0
+                        onValueChanged: ui.cutOff(maximumvalue - value)
+                    }
+                }
+            }
+
+            Item {
+                id: powerButtonArea
+
+                anchors { left: parent.left; right: parent.right; bottom: parent.bottom }
+                height: parent.height / 6
+
+                Text {
+                    text: "Power"
+                    color: "#505050"
+
+                    anchors.left: parent.left; anchors.leftMargin: 7
+                    font.pixelSize: 10
+                }
+
+                ImageButton {
+                    id: powerbutton
+
+                    function press() {
+                        turntable.playing = !turntable.playing
+                        if(turntable.playing) { arm.moveIn()  }
+                        else                  { arm.moveOut() }
+                    }
+
+                    onClicked: press()
+
+                    width: Math.min(parent.width, parent.height) * 0.9; height: width
+                    anchors.centerIn: parent
+
+                    glowColor: pressed ? "#AA00FF00" : "#AAFF0000"
+                    pressed: turntable.playing
+                    smooth: true
+                    buttonCenterImage: "powerbutton.png"
+                }
             }
         }
 
@@ -366,7 +398,6 @@ Rectangle {
     SidePanel {
         id: sidepanel
 
-        //width: 60
         width: 0.09375 * ui.width; height: ui.height
         onTurnTableClicked: flickable.state = "TurnTable"
         onDrumMachineClicked: flickable.state = "DrumMachine"

@@ -118,7 +118,6 @@ int main(int argc, char *argv[])
     QObject::connect(turnTableQML, SIGNAL(cutOff(QVariant)), turnTable, SLOT(setCutOff(QVariant)));
     QObject::connect(turnTableQML, SIGNAL(resonance(QVariant)), turnTable, SLOT(setResonance(QVariant)));
     QObject::connect(turnTableQML, SIGNAL(linkActivated(QVariant)), turnTable, SLOT(linkActivated(QVariant)));
-    //QObject::connect(turnTableQML, SIGNAL(diskSpeed(QVariant)), drumMachine, SLOT(setBeatSpeed(QVariant)));
     QObject::connect(turnTable, SIGNAL(audioPosition(QVariant)), turnTableQML, SLOT(audioPosition(QVariant)));
 
     //DrumMachine connections
@@ -126,6 +125,7 @@ int main(int argc, char *argv[])
     QObject::connect(drumMachineQML, SIGNAL(stopBeat()), drumMachine, SLOT(stopBeat()));
     QObject::connect(drumMachineQML, SIGNAL(setBeat(QVariant)), drumMachine, SLOT(setBeat(QVariant)));
     QObject::connect(drumMachineQML, SIGNAL(drumButtonToggled(QVariant, QVariant, QVariant)), drumMachine, SLOT(drumButtonToggled(QVariant, QVariant, QVariant)));
+    QObject::connect(drumMachineQML, SIGNAL(drumMachineSpeed(QVariant)), drumMachine, SLOT(setBeatSpeed(QVariant)));
     QObject::connect(drumMachine, SIGNAL(drumButtonState(QVariant, QVariant, QVariant)), drumMachineQML, SLOT(setDrumButton(QVariant, QVariant, QVariant)));
     QObject::connect(drumMachine, SIGNAL(tickChanged(QVariant)), drumMachineQML, SLOT(highlightTick(QVariant)));
 

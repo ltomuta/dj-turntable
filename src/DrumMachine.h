@@ -43,7 +43,7 @@ public slots:
     void stopBeat() { setRunning(false); }
 
     // Sets the beats speep
-    void setBeatSpeed(QVariant speed) { setBpm(speed.toInt()); }
+    void setBeatSpeed(QVariant speed) { setBpm(speed.toFloat() * 600); }
 
     // Indexes 0-3 are predefined beats, 4-7 are user defined
     void setBeat(QVariant index);

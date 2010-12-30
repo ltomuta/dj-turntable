@@ -383,6 +383,7 @@ Rectangle {
 
             y: flickable.height
             width: flickable.width; height: flickable.height
+            speed: speedslider.value
         }
 
         states: [

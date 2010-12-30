@@ -8,6 +8,7 @@ Item {
     signal stopBeat()
     signal drumButtonToggled(variant tick, variant sample, variant pressed)
     signal setBeat(variant index)
+    signal drumMachineSpeed(variant speed)
 
     function setDrumButton(tick, sample, pressed) {
         drumGrid.children[tick + 32 * sample].pressed = pressed
@@ -26,6 +27,9 @@ Item {
     property bool ledOn: false
     property alias running: powerbutton.pressed
     property alias selectedTickGroup: tickGroupSelector.selectedTickGroup
+    property real speed
+
+    onSpeedChanged: drumMachineSpeed(speed)
 
     width: 600; height: 360
 

@@ -2,9 +2,8 @@
 #include <QStringList>
 #include <vector>
 #include <QSettings>
+#include <limits>
 #include "DrumMachine.h"
-
-#include <QDebug>
 
 using namespace GE;
 
@@ -98,9 +97,13 @@ void DrumMachine::setSpeedMultiplier( float speedMul ) {
 
 void DrumMachine::setBpm(int bpm)
 {
-    float samplesPerTick  = (float)(AUDIO_FREQUENCY * 60.0f * m_speedMultiplier ) / (float)bpm;
+    float samplesPerTick = std::numeric_limits<float>::max();
+
+    if(bpm != 0) {
+        samplesPerTick  = (float)(AUDIO_FREQUENCY * 60.0f * m_speedMultiplier ) / (bpm * 1.0);
+    }
+
     m_samplesPerTick = (int)samplesPerTick;
-    m_sampleCounter = 0;
 }
 
 

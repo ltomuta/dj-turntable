@@ -204,7 +204,7 @@ Rectangle {
                 Text { y: speedslider.calculateYPos(1.5); anchors.right: parent.right; text: "225"; color: "#505050" }
 
                 Text {
-                    text: "Disk speed"
+                    text: "Disk / drum speed"
                     color: "#505050"
                     anchors { right: parent.right; rightMargin: 15; bottom: parent.bottom; bottomMargin: 0 }
                     font.pixelSize: 10

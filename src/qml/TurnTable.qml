@@ -55,8 +55,10 @@ Rectangle {
         property string prevState: ""
 
         function setState(newState) {
-            prevState = state
-            state = newState
+            if(newState != state) {
+                prevState = state
+                state = newState
+            }
         }
 
         anchors { left: sidepanel.right; right: parent.right; bottom: parent.bottom; top: parent.top }
@@ -193,13 +195,23 @@ Rectangle {
                 }
             }
 
-            Text {
-                text: "Disk speed"
-                color: "#505050"
-                anchors.right: speedslider.left; anchors.rightMargin: 15
-                anchors.bottom: speedslider.bottom; anchors.bottomMargin: 10
-                font.pixelSize: 10
+            Item {
+                anchors { top: speedslider.top; bottom: speedslider.bottom; right: speedslider.left; rightMargin: 5 }
+
+                Text { y: speedslider.calculateYPos(0); anchors.right: parent.right; text: "0"; color: "#505050" }
+                Text { y: speedslider.calculateYPos(0.5); anchors.right: parent.right; text: "75"; color: "#505050" }
+                Text { y: speedslider.calculateYPos(1.0); anchors.right: parent.right; text: "150"; color: "#505050" }
+                Text { y: speedslider.calculateYPos(1.5); anchors.right: parent.right; text: "225"; color: "#505050" }
+
+                Text {
+                    text: "Disk speed"
+                    color: "#505050"
+                    anchors { right: parent.right; rightMargin: 15; bottom: parent.bottom; bottomMargin: 0 }
+                    font.pixelSize: 10
+                }
             }
+
+
 
             SpeedSlider {
                 id: speedslider
@@ -209,8 +221,10 @@ Rectangle {
                 anchors.horizontalCenterOffset: 0.4 * parent.paintedWidth
                 anchors.verticalCenterOffset: 0.25 * parent.paintedHeight
                 maximum: 1.5; minimum: 0.0; value: 1.0; defaultValue: 1.0
+                scaleFactor: 150
                 mouseAreaScale: 3
             }
+
 
             Arm {
                 id: arm

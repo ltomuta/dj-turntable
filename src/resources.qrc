@@ -39,6 +39,8 @@
         <file>qml/images/knobdial.png</file>
         <file>qml/images/info.png</file>
         <file>qml/images/info_on.png</file>
+        <file>qml/images/back.png</file>
+        <file>qml/images/back_on.png</file>
         <file>qml/images/speed.png</file>
         <file>qml/images/speedslider.png</file>
         <file>qml/images/drumbutton.png</file>

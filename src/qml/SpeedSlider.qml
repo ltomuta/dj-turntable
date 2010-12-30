@@ -2,14 +2,18 @@ import Qt 4.7
 
 Item {
     id: slider
-
     property real value: 1
     property real maximum: 2
     property real minimum: 1
-    property alias mouseAreaScale: ma.scale
+    property alias mouseAreaScale: mouseArea.scale
     property real defaultValue: maximum
+    property real scaleFactor: 10
 
-    width: 50; height: 200
+    function calculateYPos(value) {
+        return handle.yMax - (value - minimum) * handle.yMax / (maximum - minimum) + handle.height * 0.358
+    }
+
+    width: 100; height: 200
 
     Image {
         id: sliderimage
@@ -25,12 +29,12 @@ Item {
 
         anchors { horizontalCenter: parent.horizontalCenter; horizontalCenterOffset: 1 }
         y: handle.yMax - (value - minimum) * handle.yMax / (maximum - minimum)
-        width: parent.width * 1.4; height: parent.height * 0.3
+        width: sliderimage.width * 1.4; height: parent.height * 0.3
         source: "images/speedslider.png"
     }
 
     MouseArea {
-        id: ma
+        id: mouseArea
 
         anchors.fill: handle
         drag { target: handle; axis: "YAxis"; minimumY: 0; maximumY: handle.yMax }

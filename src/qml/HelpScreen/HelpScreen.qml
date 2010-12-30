@@ -52,7 +52,7 @@ Rectangle {
 
                     property bool pressed: false
 
-                    anchors { top: parent.top; right: parent.right }
+                    anchors { top: parent.top; right: parent.right; rightMargin: -10; topMargin: -10 }
                     width: helpScreen.width / 10; height: width//0.836 * width
                     source: pressed ? "../images/back_on.png" : "../images/back.png"
                     smooth: true

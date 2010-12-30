@@ -4,6 +4,7 @@ Rectangle {
     id: helpScreen
 
     signal linkActivated(variant link)
+    signal backPressed()
 
     property real textSize: Math.min(width, height) * 0.04 <= 0 ? 8 : Math.min(width, height) * 0.02
 
@@ -23,21 +24,46 @@ Rectangle {
 
             width: parent.width
 
-            Text {
-                id: projectInfo
-
-                color: "white"
+            Item {
                 width: parent.width
-                wrapMode: Text.WordWrap
-                textFormat: Text.RichText
-                font.pointSize: helpScreen.textSize
+                height: projectInfo.height
 
-                text: "<b><h2>Dj Turntable</b></h2>" +
-                      "Dj Turntable is a Forum Nokia example that demonstrates integrating a Qt Quick application to Qt audio interface. " +
-                      "See more information about the project at " +
-                      "<a href=\"https://projects.forum.nokia.com/turntable\">https://projects.forum.nokia.com/turntable</a>.<br>"
+                Text {
+                    id: projectInfo
 
-                onLinkActivated: helpScreen.linkActivated(link)
+                    anchors { left: parent.left; right: backButton.left; rightMargin: 10 }
+                    color: "white"
+
+                    width: parent.width
+                    wrapMode: Text.WordWrap
+                    textFormat: Text.RichText
+                    font.pointSize: helpScreen.textSize
+
+                    text: "<b><h2>Dj Turntable</b></h2>" +
+                          "Dj Turntable is a Forum Nokia example that demonstrates integrating a Qt Quick application to Qt audio interface. " +
+                          "See more information about the project at " +
+                          "<a href=\"https://projects.forum.nokia.com/turntable\">https://projects.forum.nokia.com/turntable</a>.<br>"
+
+                    onLinkActivated: helpScreen.linkActivated(link)
+                }
+
+                Image {
+                    id: backButton
+
+                    property bool pressed: false
+
+                    anchors { top: parent.top; right: parent.right }
+                    width: helpScreen.width / 10; height: width//0.836 * width
+                    source: pressed ? "../images/back_on.png" : "../images/back.png"
+                    smooth: true
+
+                    MouseArea {
+                        anchors.fill: parent
+                        onPressed: { backButton.pressed = true; backButton.scale = 0.9 }
+                        onReleased: { backButton.pressed = false; backButton.scale = 1.0 }
+                        onClicked: helpScreen.backPressed()
+                    }
+                }
             }
 
             Text {
@@ -83,7 +109,8 @@ Rectangle {
                       "Key down = Go to the drum machine view<br>" +
                       "Key left = View the 1st tick group in the drum machine<br>" +
                       "Key right = View the 2nd tick group in the drum machine<br>" +
-                      "Key i = Go to the info view<br>"
+                      "Key i = Go to the info view<br>" +
+                      "Key backspace = Return from the info view to the previous view<br>"
             }
 
             Text {

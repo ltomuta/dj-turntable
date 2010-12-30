@@ -23,15 +23,20 @@ Rectangle {
     color: "black"
     focus: true
 
-    Keys.onDownPressed: flickable.state = "DrumMachine"
-    Keys.onUpPressed: flickable.state = "TurnTable"
+    Keys.onDownPressed: flickable.setState("DrumMachine")
+    Keys.onUpPressed: flickable.setState("TurnTable")
     Keys.onSpacePressed: powerbutton.press()
     Keys.onLeftPressed: drumMachine.selectedTickGroup = 1
     Keys.onRightPressed: drumMachine.selectedTickGroup = 2
     Keys.onPressed: {
         if(event.key == 56 || event.key == Qt.Key_I) {
-            flickable.state = "Help"
+            flickable.setState("Help")
             event.accepted = true
+        }
+        else if(event.key == Qt.Key_Backspace) {
+            if(flickable.state == "Help") {
+                helpScreen.backPressed()
+            }
         }
         else if(event.key == Qt.Key_Return || event.key == Qt.Key_Enter) {
             drumMachine.running = !drumMachine.running
@@ -40,12 +45,19 @@ Rectangle {
     }
 
     Component.onCompleted: {
-        flickable.state = "TurnTable"
+        flickable.setState("TurnTable")
         playTimer.start()
     }
 
     Flickable {
         id: flickable
+
+        property string prevState: ""
+
+        function setState(newState) {
+            prevState = state
+            state = newState
+        }
 
         anchors { left: sidepanel.right; right: parent.right; bottom: parent.bottom; top: parent.top }
         contentWidth: parent.width; contentHeight: parent.height * 3
@@ -57,6 +69,7 @@ Rectangle {
             width: flickable.width; height: flickable.height
             y: -flickable.height
 
+            onBackPressed: flickable.setState(flickable.prevState)
             onLinkActivated: ui.linkActivated(link)
         }
 
@@ -259,7 +272,7 @@ Rectangle {
                         anchors.fill: parent
                         onPressed: { infoButton.pressed = true; infoButton.scale = 0.9 }
                         onReleased: { infoButton.pressed = false; infoButton.scale = 1.00 }
-                        onClicked: flickable.state = "Help"
+                        onClicked: flickable.setState("Help")
                     }
                 }
             }
@@ -391,8 +404,8 @@ Rectangle {
         id: sidepanel
 
         width: 0.09375 * ui.width; height: ui.height
-        onTurnTableClicked: flickable.state = "TurnTable"
-        onDrumMachineClicked: flickable.state = "DrumMachine"
+        onTurnTableClicked: flickable.setState("TurnTable")
+        onDrumMachineClicked: flickable.setState("DrumMachine")
         turnTableLedOn: turntable.playing
         drumMachineLedOn: drumMachine.ledOn
     }

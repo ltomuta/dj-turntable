@@ -12,7 +12,7 @@ Image {
 
     width: 50; height: 50
     smooth: true
-    source: "buttonedge.png"
+    source: "../images/buttonedge.png"
 
     Rectangle {
         id: glowColor
@@ -29,7 +29,7 @@ Image {
         scale: button.pressed ? 0.85 : 0.98
         Behavior on scale { PropertyAnimation { duration: 100 } }
 
-        source: "button1.png"
+        source: "../images/button1.png"
         smooth: true
     }
 

@@ -66,7 +66,7 @@ Rectangle {
             property bool playing: false
 
             width:  flickable.width - mixerpanel.width - 2; height: flickable.height
-            source: "turntable.png"
+            source: "images/turntable.png"
             fillMode: Image.Stretch
 
             Image {
@@ -77,7 +77,7 @@ Rectangle {
                 anchors.horizontalCenterOffset: -0.085 * parent.paintedWidth
                 anchors.verticalCenterOffset: -0.0055 * parent.paintedHeight
 
-                source: "discplate.png"
+                source: "images/discplate.png"
                 smooth: true
             }
 
@@ -89,7 +89,7 @@ Rectangle {
                 property real currentSpeed: 0
 
                 width: parent.paintedWidth * 0.73; height: width
-                source: "disk.png"
+                source: "images/disk.png"
                 smooth: true
 
                 anchors.centerIn: parent
@@ -119,7 +119,7 @@ Rectangle {
                 id: diskReflection
 
                 anchors.fill: disk
-                source: "diskreflection.png"
+                source: "images/diskreflection.png"
                 rotation: 45
                 Behavior on rotation { RotationAnimation {} }
             }
@@ -233,7 +233,7 @@ Rectangle {
                     anchors { left: parent.horizontalCenter; right: parent.right }
                     anchors { top: parent.top; bottom: parent.bottom; margins: 5 }
 
-                    source: pressed ? "exit_on.png" : "exit.png"
+                    source: pressed ? "images/exit_on.png" : "images/exit.png"
                     smooth: true
 
                     MouseArea {
@@ -252,7 +252,7 @@ Rectangle {
                     anchors { left: parent.left; right: parent.horizontalCenter }
                     anchors { top: parent.top; bottom: parent.bottom; margins: 5 }
 
-                    source: pressed ? "info_on.png" : "info.png"
+                    source: pressed ? "images/info_on.png" : "images/info.png"
                     smooth: true
 
                     MouseArea {
@@ -346,7 +346,7 @@ Rectangle {
                     glowColor: pressed ? "#AA00FF00" : "#AAFF0000"
                     pressed: turntable.playing
                     smooth: true
-                    buttonCenterImage: "powerbutton.png"
+                    buttonCenterImage: "images/powerbutton.png"
                 }
             }
         }

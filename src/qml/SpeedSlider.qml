@@ -15,7 +15,7 @@ Item {
         id: sliderimage
 
         anchors.fill: parent
-        source: "speed.png"
+        source: "images/speed.png"
     }
 
     Image {
@@ -26,7 +26,7 @@ Item {
         anchors { horizontalCenter: parent.horizontalCenter; horizontalCenterOffset: 1 }
         y: handle.yMax - (value - minimum) * handle.yMax / (maximum - minimum)
         width: parent.width * 1.4; height: parent.height * 0.3
-        source: "speedslider.png"
+        source: "images/speedslider.png"
     }
 
     MouseArea {

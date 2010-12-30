@@ -18,18 +18,18 @@ Item {
         id: knobImage
 
         anchors.fill: parent
-        source: "knobdial.png"
+        source: "images/knobdial.png"
         rotation: knob.value / knob.maximumvalue * knob.maximumrotation
     }
 
     Image {
-        source: "arrowup.png"
+        source: "images/arrowup.png"
         anchors.centerIn: parent
         anchors.verticalCenterOffset: parent.height / -6
     }
 
     Image {
-        source: "arrowdown.png"
+        source: "images/arrowdown.png"
         anchors.centerIn: parent
         anchors.verticalCenterOffset: parent.height / 6
     }

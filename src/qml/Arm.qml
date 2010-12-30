@@ -15,7 +15,7 @@ Item {
         id: pedal
         width: parent.width; height: width
         smooth: true
-        source: "pedal.png"
+        source: "images/pedal.png"
     }
 
     Item {
@@ -26,14 +26,14 @@ Item {
         Image {
             anchors { fill: armImage; leftMargin: parent.width * 0.15; topMargin: parent.height * 0.02 }
             smooth: true
-            source: "armshadow.png"
+            source: "images/armshadow.png"
         }
 
         Image {
             id: armImage
             anchors { fill: parent; leftMargin: parent.width * 0.3 }
 
-            source: "arm.png"
+            source: "images/arm.png"
             smooth: true
         }
     }
@@ -44,13 +44,13 @@ Item {
         anchors.topMargin: anchors.leftMargin
 
         smooth: true
-        source: "armcasingshadow.png"
+        source: "images/armcasingshadow.png"
     }
 
     Image {
         anchors.fill: pedal; anchors.margins: pedal.width * 0.15
         smooth: true
-        source: "armcasing.png"
+        source: "images/armcasing.png"
     }
 
 

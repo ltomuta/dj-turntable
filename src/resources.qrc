@@ -12,46 +12,46 @@
         <file>qml/DrumMachine/BeatSelector.qml</file>
         <file>qml/DrumMachine/TickGroupSelector.qml</file>
         <file>qml/DrumMachine/ImageButton.qml</file>
-        <file>qml/DrumMachine/buttonedge.png</file>
-        <file>qml/DrumMachine/button1.png</file>
-        <file>qml/DrumMachine/button2.png</file>
-        <file>qml/DrumMachine/button3.png</file>
-        <file>qml/DrumMachine/dr_icon_hihat.png</file>
-        <file>qml/DrumMachine/dr_icon_hihat_open.png</file>
-        <file>qml/DrumMachine/dr_icon_kick.png</file>
-        <file>qml/DrumMachine/dr_icon_snare.png</file>
-        <file>qml/DrumMachine/dr_icon_crash.png</file>
-        <file>qml/DrumMachine/dr_icon_cowbell.png</file>
-        <file>qml/discplate.png</file>
-        <file>qml/disk.png</file>
-        <file>qml/diskreflection.png</file>
-        <file>qml/turntable.png</file>
-        <file>qml/arm.png</file>
-        <file>qml/pedal.png</file>
-        <file>qml/armcasing.png</file>
-        <file>qml/armcasingshadow.png</file>
-        <file>qml/armshadow.png</file>
-        <file>qml/arrowdown.png</file>
-        <file>qml/arrowup.png</file>
-        <file>qml/powerbutton.png</file>
-        <file>qml/exit.png</file>
-        <file>qml/exit_on.png</file>
-        <file>qml/knobdial.png</file>
-        <file>qml/info.png</file>
-        <file>qml/info_on.png</file>
-        <file>qml/speed.png</file>
-        <file>qml/speedslider.png</file>
-        <file>qml/DrumMachine/drumbutton.png</file>
-        <file>qml/DrumMachine/drumbuttonselected.png</file>
-        <file>qml/drummachine_off_noplay.png</file>
-        <file>qml/drummachine_off_play.png</file>
-        <file>qml/drummachine_on_noplay.png</file>
-        <file>qml/drummachine_on_play.png</file>
-        <file>qml/turntable_off_noplay.png</file>
-        <file>qml/turntable_off_play.png</file>
-        <file>qml/turntable_on_noplay.png</file>
-        <file>qml/turntable_on_play.png</file>
         <file>qml/HelpScreen/HelpScreen.qml</file>
+        <file>qml/images/buttonedge.png</file>
+        <file>qml/images/button1.png</file>
+        <file>qml/images/button2.png</file>
+        <file>qml/images/button3.png</file>
+        <file>qml/images/dr_icon_hihat.png</file>
+        <file>qml/images/dr_icon_hihat_open.png</file>
+        <file>qml/images/dr_icon_kick.png</file>
+        <file>qml/images/dr_icon_snare.png</file>
+        <file>qml/images/dr_icon_crash.png</file>
+        <file>qml/images/dr_icon_cowbell.png</file>
+        <file>qml/images/discplate.png</file>
+        <file>qml/images/disk.png</file>
+        <file>qml/images/diskreflection.png</file>
+        <file>qml/images/turntable.png</file>
+        <file>qml/images/arm.png</file>
+        <file>qml/images/pedal.png</file>
+        <file>qml/images/armcasing.png</file>
+        <file>qml/images/armcasingshadow.png</file>
+        <file>qml/images/armshadow.png</file>
+        <file>qml/images/arrowdown.png</file>
+        <file>qml/images/arrowup.png</file>
+        <file>qml/images/powerbutton.png</file>
+        <file>qml/images/exit.png</file>
+        <file>qml/images/exit_on.png</file>
+        <file>qml/images/knobdial.png</file>
+        <file>qml/images/info.png</file>
+        <file>qml/images/info_on.png</file>
+        <file>qml/images/speed.png</file>
+        <file>qml/images/speedslider.png</file>
+        <file>qml/images/drumbutton.png</file>
+        <file>qml/images/drumbuttonselected.png</file>
+        <file>qml/images/drummachine_off_noplay.png</file>
+        <file>qml/images/drummachine_off_play.png</file>
+        <file>qml/images/drummachine_on_noplay.png</file>
+        <file>qml/images/drummachine_on_play.png</file>
+        <file>qml/images/turntable_off_noplay.png</file>
+        <file>qml/images/turntable_off_play.png</file>
+        <file>qml/images/turntable_on_noplay.png</file>
+        <file>qml/images/turntable_on_play.png</file>
         <file>sounds/ivory.wav</file>
         <file>sounds/snare.wav</file>
         <file>sounds/hihat_open.wav</file>

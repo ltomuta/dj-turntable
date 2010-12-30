@@ -21,12 +21,12 @@ Rectangle {
         smooth: true
         source: {
             if(turnTableButtonPressed) {
-                if(turnTableLedOn) { return "turntable_on_play.png" }
-                else {return "turntable_on_noplay.png" }
+                if(turnTableLedOn) { return "images/turntable_on_play.png" }
+                else {return "images/turntable_on_noplay.png" }
             }
             else {
-                if(turnTableLedOn) { return "turntable_off_play.png" }
-                else { return "turntable_off_noplay.png" }
+                if(turnTableLedOn) { return "images/turntable_off_play.png" }
+                else { return "images/turntable_off_noplay.png" }
             }
         }
 
@@ -45,12 +45,12 @@ Rectangle {
         smooth: true
         source: {
             if(drumMachineButtonPressed) {
-                if(drumMachineLedOn) { return "drummachine_on_play.png" }
-                else {return "drummachine_on_noplay.png" }
+                if(drumMachineLedOn) { return "images/drummachine_on_play.png" }
+                else {return "images/drummachine_on_noplay.png" }
             }
             else {
-                if(drumMachineLedOn) { return "drummachine_off_play.png" }
-                else { return "drummachine_off_noplay.png" }
+                if(drumMachineLedOn) { return "images/drummachine_off_play.png" }
+                else { return "images/drummachine_off_noplay.png" }
             }
         }
 

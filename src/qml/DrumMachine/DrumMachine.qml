@@ -47,12 +47,12 @@ Item {
         anchors { left: parent.left; leftMargin: 6; top: tickGroupSelector.bottom; bottom: controlButtons.top }
         width: 30; spacing: 3
 
-        Image { width: sampleIcons.width; height: drumGrid.drumButtonHeight; source: "dr_icon_hihat.png"; smooth: true }
-        Image { width: sampleIcons.width; height: drumGrid.drumButtonHeight; source: "dr_icon_hihat_open.png"; smooth: true }
-        Image { width: sampleIcons.width; height: drumGrid.drumButtonHeight; source: "dr_icon_kick.png"; smooth: true }
-        Image { width: sampleIcons.width; height: drumGrid.drumButtonHeight; source: "dr_icon_snare.png"; smooth: true }
-        Image { width: sampleIcons.width; height: drumGrid.drumButtonHeight; source: "dr_icon_crash.png"; smooth: true }
-        Image { width: sampleIcons.width; height: drumGrid.drumButtonHeight; source: "dr_icon_cowbell.png"; smooth: true }
+        Image { width: sampleIcons.width; height: drumGrid.drumButtonHeight; source: "../images/dr_icon_hihat.png"; smooth: true }
+        Image { width: sampleIcons.width; height: drumGrid.drumButtonHeight; source: "../images/dr_icon_hihat_open.png"; smooth: true }
+        Image { width: sampleIcons.width; height: drumGrid.drumButtonHeight; source: "../images/dr_icon_kick.png"; smooth: true }
+        Image { width: sampleIcons.width; height: drumGrid.drumButtonHeight; source: "../images/dr_icon_snare.png"; smooth: true }
+        Image { width: sampleIcons.width; height: drumGrid.drumButtonHeight; source: "../images/dr_icon_crash.png"; smooth: true }
+        Image { width: sampleIcons.width; height: drumGrid.drumButtonHeight; source: "../images/dr_icon_cowbell.png"; smooth: true }
     }
 
     Flickable {
@@ -78,8 +78,8 @@ Item {
 
                 DrumButton {
                     width: drumGrid.drumButtonWidth; height: drumGrid.drumButtonHeight
-                    unselectedSource: "drumbutton.png"
-                    selectedSource: "drumbuttonselected.png"
+                    unselectedSource: "../images/drumbutton.png"
+                    selectedSource: "../images/drumbuttonselected.png"
                     tick: index % 32
                     sample: Math.floor(index / 32)
                     onButtonToggled: drumMachine.drumButtonToggled(tick, sample, pressed)
@@ -163,7 +163,7 @@ Item {
 
                 anchors { right: parent.right; rightMargin: 10 }
                 width: beatSelector.buttonWidth; height: width
-                buttonCenterImage: "../powerbutton.png"
+                buttonCenterImage: "../images/powerbutton.png"
                 glowColor: pressed ? "#AA00FF00" : "#AAFF0000"
 
                 onPressedChanged: pressed ? drumMachine.startBeat() : drumMachine.stopBeat()

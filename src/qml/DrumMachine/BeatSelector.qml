@@ -40,19 +40,19 @@ Item {
         ImageButton {
             id: first;
             width: predefined.buttonWidth; height: width
-            index: 0; buttonCenterImage: "button1.png"
+            index: 0; buttonCenterImage: "../images/button1.png"
             onClicked: selector.buttonPressed(button, index)
         }
 
         ImageButton {
             width: predefined.buttonWidth; height: width
-            index: 1; buttonCenterImage: "button2.png"
+            index: 1; buttonCenterImage: "../images/button2.png"
             onClicked: selector.buttonPressed(button, index)
         }
 
         ImageButton {
             width: predefined.buttonWidth; height: width
-            index: 2; buttonCenterImage: "button3.png"
+            index: 2; buttonCenterImage: "../images/button3.png"
             onClicked: selector.buttonPressed(button, index)
         }
     }
@@ -76,19 +76,19 @@ Item {
 
         ImageButton {
             width: predefined.buttonWidth; height: width
-            index: 3; buttonCenterImage: "button1.png"
+            index: 3; buttonCenterImage: "../images/button1.png"
             onClicked: selector.buttonPressed(button, index)
         }
 
         ImageButton {
             width: predefined.buttonWidth; height: width
-            index: 4; buttonCenterImage: "button2.png"
+            index: 4; buttonCenterImage: "../images/button2.png"
             onClicked: selector.buttonPressed(button, index)
         }
 
         ImageButton {
             width: predefined.buttonWidth; height: width
-            index: 5; buttonCenterImage: "button3.png"
+            index: 5; buttonCenterImage: "../images/button3.png"
             onClicked: selector.buttonPressed(button, index)
         }
     }

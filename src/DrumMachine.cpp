@@ -4,6 +4,8 @@
 #include <QSettings>
 #include "DrumMachine.h"
 
+#include <QDebug>
+
 using namespace GE;
 
 // Predefined sequences, they must be SEQUENCE_LENGTH ticks long each

@@ -3,6 +3,8 @@ import Qt 4.7
 Item {
     id: button
 
+    signal buttonToggled()
+
     property int tick: -1
     property int sample: -1
     property bool pressed: false
@@ -15,9 +17,7 @@ Item {
     Image {
         id: image
 
-        anchors.fill: parent
-        anchors.margins: 3
-
+        anchors { fill: parent; margins: 3 }
         source: button.pressed ? selectedSource : unselectedSource
     }
 
@@ -26,7 +26,7 @@ Item {
         onClicked: {
             button.pressed = !button.pressed
             if(tick != -1 || sample != -1) {
-                drumMachine.drumButtonToggled(button.tick, button.sample, button.pressed)
+                button.buttonToggled()
             }
         }
     }

@@ -118,6 +118,7 @@ int main(int argc, char *argv[])
     QObject::connect(turnTableQML, SIGNAL(cutOff(QVariant)), turnTable, SLOT(setCutOff(QVariant)));
     QObject::connect(turnTableQML, SIGNAL(resonance(QVariant)), turnTable, SLOT(setResonance(QVariant)));
     QObject::connect(turnTableQML, SIGNAL(linkActivated(QVariant)), turnTable, SLOT(linkActivated(QVariant)));
+    //QObject::connect(turnTableQML, SIGNAL(diskSpeed(QVariant)), drumMachine, SLOT(setBeatSpeed(QVariant)));
     QObject::connect(turnTable, SIGNAL(audioPosition(QVariant)), turnTableQML, SLOT(audioPosition(QVariant)));
 
     //DrumMachine connections

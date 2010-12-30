@@ -5,6 +5,8 @@ Rectangle {
 
     signal linkActivated(variant link)
 
+    property real textSize: Math.min(width, height) * 0.04 <= 0 ? 8 : Math.min(width, height) * 0.02
+
     width: 500; height: 360
     radius: 5
     color: "#999999"
@@ -28,11 +30,14 @@ Rectangle {
                 width: parent.width
                 wrapMode: Text.WordWrap
                 textFormat: Text.RichText
+                font.pointSize: helpScreen.textSize
 
                 text: "<b><h2>Dj Turntable</b></h2>" +
                       "Dj Turntable is a Forum Nokia example that demonstrates integrating a Qt Quick application to Qt audio interface. " +
                       "See more information about the project at " +
                       "<a href=\"https://projects.forum.nokia.com/turntable\">https://projects.forum.nokia.com/turntable</a>.<br>"
+
+                onLinkActivated: helpScreen.linkActivated(link)
             }
 
             Text {
@@ -42,6 +47,7 @@ Rectangle {
                 width: parent.width
                 wrapMode: Text.WordWrap
                 textFormat: Text.RichText
+                font.pointSize: helpScreen.textSize
 
                 text: "<b><h3>Turntable</h3></b>" +
                       "Play the looping sample with a realistic turntable. " +
@@ -65,6 +71,7 @@ Rectangle {
                 width: parent.width
                 wrapMode: Text.WordWrap
                 textFormat: Text.RichText
+                font.pointSize: helpScreen.textSize
 
                 text: "<b><h3>Keyboard shortcuts</h3></b>" +
                       "The following keyboard shortcuts exist:<br><br>" +
@@ -86,6 +93,7 @@ Rectangle {
                 width: parent.width
                 wrapMode: Text.WordWrap
                 textFormat: Text.RichText
+                font.pointSize: helpScreen.textSize
 
                 text: "<b><h3>Samples</h3></b>" +
                       "The turntable melody sample <i>ivory.wav</i> was created by nick <i>Flick3r</i> " +

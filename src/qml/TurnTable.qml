@@ -20,7 +20,6 @@ Rectangle {
 
     anchors.fill: parent
     width: 640; height: 360
-    //width: 800; height: 480
     color: "black"
     focus: true
 
@@ -48,13 +47,8 @@ Rectangle {
     Flickable {
         id: flickable
 
-        anchors.left: sidepanel.right
-        anchors.right: parent.right
-        anchors.bottom: parent.bottom
-        anchors.top: parent.top
-
-        contentWidth: parent.width
-        contentHeight: parent.height * 3
+        anchors { left: sidepanel.right; right: parent.right; bottom: parent.bottom; top: parent.top }
+        contentWidth: parent.width; contentHeight: parent.height * 3
         interactive: false
 
         HelpScreen {
@@ -71,8 +65,7 @@ Rectangle {
 
             property bool playing: false
 
-            width:  flickable.width - mixerpanel.width - 2
-            height: flickable.height
+            width:  flickable.width - mixerpanel.width - 2; height: flickable.height
             source: "turntable.png"
             fillMode: Image.Stretch
 
@@ -84,7 +77,6 @@ Rectangle {
                 anchors.horizontalCenterOffset: -0.085 * parent.paintedWidth
                 anchors.verticalCenterOffset: -0.0055 * parent.paintedHeight
 
-                //anchors.fill: disk; anchors.margins: -15
                 source: "discplate.png"
                 smooth: true
             }

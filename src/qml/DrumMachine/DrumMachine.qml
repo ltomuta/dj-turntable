@@ -9,62 +9,18 @@ Item {
     signal drumButtonToggled(variant tick, variant sample, variant pressed)
     signal setBeat(variant index)
 
-    // Public slots
-    function createDrumButtons() {
-        drumGrid.columns = 33; drumGrid.rows = 6
-
-        for(var row=0; row<6; row++) {
-            for(var col=0; col<33; col++) {
-                var button = Qt.createComponent("DrumButton.qml").createObject(drumGrid)
-
-                if(col != 16) {
-                    // The column 16 is blank column, that column was made to leave
-                    // a empty column to the breaking point of two tick groups
-                    if(col < 15) {
-                        button.tick = col
-                    }
-                    else {
-                        button.tick = col - 1
-                    }
-                    button.sample = row
-                    button.width = drumGrid.drumButtonWidth
-                    button.height = drumGrid.drumButtonHeight
-
-                    button.selectedSource = "drumbuttonselected.png"
-                    button.unselectedSource = "drumbutton.png"
-                }
-            }
-        }
-    }
-
-    function clearDrumButtons() {
-        var count = drumGrid.rows * drumGrid.columns
-        for(var i=0; i<count; i++) {
-            drumGrid.children[i].pressed = false
-        }
-    }
-
     function setDrumButton(tick, sample, pressed) {
-        var offset = sample + Math.floor(tick / 16)
-        drumGrid.children[tick + 32 * sample + offset].pressed = pressed
+        drumGrid.children[tick + 32 * sample].pressed = pressed
     }
 
     function highlightTick(tick) {
-        if(tick % 8) {
-            ledOn = false
-        }
-        else {
-            ledOn = true
-        }
+        if(tick % 8) { ledOn = false }
+        else { ledOn = true }
 
-        if(tick < 16) {
-            tickGroupSelector.selectedTickGroup = 1
-        }
-        else {
-            tickGroupSelector.selectedTickGroup = 2
-        }
+        if(tick < 16) { tickGroupSelector.selectedTickGroup = 1 }
+        else { tickGroupSelector.selectedTickGroup = 2 }
 
-        highligher.x = drumGrid.width / 33 * (tick + Math.floor(tick / 16))
+        highligher.x = drumGrid.children[tick].x
     }
 
     property bool ledOn: false
@@ -72,8 +28,6 @@ Item {
     property alias selectedTickGroup: tickGroupSelector.selectedTickGroup
 
     width: 600; height: 360
-    Component.onCompleted: { createDrumButtons() }
-
 
     TickGroupSelector {
         id: tickGroupSelector
@@ -83,22 +37,15 @@ Item {
     }
 
     Rectangle {
-        color: "#999999"
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.top: tickGroupSelector.bottom; anchors.topMargin: -10
-        anchors.bottom: parent.bottom
-        radius: 4
+        anchors { left: parent.left; right: parent.right }
+        anchors { top: tickGroupSelector.bottom; topMargin: -10; bottom: parent.bottom }
+        color: "#999999"; radius: 4
     }
 
     Column {
         id: sampleIcons
-        anchors.left: parent.left; anchors.leftMargin: 6
-        anchors.top: tickGroupSelector.bottom; anchors.topMargin: 10
-        anchors.bottom: controlButtons.top
-
-        width: 30
-        spacing: 3
+        anchors { left: parent.left; leftMargin: 6; top: tickGroupSelector.bottom; bottom: controlButtons.top }
+        width: 30; spacing: 3
 
         Image { width: sampleIcons.width; height: drumGrid.drumButtonHeight; source: "dr_icon_hihat.png"; smooth: true }
         Image { width: sampleIcons.width; height: drumGrid.drumButtonHeight; source: "dr_icon_hihat_open.png"; smooth: true }
@@ -111,31 +58,51 @@ Item {
     Flickable {
         id: drumFlickable
 
-        anchors.top: tickGroupSelector.bottom; anchors.topMargin: 10
-        anchors.left: sampleIcons.right; anchors.leftMargin: 5
-        anchors.right: parent.right; anchors.rightMargin: 10
-        anchors.bottom: controlButtons.top; anchors.bottomMargin: 3
+        anchors { top: sampleIcons.top; bottom: sampleIcons.bottom }
+        anchors { left: sampleIcons.right; leftMargin: 5; right: parent.right }
 
         contentWidth: drumGrid.width
         interactive: false
         clip: true
 
         Grid {
-            // Holds dynamically created DrumButtons childern
             id: drumGrid
 
             property real drumButtonWidth: drumFlickable.width / 16
             property real drumButtonHeight: drumFlickable.height / 6
 
-            spacing: 0
+            columns: 32; rows: 6
+
+            Repeater {
+                model: drumGrid.columns * drumGrid.rows
+
+                DrumButton {
+                    width: drumGrid.drumButtonWidth; height: drumGrid.drumButtonHeight
+                    unselectedSource: "drumbutton.png"
+                    selectedSource: "drumbuttonselected.png"
+                    tick: index % 32
+                    sample: Math.floor(index / 32)
+                    onButtonToggled: drumMachine.drumButtonToggled(tick, sample, pressed)
+                }
+            }
+        }
+
+        Rectangle {
+            // Hides the sometimes visible column of drumbuttons when in state "Ticks1".
+            // When moving to state "Ticks2" this rectangle is hidded.
+            id: hackAround
+            color: "#999999"
+
+            x: drumGrid.children[16].x
+            width: drumGrid.drumButtonWidth
+            height: drumFlickable.height
         }
 
         Rectangle {
             id: highligher
 
             width: drumGrid.drumButtonWidth; height: drumGrid.height
-            opacity: 0.3
-            color: "red"
+            opacity: 0.3; color: "red"
         }
 
         states: [
@@ -143,17 +110,23 @@ Item {
                 name: "Ticks1"
                 when: tickGroupSelector.selectedTickGroup == 1
                 PropertyChanges { target: drumFlickable; contentX: 0 }
-
             },
             State {
                 name: "Ticks2"
                 when: tickGroupSelector.selectedTickGroup == 2
-                PropertyChanges { target: drumFlickable; contentX: drumFlickable.width + drumGrid.drumButtonWidth}
+                PropertyChanges { target: hackAround; visible: false }
+                PropertyChanges { target: drumFlickable; contentX: drumGrid.children[16].x }
             }
         ]
 
         transitions: Transition {
-            PropertyAnimation { property: "contentX"; easing.type: Easing.InOutQuart }
+            from: "Ticks1"
+            to: "Ticks2"
+            reversible: true
+            SequentialAnimation {
+                PropertyAction { target: hackAround; property: "visible" }
+                PropertyAnimation { property: "contentX"; easing.type: Easing.InOutQuart }
+            }
         }
     }
 
@@ -167,8 +140,7 @@ Item {
         BeatSelector {
             id: beatSelector
 
-            anchors.left: parent.left
-            anchors.right: powerButtonArea.left; anchors.rightMargin: 30
+            anchors { left: parent.left; right: powerButtonArea.left; rightMargin: 30 }
             height: parent.height
             onIndexChanged: drumMachine.setBeat(index)
         }
@@ -189,13 +161,12 @@ Item {
             ImageButton {
                 id: powerbutton
 
-                buttonCenterImage: "../powerbutton.png"
-                width: beatSelector.buttonWidth; height: width
                 anchors { right: parent.right; rightMargin: 10 }
+                width: beatSelector.buttonWidth; height: width
+                buttonCenterImage: "../powerbutton.png"
                 glowColor: pressed ? "#AA00FF00" : "#AAFF0000"
 
                 onPressedChanged: pressed ? drumMachine.startBeat() : drumMachine.stopBeat()
-
                 onClicked: pressed = !pressed
             }
         }

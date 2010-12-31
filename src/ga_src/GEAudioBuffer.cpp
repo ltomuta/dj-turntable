@@ -1,13 +1,6 @@
 
-/**
- *
- * GE::GA AudioBuffer functionality
- * tuomo.hirvonen@digia.com
- *
- */
-
-#include <QDebug>
 #include <math.h>
+#include <QDebug>
 #include "GEAudioBuffer.h"
 
 using namespace GE;
@@ -58,7 +51,6 @@ CAudioBuffer* CAudioBuffer::loadWav( QString fileName ) {
 
 
     if (wavFile->open(QIODevice::ReadOnly)) {
-        //qDebug() << "opened file";
         SWavHeader header;
 
         wavFile->read( header.chunkID, 4 );
@@ -80,13 +72,11 @@ CAudioBuffer* CAudioBuffer::loadWav( QString fileName ) {
         wavFile->read( (char*)&header.blockAlign,2 );
         wavFile->read( (char*)&header.bitsPerSample,2 );
 
+        qDebug() << fileName << " opened";
+
         while (1) {
             if (wavFile->read( (char*)&header.subchunk2id,4 ) != 4) return 0;
             if (wavFile->read( (char*)&header.subchunk2size,4 ) != 4) return 0;
-            int deb_size = header.subchunk2size;
-            char tes[4];
-            memcpy(tes, header.subchunk2id, 4 );
-            //if (header.subchunk2id[0]!='d' || header.subchunk2id[1]!='a' || header.subchunk2id[2]!='t' || header.subchunk2id[3]!='a') return 0;	//  incorrect header
             if (header.subchunk2id[0]=='d' && header.subchunk2id[1]=='a' && header.subchunk2id[2]=='t' && header.subchunk2id[3]=='a') break;            // found the data, chunk
             // this was not the data-chunk. skip it
             if (header.subchunk2size<1) return 0;           // error in file
@@ -123,6 +113,7 @@ CAudioBuffer* CAudioBuffer::loadWav( QString fileName ) {
 
 
     } else {
+        qDebug() << fileName << " NOT opened";
         return 0;
     }
 
@@ -234,7 +225,6 @@ void CAudioBufferPlayInstance::playBuffer( CAudioBuffer *startPlaying, float vol
     m_fixedLeftVolume = (int)(4096.0f*volume);
     m_fixedRightVolume = m_fixedLeftVolume;
     m_fixedPos = 0;
-    //m_fixedInc = ( startPlaying->getSamplesPerSec() * (int)(4096.0f*speed)) / AUDIO_FREQUENCY;
     setSpeed( speed );
     m_loopTimes = loopTimes;
 
@@ -276,7 +266,6 @@ int CAudioBufferPlayInstance::mixBlock( AUDIO_SAMPLE_TYPE *target, int samplesTo
     if (!sampleFunction) return 0; // unsupported sampletype
     AUDIO_SAMPLE_TYPE *t_target = target+samplesToMix*2;
     int sourcepos;
-    //int tempCounter = 0;
 
     if (m_buffer->getNofChannels() == 2) {         // stereo
         while (target!=t_target) {
@@ -285,7 +274,6 @@ int CAudioBufferPlayInstance::mixBlock( AUDIO_SAMPLE_TYPE *target, int samplesTo
             target[1] = (((((sampleFunction)( m_buffer, sourcepos, 1) * (4096-(m_fixedPos&4095)) + (sampleFunction)( m_buffer, sourcepos+1, 1) * (m_fixedPos&4095) ) >> 12) * m_fixedRightVolume) >> 12);
             m_fixedPos+=m_fixedInc;
             target+=2;
-            //tempCounter++;
         };
     } else {                                      // mono
         int temp;
@@ -296,7 +284,6 @@ int CAudioBufferPlayInstance::mixBlock( AUDIO_SAMPLE_TYPE *target, int samplesTo
             target[1] = ((temp*m_fixedRightVolume)>>12);
             m_fixedPos+=m_fixedInc;
             target+=2;
-            //tempCounter++;
         };
 
     };
@@ -319,8 +306,6 @@ int CAudioBufferPlayInstance::pullAudio( AUDIO_SAMPLE_TYPE *target, int bufferLe
     while (samplesToWrite>0) {
         int samplesLeft = channelLength - (m_fixedPos>>12);
         int maxMixAmount = (int)(((long long int)(samplesLeft)<<12) / m_fixedInc );         // This is how much we can mix at least
-        //int maxMixAmount = (int)((float)samplesLeft / ((float)m_fixedInc/4096.0f));
-        //if (maxMixAmount<1) maxMixAmount = 1;           // NOTE, THIS MIGHT CAUSE PROBLEMS. NEEDS CHECKING
         if (maxMixAmount>samplesToWrite) {
             maxMixAmount=samplesToWrite;
         }
@@ -336,8 +321,6 @@ int CAudioBufferPlayInstance::pullAudio( AUDIO_SAMPLE_TYPE *target, int bufferLe
             amount = 0;
             m_fixedPos = channelLength<<12;
         }
-
-
 
         // sample is ended,.. check the looping variables and see what to do.
         if ((m_fixedPos>>12)>=channelLength) {

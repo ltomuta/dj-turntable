@@ -1,14 +1,9 @@
-/**
- *
- * GE::GA General interfaces
- * tuomo.hirvonen@digia.com
- *
- */
 
 #ifndef __GE_IGA_INTERFACES__
 #define __GE_IGA_INTERFACES__
 
 #include <QObject>
+#include <QMutex>
 
 namespace GE {
 
@@ -32,7 +27,7 @@ namespace GE {
     public:
         CAudioMixer();
         virtual ~CAudioMixer();
-        void destroyList();							// destroy all the sources in the list
+        void destroyList();						// destroy all the sources in the list
 
 
         IAudioSource* addAudioSource( IAudioSource *s );		// add new audio source to the list
@@ -50,6 +45,7 @@ namespace GE {
 
 
     protected:
+        QMutex m_mutex;
         int m_fixedGeneralVolume;
         AUDIO_SAMPLE_TYPE *m_mixingBuffer;
         int m_mixingBufferLength;

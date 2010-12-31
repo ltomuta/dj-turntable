@@ -1,13 +1,6 @@
-/**
- *
- * GE::GA Qt Audio out
- * tuomo.hirvonen@digia.com
- *
- */
-
 #include <QtCore/qstring.h>
 #include <QAudioOutput>
-#include <QDebug>
+
 #include "GEAudioOut.h"
 
 #ifdef Q_OS_SYMBIAN
@@ -23,7 +16,8 @@ const QAudioFormat::Endian BYTEORDER = QAudioFormat::LittleEndian;
 const QAudioFormat::SampleType SAMTYPE = QAudioFormat::SignedInt;
 
 
-AudioOut::AudioOut( QObject *parent, GE::IAudioSource *source ) : QThread(parent) {         // qobject
+
+AudioOut::AudioOut( QObject *parent, GE::IAudioSource *source ) : QThread(parent) {
     m_source = source;
     QAudioFormat format;
     format.setFrequency(AUDIO_FREQUENCY);
@@ -37,17 +31,31 @@ AudioOut::AudioOut( QObject *parent, GE::IAudioSource *source ) : QThread(parent
     if (!info.isFormatSupported(format))
         format = info.nearestFormat(format);
 
-    m_sendBufferSize = 3000;
-    m_sendBuffer = new AUDIO_SAMPLE_TYPE[ m_sendBufferSize ];
 
     m_audioOutput = new QAudioOutput(info,format);
-    m_audioOutput->setBufferSize(6000);
-    connect(m_audioOutput,SIGNAL(notify()),SLOT(audioNotify()));
-    m_audioOutput->setNotifyInterval(5);
+
+#ifdef Q_WS_MAEMO_5
+    m_audioOutput->setBufferSize(20000);
+    m_sendBufferSize = 5000;
+#else
+    m_audioOutput->setBufferSize(16000);
+    m_sendBufferSize = 4000;
+#endif
+
     m_outTarget = m_audioOutput->start();
 
 
-#ifdef Q_OS_SYMBIAN
+    m_sendBuffer = new AUDIO_SAMPLE_TYPE[ m_sendBufferSize ];
+    m_samplesMixed = 0;
+
+    m_runstate=0;
+
+#ifndef Q_OS_SYMBIAN
+    start();
+#else
+    m_audioOutput->setNotifyInterval(5);
+    connect(m_audioOutput,SIGNAL(notify()),SLOT(audioNotify()));
+
     // Really ugly hack is used as a last resort. This allows us to adjust the application volume
     // in Symbian. The CMMFDevSound object which lies deep inside the QAudioOutput in Symbian
     // implementation has the needed functions. So we get the needed object accessing directly
@@ -57,12 +65,9 @@ AudioOut::AudioOut( QObject *parent, GE::IAudioSource *source ) : QThread(parent
     unsigned int *temp = ((unsigned int*)(*dev_sound_wrapper) + 6);
     CMMFDevSound *dev_sound = (CMMFDevSound*)(*temp);
     dev_sound->SetVolume(dev_sound->MaxVolume());
+
 #endif
-
-
-    m_samplesMixed = 0;
-    m_runstate=0;
-};
+}
 
 
 AudioOut::~AudioOut() {
@@ -72,12 +77,12 @@ AudioOut::~AudioOut() {
     m_audioOutput->stop();
     delete m_audioOutput;
     delete [] m_sendBuffer;
-};
+}
 
 
 void AudioOut::audioNotify() {
     tick();
-};
+}
 
 void AudioOut::tick() {
     // fill data to buffer as much as free space is available..
@@ -89,53 +94,17 @@ void AudioOut::tick() {
     int mixedSamples = m_source->pullAudio( m_sendBuffer, samplesToWrite );
     m_outTarget->write( (char*)m_sendBuffer, mixedSamples*2 );
 
-
-    /*
-    qint64 processedUsecs = m_audioOutput->processedUSecs();
-    //float secsMixed = (float)processed / 1000000.0f;
-
-    qint64 bytesInBuffer = m_audioOutput->bufferSize() - m_audioOutput->bytesFree();
-    qint64 usInBuffer = (qint64)(1000000) * bytesInBuffer / ( CHANNELS * AUDIO_SAMPLE_BITS / 8 ) / AUDIO_FREQUENCY;
-    qint64 processed = (processedUsecs - usInBuffer) * AUDIO_FREQUENCY / 1000000;
-
-    qint64 mixed = (m_samplesMixed>>1);
-
-
-    //qint64 usPlayed = processed - usInBuffer;
-
-    //int ofs = mixed-samplesProcessed;
-    //int writeSize = ((int)( (samplesProcessed + m_sendBufferSize*2) - m_samplesMixed) ) * 2;
-    int writeSize = ((processed+m_sendBufferSize)-mixed)*2;
-
-
-    // if ofs kasvaa liian isoksi,... reset playing position.
-    //qint64 ofs = (qint64)(m_samplesMixed>>1)-usPlayed;
-    //if (mixed<=samplesProcessed || processedUsecs==0) {         // try to process more
-    if (writeSize>0 || processedUsecs==0) {
-        //int writeSize = m_sendBufferSize;
-
-        qint64 samplesFree = m_audioOutput->bytesFree() / (AUDIO_SAMPLE_BITS/8);
-        if (writeSize>m_sendBufferSize) writeSize = m_sendBufferSize;
-        if (writeSize > samplesFree) writeSize = samplesFree;
-        int wroteSamples = m_source->pullAudio( m_sendBuffer, writeSize );
-        qint64 sentSamples = m_outTarget->write( (char*)m_sendBuffer, wroteSamples*2 ) / 2;
-        m_samplesMixed+=sentSamples;//(qint64)wroteSamples;
-        if (processedUsecs==0) m_samplesMixed = 0;          // symbianHack
-
-    };
-*/
-};
+}
 
 
 void AudioOut::run() {
     if (!m_source) { m_runstate=2; return; }
-    int sleepTime = m_sendBufferSize * 400 / AUDIO_FREQUENCY;
+    int sleepTime = m_sendBufferSize * 340 / AUDIO_FREQUENCY;
+    if (sleepTime<2) sleepTime = 2;
 
     while (m_runstate==0) {
         tick();
-        //msleep(sleepTime);
+        msleep(sleepTime);
     };
     m_runstate = 2;
-};
-
-
+}

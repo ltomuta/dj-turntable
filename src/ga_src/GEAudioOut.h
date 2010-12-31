@@ -1,9 +1,3 @@
-/**
- *
- * GE::GA Qt Audio out
- * tuomo.hirvonen@digia.com
- *
- */
 
 #ifndef __GE_QTAUDIOOUT__
 #define __GE_QTAUDIOOUT__
@@ -15,15 +9,15 @@
 #include <QtCore/qtimer.h>
 #include <QtCore/qstring.h>
 #include <QThread>
-#include <QAudioOutput>
 
 #include "GEInterfaces.h"
 
 
 class QAudioOutput;
 
-
 namespace GE {
+
+
 
     class AudioOut : public QThread {
         Q_OBJECT
@@ -31,7 +25,7 @@ namespace GE {
     public:
         AudioOut(QObject *parent, GE::IAudioSource *source);
         virtual ~AudioOut();
-        void tick();
+
 
 
     private slots:
@@ -39,6 +33,7 @@ namespace GE {
 
 
     protected:
+         void tick();
         virtual void run();         // this is for the threaded mode only
 
 

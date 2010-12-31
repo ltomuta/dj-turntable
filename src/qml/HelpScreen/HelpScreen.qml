@@ -110,7 +110,7 @@ Rectangle {
                       "Key left = View the 1st tick group in the drum machine<br>" +
                       "Key right = View the 2nd tick group in the drum machine<br>" +
                       "Key i = Go to the info view<br>" +
-                      "Key backspace = Return from the info view to the previous view<br>"
+                      "Backspace = Return from the info view to the previous view<br>"
             }
 
             Text {

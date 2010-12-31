@@ -1,16 +1,10 @@
 
-/**
- *
- * GE::GA AudioBuffer functionality
- * tuomo.hirvonen@digia.com
- *
- */
-
 #ifndef __GE_IGA_AUDIOBUFFER__
 #define __GE_IGA_AUDIOBUFFER__
 
 #include <QFile>
 #include "GEInterfaces.h"
+
 
 namespace GE {
 
@@ -98,5 +92,7 @@ namespace GE {
     };
 
 };
+
+
 
 #endif

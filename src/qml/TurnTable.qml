@@ -399,12 +399,14 @@ Rectangle {
                 PropertyChanges { target: flickable; contentY: ui.height }
                 PropertyChanges { target: sidepanel; drumMachineButtonPressed: true }
                 PropertyChanges { target: turntable; opacity: 0 }
+                PropertyChanges { target: mixerpanel; opacity: 0 }
                 PropertyChanges { target: helpScreen; opacity: 0 }
             },
             State {
                 name: "Help"
                 PropertyChanges { target: flickable; contentY: -ui.height }
                 PropertyChanges { target: turntable; opacity: 0 }
+                PropertyChanges { target: mixerpanel; opacity: 0 }
                 PropertyChanges { target: drumMachine; opacity: 0 }
             }
         ]

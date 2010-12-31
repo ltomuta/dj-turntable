@@ -1,10 +1,3 @@
-/**
- *
- * GE::GA General interfaces
- * tuomo.hirvonen@digia.com
- *
- */
-
 #include <memory.h>
 #include "GEInterfaces.h"
 
@@ -46,6 +39,7 @@ CAudioMixer::~CAudioMixer() {
 };
 
 void CAudioMixer::destroyList() {
+    m_mutex.lock();
     IAudioSource *l = m_sourceList;
     while (l) {
         IAudioSource *n = l->m_next;
@@ -53,17 +47,21 @@ void CAudioMixer::destroyList() {
         l = n;
     };
     m_sourceList = 0;
+    m_mutex.unlock();
 };
 
 
 IAudioSource* CAudioMixer::addAudioSource( IAudioSource *source ) {
+    m_mutex.lock();
     source->m_next = 0;
     if (m_sourceList) {
         IAudioSource *l = m_sourceList;
         while (l->m_next) l = l->m_next;
         l->m_next = source;
     } else m_sourceList = source;
+    m_mutex.unlock();
     return source;
+
 };
 
 
@@ -92,7 +90,11 @@ void CAudioMixer::setAbsoluteVolume( float vol ) {
 };
 
 int CAudioMixer::pullAudio( AUDIO_SAMPLE_TYPE *target, int bufferLength ) {
+
     if (!m_sourceList) return 0;
+
+    m_mutex.lock();
+
 
     if (m_mixingBufferLength<bufferLength) {
         if (m_mixingBuffer) delete [] m_mixingBuffer;
@@ -126,18 +128,23 @@ int CAudioMixer::pullAudio( AUDIO_SAMPLE_TYPE *target, int bufferLength ) {
         };
 
 
+
         // autodestroy
-        if (l->canBeDestroyed() == true) {
-            if (!prev) m_sourceList = next; else prev->m_next = l->m_next;
-            l->m_next = 0;
+        if (l->canBeDestroyed() == true) {          // NOTE, IS UNDER TESTING,... MIGHT CAUSE UNPREDICTABLE CRASHING WITH SOME USE CASES!!!
+            if (!prev)
+                m_sourceList = next;
+            else prev->m_next = next;
             delete l;
+            l = 0;
         };
+
+
 
 
         prev = l;
         l = next;
     };
-
+    m_mutex.unlock();
     return bufferLength;
 };
 

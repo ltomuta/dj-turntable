@@ -1,8 +1,8 @@
-DJ Turntable v1.0.0
+DJ Turntable v1.1.0
 ===================
 
 Dj Turntable demonstrates integrating a Qt Quick application to Qt audio
-interface. The application is compatible with Symbian^3 devices with Qt 4.7.0
+interface. The application is compatible with Symbian^3 devices with Qt 4.7.1
 or higher.
 
 
@@ -92,6 +92,14 @@ There are two ways to install the application into the device.
 3. Locate the turntable icon and select it to launch the application.
 
 
+Windows desktop
+~~~~~~~~~~~~~~~
+
+1. Extract the turntable.zip to the folder of your choosing
+
+2. Launch the application from turntable.exe.
+
+
 
 RUNNING THE APPLICATION
 -------------------------------------------------------------------------------
@@ -129,6 +137,7 @@ Key down = Go to the drum machine view
 Key left = View the 1st tick group in the drum machine
 Key right = View the 2nd tick group in the drum machine
 Key i = Go to the info view
+Backspace = Return from the info view to the previous view
 
 
 Samples
@@ -156,6 +165,7 @@ Tested on:
 
 - Nokia N8
 - Nokia E7
+- Windows XP
 
 RELATED RESOURCES
 -------------------------------------------------------------------------------

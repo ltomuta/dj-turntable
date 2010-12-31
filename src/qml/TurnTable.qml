@@ -198,10 +198,10 @@ Rectangle {
             Item {
                 anchors { top: speedslider.top; bottom: speedslider.bottom; right: speedslider.left; rightMargin: 5 }
 
-                Text { y: speedslider.calculateYPos(0); anchors.right: parent.right; text: "0"; color: "#505050" }
-                Text { y: speedslider.calculateYPos(0.5); anchors.right: parent.right; text: "75"; color: "#505050" }
-                Text { y: speedslider.calculateYPos(1.0); anchors.right: parent.right; text: "150"; color: "#505050" }
-                Text { y: speedslider.calculateYPos(1.5); anchors.right: parent.right; text: "225"; color: "#505050" }
+                Text { y: speedslider.calculateYPos(0); anchors.right: parent.right; text: "0"; color: "#505050"; font.pixelSize: 10 }
+                Text { y: speedslider.calculateYPos(0.5); anchors.right: parent.right; text: "75"; color: "#505050"; font.pixelSize: 10 }
+                Text { y: speedslider.calculateYPos(1.0); anchors.right: parent.right; text: "150"; color: "#505050"; font.pixelSize: 10 }
+                Text { y: speedslider.calculateYPos(1.5); anchors.right: parent.right; text: "225"; color: "#505050"; font.pixelSize: 10 }
 
                 Text {
                     text: "Disk / drum speed"

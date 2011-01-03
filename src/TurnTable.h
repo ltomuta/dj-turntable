@@ -1,5 +1,5 @@
-#ifndef __CTURNTABLE__
-#define __CTURNTABLE__
+#ifndef __TURNTABLE__
+#define __TURNTABLE__
 
 #include <QVariant>
 #include <QPointer>
@@ -14,12 +14,9 @@
 
 #ifdef Q_OS_SYMBIAN
     #include <remconcoreapitargetobserver.h>
-
-    class Observer;
     class CRemConInterfaceSelector;
     class CRemConCoreApiTarget;
 #endif
-
 
 
 class QSettings;
@@ -94,13 +91,6 @@ protected:
     QPointer<GE::AudioOut> m_audioOut;
 
 #ifdef Q_OS_SYMBIAN
-    Observer *m_Observer;
-    CRemConInterfaceSelector *m_Selector;
-    CRemConCoreApiTarget *m_Target;
-#endif
-};
-
-#ifdef Q_OS_SYMBIAN
 
     class Observer : public MRemConCoreApiTargetObserver
     {
@@ -122,7 +112,12 @@ protected:
     protected:
         TurnTable *m_TurnTable;
     };
+
+    Observer *m_Observer;
+    CRemConInterfaceSelector *m_Selector;
+    CRemConCoreApiTarget *m_Target;
 #endif
+};
 
 
 #endif

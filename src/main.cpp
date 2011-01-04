@@ -120,7 +120,7 @@ int main(int argc, char *argv[])
     QObject::connect(turnTableQML, SIGNAL(linkActivated(QVariant)), turnTable, SLOT(linkActivated(QVariant)));
     QObject::connect(turnTable, SIGNAL(audioPosition(QVariant)), turnTableQML, SLOT(audioPosition(QVariant)));
 
-    //DrumMachine connections
+    // DrumMachine connections
     QObject::connect(drumMachineQML, SIGNAL(startBeat()), drumMachine, SLOT(startBeat()));
     QObject::connect(drumMachineQML, SIGNAL(stopBeat()), drumMachine, SLOT(stopBeat()));
     QObject::connect(drumMachineQML, SIGNAL(setBeat(QVariant)), drumMachine, SLOT(setBeat(QVariant)));
@@ -129,7 +129,7 @@ int main(int argc, char *argv[])
     QObject::connect(drumMachine, SIGNAL(drumButtonState(QVariant, QVariant, QVariant)), drumMachineQML, SLOT(setDrumButton(QVariant, QVariant, QVariant)));
     QObject::connect(drumMachine, SIGNAL(tickChanged(QVariant)), drumMachineQML, SLOT(highlightTick(QVariant)));
 
-    //Framework connections
+    // Framework connections
     QObject::connect((QObject*)view.engine(), SIGNAL(quit()), &app, SLOT(quit()));
 #if defined(Q_OS_SYMBIAN) || defined(Q_WS_MAEMO_5)
     QObject::connect(filter, SIGNAL(rotationChanged(QVariant)), turnTableQML, SLOT(inclination(QVariant)));

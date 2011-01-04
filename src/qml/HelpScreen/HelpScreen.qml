@@ -59,8 +59,8 @@ Rectangle {
 
                     MouseArea {
                         anchors.fill: parent
-                        onPressed: { backButton.pressed = true; backButton.scale = 0.9 }
-                        onReleased: { backButton.pressed = false; backButton.scale = 1.0 }
+                        onPressed: { backButton.pressed = true; backButton.scale = 0.9; flickable.interactive = false }
+                        onReleased: { backButton.pressed = false; backButton.scale = 1.0; flickable.interactive = true }
                         onClicked: helpScreen.backPressed()
                     }
                 }

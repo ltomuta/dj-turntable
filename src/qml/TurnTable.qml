@@ -49,6 +49,16 @@ Rectangle {
         playTimer.start()
     }
 
+    SidePanel {
+        id: sidepanel
+
+        width: 0.09375 * ui.width; height: ui.height
+        onTurnTableClicked: flickable.setState("TurnTable")
+        onDrumMachineClicked: flickable.setState("DrumMachine")
+        turnTableLedOn: turntable.playing
+        drumMachineLedOn: drumMachine.ledOn
+    }
+
     Flickable {
         id: flickable
 
@@ -373,6 +383,7 @@ Rectangle {
             y: flickable.height
             width: flickable.width; height: flickable.height
             speed: speedslider.value
+            onInfoPressed: flickable.setState("Help")
         }
 
         states: [
@@ -404,15 +415,5 @@ Rectangle {
             PropertyAnimation { property: "contentY"; easing.type: Easing.InOutQuart }
             PropertyAnimation { property: "opacity" }
         }
-    }
-
-    SidePanel {
-        id: sidepanel
-
-        width: 0.09375 * ui.width; height: ui.height
-        onTurnTableClicked: flickable.setState("TurnTable")
-        onDrumMachineClicked: flickable.setState("DrumMachine")
-        turnTableLedOn: turntable.playing
-        drumMachineLedOn: drumMachine.ledOn
     }
 }

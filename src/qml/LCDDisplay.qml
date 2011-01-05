@@ -6,7 +6,7 @@ Rectangle {
 
     property int number: -1
 
-    width: digit1.width + digit2.width; height: digit1.height
+    width: digit2.x + digit2.width + 2 ; height: digit1.y + digit1.height + 2
     color: "black"
 
     onNumberChanged: {
@@ -16,11 +16,13 @@ Rectangle {
 
     LCDDigit {
         id: digit1
+        x: 2; y: 2
     }
 
     LCDDigit {
         id: digit2
 
         anchors.left: digit1.right; anchors.leftMargin: 2
+        anchors.top: digit1.top
     }
 }

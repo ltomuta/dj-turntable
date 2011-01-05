@@ -1,6 +1,6 @@
 import Qt 4.7
 
-Item {
+Image {
     id: drumMachine
     objectName: "drumMachine"   // used to identify this element in Qt side
 
@@ -9,6 +9,8 @@ Item {
     signal drumButtonToggled(variant tick, variant sample, variant pressed)
     signal setBeat(variant index)
     signal drumMachineSpeed(variant speed)
+
+    signal infoPressed()
 
     function setDrumButton(tick, sample, pressed) {
         drumGrid.children[tick + 32 * sample].pressed = pressed
@@ -32,23 +34,71 @@ Item {
     onSpeedChanged: drumMachineSpeed(speed)
 
     width: 600; height: 360
+    source: "../images/turntable.png"
+
+    Text {
+        anchors { right: tickGroupSelector.left; rightMargin: 15; top: tickGroupSelector.top; topMargin: 10 }
+        text: "Ticks"
+        color: "#505050"
+        font.pixelSize: 10
+    }
 
     TickGroupSelector {
         id: tickGroupSelector
 
-        anchors { top: parent.top; topMargin: 5; horizontalCenter: parent.horizontalCenter }
-        width: parent.width / 2; height: parent.height / 7
+        anchors { top: parent.top; left: drumFlickable.left; right: buttonPanel.left; topMargin: 5 }
+        height: parent.height / 7
     }
 
-    Rectangle {
-        anchors { left: parent.left; right: parent.right }
-        anchors { top: tickGroupSelector.bottom; topMargin: -10; bottom: parent.bottom }
-        color: "#999999"; radius: 4
+    Item {
+        id: buttonPanel
+
+        anchors { right: parent.right; top: parent.top }
+        width:  parent.width / 4; height: parent.height / 6
+
+        Image {
+            id: closeButton
+
+            property bool pressed: false
+
+            anchors { left: parent.horizontalCenter; right: parent.right }
+            anchors { top: parent.top; bottom: parent.bottom; margins: 5 }
+
+            source: pressed ? "../images/exit_on.png" : "../images/exit.png"
+            smooth: true
+
+            MouseArea {
+                anchors.fill: parent
+                onPressed: { closeButton.pressed = true; closeButton.scale = 0.9 }
+                onReleased: { closeButton.pressed = false; closeButton.scale = 1.0 }
+                onClicked: Qt.quit()
+            }
+        }
+
+        Image {
+            id: infoButton
+
+            property bool pressed: false
+
+            anchors { left: parent.left; right: parent.horizontalCenter }
+            anchors { top: parent.top; bottom: parent.bottom; margins: 5 }
+
+            source: pressed ? "../images/info_on.png" : "../images/info.png"
+            smooth: true
+
+            MouseArea {
+                anchors.fill: parent
+                onPressed: { infoButton.pressed = true; infoButton.scale = 0.9 }
+                onReleased: { infoButton.pressed = false; infoButton.scale = 1.00 }
+                onClicked: drumMachine.infoPressed()
+            }
+        }
     }
+
 
     Column {
         id: sampleIcons
-        anchors { left: parent.left; leftMargin: 6; top: tickGroupSelector.bottom; bottom: controlButtons.top }
+        anchors { left: parent.left; leftMargin: 6; top: tickGroupSelector.bottom; topMargin: 2; bottom: controlButtons.top }
         width: height / 6; spacing: 3
 
         Image { width: sampleIcons.width; height: drumGrid.drumButtonHeight; source: "../images/dr_icon_hihat.png"; smooth: true }

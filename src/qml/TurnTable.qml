@@ -211,8 +211,6 @@ Rectangle {
                 }
             }
 
-
-
             SpeedSlider {
                 id: speedslider
 
@@ -224,7 +222,6 @@ Rectangle {
                 scaleFactor: 150
                 mouseAreaScale: 3
             }
-
 
             Arm {
                 id: arm

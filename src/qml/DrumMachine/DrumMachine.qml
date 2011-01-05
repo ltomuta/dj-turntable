@@ -47,14 +47,15 @@ Image {
         id: tickGroupSelector
 
         anchors { top: parent.top; left: drumFlickable.left; right: buttonPanel.left; topMargin: 5 }
-        height: parent.height / 7
+        anchors { bottom: buttonPanel.bottom; bottomMargin: 5 }
+
     }
 
     Item {
         id: buttonPanel
 
         anchors { right: parent.right; top: parent.top }
-        width:  parent.width / 4; height: parent.height / 6
+        width:  parent.width * 0.23; height: parent.height / 6
 
         Image {
             id: closeButton

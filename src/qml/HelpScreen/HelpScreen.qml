@@ -9,8 +9,6 @@ Image {
     property real textSize: Math.min(width, height) * 0.04 <= 0 ? 8 : Math.min(width, height) * 0.02
 
     width: 500; height: 360
-    //radius: 5
-    //color: "#999999"
     source: "../images/turntable.png"
     clip: true
 
@@ -53,8 +51,8 @@ Image {
 
                     property bool pressed: false
 
-                    anchors { top: parent.top; right: parent.right; rightMargin: -10; topMargin: -10 }
-                    width: helpScreen.width / 10; height: width//0.836 * width
+                    anchors { top: parent.top; right: parent.right; rightMargin: -15; topMargin: -15 }
+                    width: helpScreen.width * 0.10; height: helpScreen.height / 6
                     source: pressed ? "../images/back_on.png" : "../images/back.png"
                     smooth: true
 

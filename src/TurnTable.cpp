@@ -37,7 +37,7 @@ TurnTable::TurnTable(QSettings *settings)
     m_audioMixer->addAudioSource(this);
     m_audioOut = new GE::AudioOut(this, m_audioMixer);
 
-    m_audioMixer->setGeneralVolume(m_Settings->value("Volume", 0.75f).toFloat());
+    m_audioMixer->setGeneralVolume(m_Settings->value("Volume", 0.65f).toFloat());
 
 
 #ifdef Q_OS_SYMBIAN

@@ -241,7 +241,8 @@ Rectangle {
             id: mixerpanel
 
             x: flickable.width - mixerpanel.width
-            width: 0.203125 * ui.width; height: flickable.height
+            width: flickable.width * 0.23
+            height: flickable.height
             color: "#999999"
             radius: 4
 

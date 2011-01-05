@@ -11,14 +11,14 @@ Rectangle {
     smooth: true
 
     Rectangle {
-        anchors { left: parent.left; top: parent.top; bottom: parent.bottom; bottomMargin: 2 }
+        anchors { left: parent.left; leftMargin: 1; top: parent.top; topMargin: 1; bottom: parent.bottom; bottomMargin: 1 }
         width: 8
         color: "#555555"
         radius: 2
     }
 
     Rectangle {
-        anchors { left: parent.left; top: parent.top; right: parent.right; rightMargin: 2 }
+        anchors { left: parent.left; top: parent.top; right: parent.right; rightMargin: 1 }
         height: 8
         color: "#555555"
         radius: 2
@@ -56,7 +56,7 @@ Rectangle {
         id: knob
 
         anchors { top: parent.top; bottom: parent.bottom }
-        anchors { topMargin: 2; bottomMargin: 2 }
+        anchors { topMargin: 3; bottomMargin: 3 }
         width: parent.width / 2; height: parent.height
         radius: 4
         color: "#888888"
@@ -64,7 +64,7 @@ Rectangle {
         border.color: "#AAAAAA"
 
         Behavior on x { NumberAnimation { easing.type: Easing.InOutQuad; duration: 100 } }
-        x: toggleSwitch.selectedTickGroup == 1 ? toggleSwitch.width / 2 - 2 : 2
+        x: toggleSwitch.selectedTickGroup == 1 ? toggleSwitch.width / 2 - 4 : 4
 
         MouseArea {
             anchors.fill: parent

@@ -5,14 +5,14 @@ import "HelpScreen"
 Rectangle {
     id: ui
 
+    property bool lowPerf: false
+
     signal diskSpeed(variant speed)
     signal diskAimSpeed(variant speed)
     signal start()
     signal stop()
-
     signal cutOff(variant value)
     signal resonance(variant value)
-
     signal linkActivated(variant link)
 
     function audioPosition(pos) { arm.positionOnDisk = pos }
@@ -93,7 +93,7 @@ Rectangle {
                 anchors.verticalCenterOffset: -0.0055 * parent.paintedHeight
 
                 source: "images/discplate.png"
-                smooth: true
+                smooth: ui.lowPerf ? false : true
             }
 
             Image {
@@ -105,7 +105,7 @@ Rectangle {
 
                 width: parent.paintedWidth * 0.73; height: width
                 source: "images/disk.png"
-                smooth: true
+                smooth: ui.lowPerf ? false : true
 
                 anchors.centerIn: parent
                 anchors.horizontalCenterOffset: -0.085 * parent.paintedWidth
@@ -116,7 +116,7 @@ Rectangle {
                 Timer {
                     id: playTimer
 
-                    interval: 16  // 60 fps
+                    interval: ui.lowPerf ? 32 : 16  // 30fps in lowPerf otherwise 60fps
                     repeat: true
                     onTriggered: {
                         disk.rotation = (disk.rotation + 0.36 * disk.currentSpeed * interval) % 360
@@ -313,8 +313,8 @@ Rectangle {
                         anchors.centerIn: parent
                         smooth: true
 
-                        maximumvalue: 1.0; minimumvalue: 0; value: 0
-                        onValueChanged: ui.resonance(maximumvalue - value)
+                        maximumvalue: 99; minimumvalue: 0; value: 0
+                        onValueChanged: ui.resonance(maximumvalue / 100 - value / 100)
                     }
                 }
 
@@ -336,8 +336,8 @@ Rectangle {
                         anchors.centerIn: parent
                         smooth: true
 
-                        maximumvalue: 1.0; minimumvalue: 0.0; value: 0
-                        onValueChanged: ui.cutOff(maximumvalue - value)
+                        maximumvalue: 99; minimumvalue: 0.0; value: 0
+                        onValueChanged: ui.cutOff(maximumvalue / 100 - value / 100)
                     }
                 }
             }

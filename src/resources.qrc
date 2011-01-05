@@ -5,6 +5,8 @@
         <file>qml/Arm.qml</file>
         <file>qml/SidePanel.qml</file>
         <file>qml/KnobDial.qml</file>
+        <file>qml/LCDDisplay.qml</file>
+        <file>qml/LCDDigit.qml</file>
         <file>qml/DrumMachine/DrumMachine.qml</file>
         <file>qml/DrumMachine/DrumButton.qml</file>
         <file>qml/DrumMachine/SlideSwitch.qml</file>

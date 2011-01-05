@@ -31,8 +31,9 @@ win32 {
 
 unix:!symbian {
     maemo5 {
+        QT += multimedia
         CONFIG   += mobility
-        MOBILITY += sensors multimedia systeminfo
+        MOBILITY += sensors systeminfo
 
         HEADERS  += accelerometerfilter.h
 

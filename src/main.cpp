@@ -110,6 +110,12 @@ int main(int argc, char *argv[])
         return -1;
     }
 
+#ifdef Q_WS_MAEMO_5
+    // Set UI to low performance mode in Maemo5, mostly this disables
+    // antialiasing on some performance costly elements
+    turnTableQML->setProperty("lowPerf", QVariant(true));
+#endif
+
     // TurnTable connections
     QObject::connect(turnTableQML, SIGNAL(start()), turnTable, SLOT(start()));
     QObject::connect(turnTableQML, SIGNAL(stop()), turnTable, SLOT(stop()));
@@ -146,7 +152,7 @@ int main(int argc, char *argv[])
     view.setGeometry(QApplication::desktop()->screenGeometry());
     view.showFullScreen();
 #else
-    view.setGeometry(QRect(100, 100, 640, 360));
+    view.setGeometry(QRect(100, 100, 800, 480));
     view.show();
 #endif
 

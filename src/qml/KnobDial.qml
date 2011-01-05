@@ -9,8 +9,7 @@ Item {
     property real minimumrotation: 0
     property real maximumrotation: -315
 
-    property real preferredvalue: 1.0
-    property real value: preferredvalue
+    property real value: 0
 
     width: 300; height: 300
 
@@ -34,12 +33,9 @@ Item {
         anchors.verticalCenterOffset: parent.height / 6
     }
 
-    Text {
+    LCDDisplay {
         anchors.centerIn: parent
-        color: "white"
-        text: knob.value.toFixed(2)
-        font.bold: true
-        font.pixelSize: 10
+        number: knob.value
     }
 
     MouseArea {
@@ -47,10 +43,9 @@ Item {
 
         anchors.fill: knobImage
 
-        //onDoubleClicked: knob.value = knob.preferredvalue
         onPressed: previousY = mouse.y
         onPositionChanged: {
-            var delta = (previousY - mouse.y) * 0.008
+            var delta = (previousY - mouse.y) * 0.20
 
             if(knob.value + delta > knob.maximumvalue) {
                 knob.value = knob.maximumvalue

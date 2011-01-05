@@ -87,7 +87,7 @@ Rectangle {
             Image {
                 id: discPlate
 
-                width: parent.paintedWidth * 0.79; height: width
+                width: Math.min(parent.paintedWidth * 0.79, parent.paintedHeight * 0.98); height: width
                 anchors.centerIn: parent
                 anchors.horizontalCenterOffset: -0.085 * parent.paintedWidth
                 anchors.verticalCenterOffset: -0.0055 * parent.paintedHeight
@@ -97,21 +97,17 @@ Rectangle {
             }
 
             Image {
-                id: disk
+                id: disc
 
                 // speed are Hz values of the disk
                 property real targetSpeed: turntable.playing ? speedslider.value : 0.0
                 property real currentSpeed: 0
 
-                width: parent.paintedWidth * 0.73; height: width
+                anchors { fill: discPlate; margins: discPlate.width * 0.045 }
                 source: "images/disk.png"
                 smooth: ui.lowPerf ? false : true
 
-                anchors.centerIn: parent
-                anchors.horizontalCenterOffset: -0.085 * parent.paintedWidth
-                anchors.verticalCenterOffset: -0.0055 * parent.paintedHeight
-
-                onCurrentSpeedChanged: playTimer.running ? ui.diskSpeed(disk.currentSpeed) : ui.diskAimSpeed(disk.currentSpeed)
+                onCurrentSpeedChanged: playTimer.running ? ui.diskSpeed(disc.currentSpeed) : ui.diskAimSpeed(disc.currentSpeed)
 
                 Timer {
                     id: playTimer
@@ -119,12 +115,12 @@ Rectangle {
                     interval: ui.lowPerf ? 32 : 16  // 30fps in lowPerf otherwise 60fps
                     repeat: true
                     onTriggered: {
-                        disk.rotation = (disk.rotation + 0.36 * disk.currentSpeed * interval) % 360
-                        if(Math.abs(disk.currentSpeed - disk.targetSpeed) <= 0.01) {
-                            disk.currentSpeed = disk.targetSpeed
+                        disc.rotation = (disc.rotation + 0.36 * disc.currentSpeed * interval) % 360
+                        if(Math.abs(disc.currentSpeed - disc.targetSpeed) <= 0.01) {
+                            disc.currentSpeed = disc.targetSpeed
                         }
                         else {
-                            disk.currentSpeed += (disk.targetSpeed - disk.currentSpeed) * 0.10
+                            disc.currentSpeed += (disc.targetSpeed - disc.currentSpeed) * 0.10
                         }
                     }
                 }
@@ -133,7 +129,7 @@ Rectangle {
             Image {
                 id: diskReflection
 
-                anchors.fill: disk
+                anchors.fill: disc
                 source: "images/diskreflection.png"
                 rotation: 45
                 Behavior on rotation { RotationAnimation {} }
@@ -150,7 +146,7 @@ Rectangle {
                 property int previousY: 0
                 property variant previousTime
 
-                anchors.fill: disk
+                anchors.fill: disc
 
                 onPressed: {
                     var xlength = Math.abs(mouse.x - centerx)
@@ -164,7 +160,7 @@ Rectangle {
                     }
 
                     playTimer.stop()
-                    disk.currentSpeed = 0.0
+                    disc.currentSpeed = 0.0
 
                     previousX = mouse.x
                     previousY = mouse.y
@@ -185,9 +181,9 @@ Rectangle {
                     if(angledelta > 180)       { angledelta -= 360 }
                     else if(angledelta < -180) { angledelta += 360 }
 
-                    disk.rotation = (disk.rotation + angledelta) % 360
+                    disc.rotation = (disc.rotation + angledelta) % 360
 
-                    if(now - previousTime > 0) { disk.currentSpeed = angledelta * 2.77778 / (now - previousTime) }
+                    if(now - previousTime > 0) { disc.currentSpeed = angledelta * 2.77778 / (now - previousTime) }
 
                     previousX = mouse.x
                     previousY = mouse.y
@@ -215,9 +211,7 @@ Rectangle {
                 id: speedslider
 
                 width: parent.paintedWidth * 0.085; height: parent.paintedHeight * 0.4
-                anchors.centerIn: parent
-                anchors.horizontalCenterOffset: 0.4 * parent.paintedWidth
-                anchors.verticalCenterOffset: 0.25 * parent.paintedHeight
+                anchors { centerIn: parent; horizontalCenterOffset: 0.4 * parent.paintedWidth; verticalCenterOffset: 0.25 * parent.paintedHeight }
                 maximum: 1.5; minimum: 0.0; value: 1.0; defaultValue: 1.0
                 scaleFactor: 150
                 mouseAreaScale: 3
@@ -226,10 +220,8 @@ Rectangle {
             Arm {
                 id: arm
 
-                width: parent.paintedWidth * 0.20; height: parent.paintedHeight * 0.93
-                anchors.centerIn: parent
-                anchors.horizontalCenterOffset: 0.38 * parent.paintedWidth
-                anchors.verticalCenterOffset: -0.025 * parent.paintedHeight
+                width: disc.width * 0.30; height: disc.height * 1.06
+                anchors { left: discPlate.right; top: discPlate.top; leftMargin: discPlate.width * -0.05 }
 
                 onArmdownChanged: armdown ? ui.start() : ui.stop()
             }

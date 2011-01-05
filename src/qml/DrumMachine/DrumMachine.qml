@@ -49,7 +49,7 @@ Item {
     Column {
         id: sampleIcons
         anchors { left: parent.left; leftMargin: 6; top: tickGroupSelector.bottom; bottom: controlButtons.top }
-        width: 30; spacing: 3
+        width: height / 6; spacing: 3
 
         Image { width: sampleIcons.width; height: drumGrid.drumButtonHeight; source: "../images/dr_icon_hihat.png"; smooth: true }
         Image { width: sampleIcons.width; height: drumGrid.drumButtonHeight; source: "../images/dr_icon_hihat_open.png"; smooth: true }
@@ -98,8 +98,7 @@ Item {
             color: "#999999"
 
             x: drumGrid.children[16].x
-            width: drumGrid.drumButtonWidth
-            height: drumFlickable.height
+            width: drumGrid.drumButtonWidth; height: drumFlickable.height
         }
 
         Rectangle {

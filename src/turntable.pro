@@ -26,6 +26,7 @@ HEADERS   +=   TurnTable.h \
 
 win32 {
     QT += multimedia
+    RC_FILE = turntable.rc
 }
 
 

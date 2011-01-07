@@ -37,8 +37,8 @@ unix:!symbian {
 
         HEADERS  += accelerometerfilter.h
 
-        BINDIR  = /opt/usr/bin
-        DATADIR = /opt/usr/share
+        BINDIR  = /usr/bin
+        DATADIR = /usr/share
         DEFINES += DATADIR=\\\"$$DATADIR\\\" \
                    PKGDATADIR=\\\"$$PKGDATADIR\\\"
         INSTALLS += target \

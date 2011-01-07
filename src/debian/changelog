@@ -1,5 +1,11 @@
-turntable (0.0.1) unstable; urgency=low
+turntable (1.1.0) unstable; urgency=low
 
-  * Initial Release.
+  * Sync drum machine to turntable speed
+  
+ -- Antonio Aloisio <antonio.aloisio@nokia.com>  Fri, 07 Jan 2010 10:14:38 +0300
 
- -- unknown <>  Tue, 28 Dec 2010 14:55:57 +0200
+turntable (1.0.0) stable; urgency=low
+
+  * Initial release
+
+ -- Antonio Aloisio <antonio.aloisio@nokia.com>  Tue, 21 Dec 2010 10:00:09 +0300

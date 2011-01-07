@@ -37,11 +37,35 @@ unix:!symbian {
 
         HEADERS  += accelerometerfilter.h
 
-        target.path = /opt/usr/bin
+        BINDIR  = /opt/usr/bin
+        DATADIR = /opt/usr/share
+        DEFINES += DATADIR=\\\"$$DATADIR\\\" \
+                   PKGDATADIR=\\\"$$PKGDATADIR\\\"
+        INSTALLS += target \
+                    desktop \
+                    iconxpm \
+                    icon26 \
+                    icon40 \
+                    icon64
+
+        target.path = $$BINDIR
+        desktop.path = $$DATADIR/applications/hildon
+        desktop.files += $${TARGET}.desktop
+
+        iconxpm.path = $$DATADIR/pixmap
+        iconxpm.files += icons/xpm/turntable.xpm
+
+        icon26.path = $$DATADIR/icons/hicolor/26x26/apps
+        icon26.files += icons/26x26/turntable.png
+
+        icon40.path = $$DATADIR/icons/hicolor/40x40/apps
+        icon40.files += icons/40x40/turntable.png
+
+        icon64.path = $$DATADIR/icons/hicolor/64x64/apps
+        icon64.files += icons/64x64/turntable.png
     } else {
         target.path = /usr/local/bin
     }
-    INSTALLS += target
 }
 
 

@@ -37,16 +37,14 @@ Image {
         onClicked: toggleSwitch.selectedTickGroup = 1
     }
 
-    Rectangle {
+    Image {
         id: knob
 
         anchors { top: parent.top; bottom: parent.bottom }
         anchors { topMargin: 3; bottomMargin: 3 }
         width: parent.width / 2; height: parent.height
-        radius: 4
-        color: "#888888"
-        border.width: 2
-        border.color: "#AAAAAA"
+        smooth: true
+        source: "../images/tickgroupselectorslider.png"
 
         Behavior on x { NumberAnimation { easing.type: Easing.InOutQuad; duration: 100 } }
         x: toggleSwitch.selectedTickGroup == 1 ? toggleSwitch.width / 2 - 4 : 4

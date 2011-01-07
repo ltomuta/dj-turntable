@@ -24,6 +24,7 @@
         <file>qml/images/dr_icon_crash.png</file>
         <file>qml/images/dr_icon_cowbell.png</file>
         <file>qml/images/tickgroupselectorback.png</file>
+        <file>qml/images/tickgroupselectorslider.png</file>
         <file>qml/images/discplate.png</file>
         <file>qml/images/disk.png</file>
         <file>qml/images/diskreflection.png</file>

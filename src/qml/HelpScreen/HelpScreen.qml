@@ -1,6 +1,6 @@
 import Qt 4.7
 
-Image {
+Rectangle {
     id: helpScreen
 
     signal linkActivated(variant link)
@@ -9,7 +9,8 @@ Image {
     property real textSize: Math.min(width, height) * 0.04 <= 0 ? 8 : Math.min(width, height) * 0.02
 
     width: 500; height: 360
-    source: "../images/turntable.png"
+    radius: 4
+    color: "#999999"
     clip: true
 
     Flickable {

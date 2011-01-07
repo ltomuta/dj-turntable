@@ -1,36 +1,21 @@
 import Qt 4.7
 
-Rectangle {
+Image {
     id: toggleSwitch
 
     property int selectedTickGroup: 1
 
     width: 300; height: 40
-    color: "#666666"
-    radius: 4
+    source: "../images/tickgroupselectorback.png"
     smooth: true
-
-    Rectangle {
-        anchors { left: parent.left; leftMargin: 1; top: parent.top; topMargin: 1; bottom: parent.bottom; bottomMargin: 1 }
-        width: 8
-        color: "#555555"
-        radius: 2
-    }
-
-    Rectangle {
-        anchors { left: parent.left; top: parent.top; right: parent.right; rightMargin: 1 }
-        height: 8
-        color: "#555555"
-        radius: 2
-    }
 
     Text {
         anchors.verticalCenter: parent.verticalCenter
-        x: parent.width/4 -width / 2
+        x: parent.width / 4 - width / 2
         text: "1-16"
         color: "white"
         font.bold: true
-        font.pixelSize: 20
+        font.pixelSize: parent.height / 3
     }
 
     Text {
@@ -39,7 +24,7 @@ Rectangle {
         text: "17-32"
         color: "white"
         font.bold: true
-        font.pixelSize: 20
+        font.pixelSize: parent.height / 3
     }
 
     MouseArea {

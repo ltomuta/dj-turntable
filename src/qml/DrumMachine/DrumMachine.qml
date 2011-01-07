@@ -48,7 +48,6 @@ Image {
 
         anchors { top: parent.top; left: drumFlickable.left; right: buttonPanel.left; topMargin: 5 }
         anchors { bottom: buttonPanel.bottom; bottomMargin: 5 }
-
     }
 
     Item {

@@ -370,7 +370,7 @@ Rectangle {
                     width: Math.min(parent.width, parent.height) * 0.9; height: width
                     anchors.centerIn: parent
 
-                    glowColor: pressed ? "#AA00FF00" : "#AAFF0000"
+                    glowColor: pressed ? "#CC00FF00" : "#CCFF0000"
                     pressed: turntable.playing
                     smooth: true
                     buttonCenterImage: "images/powerbutton.png"

@@ -4,10 +4,13 @@ Item {
     id: knob
 
     property real minimumvalue: 0
-    property real maximumvalue: 1.5
+    property real maximumvalue: 99
 
-    property real minimumrotation: 0
-    property real maximumrotation: -315
+
+    property real minimumrotation: 35
+    property real maximumrotation: -285
+    //property real minimumrotation: 0
+    //property real maximumrotation: -315
 
     property real value: 0
 
@@ -18,9 +21,10 @@ Item {
 
         anchors.fill: parent
         source: "images/knobdial.png"
-        rotation: knob.value / knob.maximumvalue * knob.maximumrotation
+        rotation: knob.minimumrotation + knob.value / knob.maximumvalue * -knob.maximumrotation
     }
 
+    /*
     Image {
         source: "images/arrowup.png"
         anchors.centerIn: parent
@@ -32,6 +36,7 @@ Item {
         anchors.centerIn: parent
         anchors.verticalCenterOffset: parent.height / 6
     }
+    */
 
     LCDDisplay {
         anchors.centerIn: parent

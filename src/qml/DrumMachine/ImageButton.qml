@@ -18,7 +18,7 @@ Image {
         id: glowColor
         anchors.fill: parent; anchors.margins: parent.width * 0.8
         z: -1
-        color: button.pressed ? "#AAFF0000" : "#AA202020"
+        color: button.pressed ? "#CCFF0000" : "#CC202020"
         Behavior on color { ColorAnimation { duration: 100 } }
     }
 

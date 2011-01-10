@@ -18,7 +18,7 @@ Image {
 
     function highlightTick(tick) {
         if(tick % 8) { ledOn = false }
-        else { ledOn = true }
+        else if(powerbutton.pressed) { ledOn = true }
 
         if(tick < 16) { tickGroupSelector.selectedTickGroup = 1 }
         else { tickGroupSelector.selectedTickGroup = 2 }
@@ -217,9 +217,12 @@ Image {
                 anchors { right: parent.right; rightMargin: 10 }
                 width: beatSelector.buttonWidth; height: width
                 buttonCenterImage: "../images/powerbutton.png"
-                glowColor: pressed ? "#AA00FF00" : "#AAFF0000"
+                glowColor: pressed ? "#CC00FF00" : "#CCFF0000"
 
-                onPressedChanged: pressed ? drumMachine.startBeat() : drumMachine.stopBeat()
+                onPressedChanged: {
+                    if(pressed) { drumMachine.startBeat() }
+                    else { drumMachine.stopBeat(); drumMachine.ledOn = false }
+                }
                 onClicked: pressed = !pressed
             }
         }

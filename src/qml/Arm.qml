@@ -3,7 +3,8 @@ import Qt 4.7
 Item {
     id: arm
 
-    property real angle: armdown ? positionOnDisk * 20 + armOnDiskOffset : armOnDiskOffset
+    property real angle: armdown ? positionOnDisk * 20 + armOnDiskOffset :
+                                   armOnDiskOffset
     property real armOnDiskOffset: 0
     property bool armdown: false
     property real positionOnDisk: 0   // Values from 0.0 - 1.0
@@ -19,12 +20,17 @@ Item {
     }
 
     Item {
-        anchors { top: pedal.verticalCenter; bottom: parent.bottom; left: parent.left; right: parent.right }
+        anchors { top: pedal.verticalCenter; bottom: parent.bottom }
+        anchors { left: parent.left; right: parent.right }
 
-        transform: Rotation { origin.x: width / 2; origin.y: 0; angle: arm.angle }
+        transform: Rotation {
+            origin.x: width / 2; origin.y: 0
+            angle: arm.angle
+        }
 
         Image {
-            anchors { fill: armImage; leftMargin: parent.width * 0.15; topMargin: parent.height * 0.02 }
+            anchors { fill: armImage; leftMargin: parent.width * 0.15 }
+            anchors { topMargin: parent.height * 0.02 }
             smooth: true
             source: "images/armshadow.png"
         }
@@ -57,7 +63,9 @@ Item {
     SequentialAnimation {
         id: moveToDisk
 
-        PropertyAnimation { target: arm; property: "armOnDiskOffset"; to: 23; duration: 2000 }
+        PropertyAnimation {
+            target: arm; property: "armOnDiskOffset"; to: 23; duration: 2000
+        }
         ScriptAction { script: { arm.armdown = true } }
     }
 
@@ -65,6 +73,8 @@ Item {
         id: moveToStop
 
         ScriptAction { script: arm.armdown = false }
-        PropertyAnimation { target: arm; property: "armOnDiskOffset"; to: 0; duration: 1000 }
+        PropertyAnimation {
+            target: arm; property: "armOnDiskOffset"; to: 0; duration: 1000
+        }
     }
 }

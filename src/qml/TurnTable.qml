@@ -71,7 +71,8 @@ Rectangle {
             }
         }
 
-        anchors { left: sidepanel.right; right: parent.right; bottom: parent.bottom; top: parent.top }
+        anchors { left: sidepanel.right; right: parent.right }
+        anchors { bottom: parent.bottom; top: parent.top }
         contentWidth: parent.width; contentHeight: parent.height * 3
         interactive: false
 
@@ -90,14 +91,18 @@ Rectangle {
 
             property bool playing: false
 
-            width:  flickable.width - mixerpanel.width - 2; height: flickable.height
+            width:  flickable.width - mixerpanel.width - 2
+            height: flickable.height
             source: "images/turntable.png"
             fillMode: Image.Stretch
 
             Image {
                 id: discPlate
 
-                width: Math.min(parent.paintedWidth * 0.79, parent.paintedHeight * 0.98); height: width
+                width: Math.min(parent.paintedWidth * 0.79,
+                                parent.paintedHeight * 0.98)
+                height: width
+
                 anchors.centerIn: parent
                 anchors.horizontalCenterOffset: -0.085 * parent.paintedWidth
                 anchors.verticalCenterOffset: -0.0055 * parent.paintedHeight
@@ -110,27 +115,34 @@ Rectangle {
                 id: disc
 
                 // speed are Hz values of the disk
-                property real targetSpeed: turntable.playing ? speedslider.value : 0.0
+                property real targetSpeed: turntable.playing ?
+                                               speedslider.value : 0.0
                 property real currentSpeed: 0
 
                 anchors { fill: discPlate; margins: discPlate.width * 0.045 }
                 source: "images/disk.png"
                 smooth: ui.lowPerf ? false : true
 
-                onCurrentSpeedChanged: playTimer.running ? ui.diskSpeed(disc.currentSpeed) : ui.diskAimSpeed(disc.currentSpeed)
+                onCurrentSpeedChanged: playTimer.running ?
+                                           ui.diskSpeed(disc.currentSpeed) :
+                                           ui.diskAimSpeed(disc.currentSpeed)
 
                 Timer {
                     id: playTimer
 
-                    interval: ui.lowPerf ? 32 : 16  // 30fps in lowPerf otherwise 60fps
+                    // 30fps in lowPerf otherwise 60fps
+                    interval: ui.lowPerf ? 32 : 16
                     repeat: true
                     onTriggered: {
-                        disc.rotation = (disc.rotation + 0.36 * disc.currentSpeed * interval) % 360
+                        disc.rotation = (disc.rotation + 0.36 *
+                                         disc.currentSpeed * interval) % 360
+
                         if(Math.abs(disc.currentSpeed - disc.targetSpeed) <= 0.01) {
                             disc.currentSpeed = disc.targetSpeed
                         }
                         else {
-                            disc.currentSpeed += (disc.targetSpeed - disc.currentSpeed) * 0.10
+                            disc.currentSpeed += (disc.targetSpeed -
+                                                  disc.currentSpeed) * 0.10
                         }
                     }
                 }
@@ -162,7 +174,8 @@ Rectangle {
                     var xlength = Math.abs(mouse.x - centerx)
                     var ylength = Math.abs(mouse.y - centery)
 
-                    if(Math.sqrt(xlength * xlength + ylength * ylength) > centerx) {
+                    if(Math.sqrt(xlength * xlength + ylength *
+                                 ylength) > centerx) {
                         // mouse press did not hit on the disk, the disk is actually
                         // rectangle shaped and the mouse was pressed one of the corners
                         mouse.accepted = false
@@ -187,13 +200,18 @@ Rectangle {
                     var bx = previousX - centerx
                     var by = centery - previousY
 
-                    var angledelta = (Math.atan2(by, bx) - Math.atan2(ay, ax)) * 57.2957795
+                    var angledelta = (Math.atan2(by, bx) -
+                                      Math.atan2(ay, ax)) * 57.2957795
+
                     if(angledelta > 180)       { angledelta -= 360 }
                     else if(angledelta < -180) { angledelta += 360 }
 
                     disc.rotation = (disc.rotation + angledelta) % 360
 
-                    if(now - previousTime > 0) { disc.currentSpeed = angledelta * 2.77778 / (now - previousTime) }
+                    if(now - previousTime > 0) {
+                        disc.currentSpeed = angledelta * 2.77778 /
+                                            (now - previousTime)
+                    }
 
                     previousX = mouse.x
                     previousY = mouse.y
@@ -202,26 +220,51 @@ Rectangle {
             }
 
             Item {
-                anchors { top: speedslider.top; bottom: speedslider.bottom; right: speedslider.left; rightMargin: 5 }
-
-                Text { y: speedslider.calculateYPos(0); anchors.right: parent.right; text: "0"; color: "#505050"; font.pixelSize: 10 }
-                Text { y: speedslider.calculateYPos(0.5); anchors.right: parent.right; text: "75"; color: "#505050"; font.pixelSize: 10 }
-                Text { y: speedslider.calculateYPos(1.0); anchors.right: parent.right; text: "150"; color: "#505050"; font.pixelSize: 10 }
-                Text { y: speedslider.calculateYPos(1.5); anchors.right: parent.right; text: "225"; color: "#505050"; font.pixelSize: 10 }
+                anchors { top: speedslider.top; bottom: speedslider.bottom }
+                anchors { right: speedslider.left; rightMargin: 5 }
 
                 Text {
+                    y: speedslider.calculateYPos(0)
+                    anchors.right: parent.right
+                    text: "0"; color: "#505050"; font.pixelSize: 10
+                }
+
+                Text {
+                    y: speedslider.calculateYPos(0.5)
+                    anchors.right: parent.right
+                    text: "75"; color: "#505050"; font.pixelSize: 10
+                }
+
+                Text {
+                    y: speedslider.calculateYPos(1.0)
+                    anchors.right: parent.right
+                    text: "150"; color: "#505050"; font.pixelSize: 10
+                }
+
+                Text {
+                    y: speedslider.calculateYPos(1.5)
+                    anchors.right: parent.right
+                    text: "225"; color: "#505050"; font.pixelSize: 10
+                }
+
+                Text {
+                    anchors { right: parent.right; rightMargin: 15 }
+                    anchors { bottom: parent.bottom; bottomMargin: 0 }
                     text: "Disk / drum speed"
-                    color: "#505050"
-                    anchors { right: parent.right; rightMargin: 15; bottom: parent.bottom; bottomMargin: 0 }
-                    font.pixelSize: 10
+                    color: "#505050"; font.pixelSize: 10
                 }
             }
 
             SpeedSlider {
                 id: speedslider
 
-                width: parent.paintedWidth * 0.085; height: parent.paintedHeight * 0.4
-                anchors { centerIn: parent; horizontalCenterOffset: 0.4 * parent.paintedWidth; verticalCenterOffset: 0.25 * parent.paintedHeight }
+                width: parent.paintedWidth * 0.085
+                height: parent.paintedHeight * 0.4
+
+                anchors.centerIn: parent
+                anchors.horizontalCenterOffset: 0.4 * parent.paintedWidth
+                anchors.verticalCenterOffset: 0.25 * parent.paintedHeight
+
                 maximum: 1.5; minimum: 0.0; value: 1.0; defaultValue: 1.0
                 scaleFactor: 150
                 mouseAreaScale: 3
@@ -231,7 +274,8 @@ Rectangle {
                 id: arm
 
                 width: disc.width * 0.30; height: disc.height * 1.06
-                anchors { left: discPlate.right; top: discPlate.top; leftMargin: discPlate.width * -0.05 }
+                anchors { left: discPlate.right; top: discPlate.top }
+                anchors { leftMargin: discPlate.width * -0.05 }
 
                 onArmdownChanged: armdown ? ui.start() : ui.stop()
             }
@@ -249,7 +293,8 @@ Rectangle {
             Item {
                 id: buttonPanel
 
-                anchors { left: parent.left; right: parent.right; top: parent.top }
+                anchors { left: parent.left; right: parent.right }
+                anchors { top: parent.top }
                 height: parent.height / 6
 
                 Image {
@@ -257,16 +302,25 @@ Rectangle {
 
                     property bool pressed: false
 
-                    anchors { left: parent.horizontalCenter; right: parent.right }
-                    anchors { top: parent.top; bottom: parent.bottom; margins: 5 }
+                    anchors { left: parent.horizontalCenter }
+                    anchors { right: parent.right; top: parent.top }
+                    anchors { bottom: parent.bottom; margins: 5 }
 
                     source: pressed ? "images/exit_on.png" : "images/exit.png"
                     smooth: true
 
                     MouseArea {
                         anchors.fill: parent
-                        onPressed: { closeButton.pressed = true; closeButton.scale = 0.9 }
-                        onReleased: { closeButton.pressed = false; closeButton.scale = 1.0 }
+                        onPressed: {
+                            closeButton.pressed = true
+                            closeButton.scale = 0.9
+                        }
+
+                        onReleased: {
+                            closeButton.pressed = false
+                            closeButton.scale = 1.0
+                        }
+
                         onClicked: Qt.quit()
                     }
                 }
@@ -276,16 +330,26 @@ Rectangle {
 
                     property bool pressed: false
 
-                    anchors { left: parent.left; right: parent.horizontalCenter }
-                    anchors { top: parent.top; bottom: parent.bottom; margins: 5 }
+                    anchors { left: parent.left }
+                    anchors { right: parent.horizontalCenter }
+                    anchors { top: parent.top; bottom: parent.bottom }
+                    anchors { margins: 5 }
 
                     source: pressed ? "images/info_on.png" : "images/info.png"
                     smooth: true
 
                     MouseArea {
                         anchors.fill: parent
-                        onPressed: { infoButton.pressed = true; infoButton.scale = 0.9 }
-                        onReleased: { infoButton.pressed = false; infoButton.scale = 1.00 }
+                        onPressed: {
+                            infoButton.pressed = true
+                            infoButton.scale = 0.9
+                        }
+
+                        onReleased: {
+                            infoButton.pressed = false
+                            infoButton.scale = 1.00
+                        }
+
                         onClicked: flickable.setState("Help")
                     }
                 }
@@ -293,51 +357,62 @@ Rectangle {
 
             Item {
                 anchors { left: parent.left; right: parent.right }
-                anchors { top: buttonPanel.bottom; bottom: powerButtonArea.top }
+                anchors { top: buttonPanel.bottom }
+                anchors { bottom: powerButtonArea.top }
 
                 Text {
                     text: "Resonance"
                     color: "#505050"
-                    anchors { left: parent.left; leftMargin: 7; top: parent.top }
+                    anchors { left: parent.left; leftMargin: 7 }
+                    anchors { top: parent.top }
                     font.pixelSize: 10
                 }
 
                 Item {
                     anchors { left: parent.left; right: parent.right }
-                    anchors { top: parent.top; bottom: parent.verticalCenter; margins: 10 }
+                    anchors { top: parent.top; bottom: parent.verticalCenter }
+                    anchors { margins: 10 }
 
                     KnobDial {
                         id: resonance
 
-                        width: Math.min(parent.width, parent.height); height: width
+                        width: Math.min(parent.width, parent.height)
+                        height: width
+
                         anchors.centerIn: parent
                         smooth: true
 
                         maximumvalue: 99; minimumvalue: 0; value: 0
-                        onValueChanged: ui.resonance(maximumvalue / 100 - value / 100)
+                        onValueChanged: ui.resonance(maximumvalue / 100 -
+                                                     value / 100)
                     }
                 }
 
                 Text {
                     text: "Cutoff"
                     color: "#505050"
-                    anchors { left: parent.left; leftMargin: 7; top: parent.verticalCenter }
+                    anchors { left: parent.left; leftMargin: 7 }
+                    anchors { top: parent.verticalCenter }
                     font.pixelSize: 10
                 }
 
                 Item {
                     anchors { left: parent.left; right: parent.right }
-                    anchors { top: parent.verticalCenter; bottom: parent.bottom; margins: 10 }
+                    anchors { bottom: parent.bottom; margins: 10 }
+                    anchors { top: parent.verticalCenter }
 
                     KnobDial {
                         id: cutoff
 
-                        width: Math.min(parent.width, parent.height); height: width
+                        width: Math.min(parent.width, parent.height)
+                        height: width
+
                         anchors.centerIn: parent
                         smooth: true
 
                         maximumvalue: 99; minimumvalue: 0.0; value: 0
-                        onValueChanged: ui.cutOff(maximumvalue / 100 - value / 100)
+                        onValueChanged: ui.cutOff(maximumvalue / 100 -
+                                                  value / 100)
                     }
                 }
             }
@@ -345,7 +420,8 @@ Rectangle {
             Item {
                 id: powerButtonArea
 
-                anchors { left: parent.left; right: parent.right; bottom: parent.bottom }
+                anchors { left: parent.left; right: parent.right }
+                anchors { bottom: parent.bottom }
                 height: parent.height / 6
 
                 Text {
@@ -361,13 +437,18 @@ Rectangle {
 
                     function press() {
                         turntable.playing = !turntable.playing
-                        if(turntable.playing) { arm.moveIn()  }
-                        else                  { arm.moveOut() }
+                        if(turntable.playing) {
+                            arm.moveIn()
+                        }
+                        else {
+                            arm.moveOut()
+                        }
                     }
 
                     onClicked: press()
 
-                    width: Math.min(parent.width, parent.height) * 0.9; height: width
+                    width: Math.min(parent.width, parent.height) * 0.9
+                    height: width
                     anchors.centerIn: parent
 
                     glowColor: pressed ? "#CC00FF00" : "#CCFF0000"
@@ -391,14 +472,18 @@ Rectangle {
             State {
                 name: "TurnTable"
                 PropertyChanges { target: flickable; contentY: 0 }
-                PropertyChanges { target: sidepanel; turnTableButtonPressed: true }
+                PropertyChanges {
+                    target: sidepanel; turnTableButtonPressed: true
+                }
                 PropertyChanges { target: drumMachine; opacity: 0 }
                 PropertyChanges { target: helpScreen; opacity: 0 }
             },
             State {
                 name: "DrumMachine"
                 PropertyChanges { target: flickable; contentY: ui.height }
-                PropertyChanges { target: sidepanel; drumMachineButtonPressed: true }
+                PropertyChanges {
+                    target: sidepanel; drumMachineButtonPressed: true
+                }
                 PropertyChanges { target: turntable; opacity: 0 }
                 PropertyChanges { target: mixerpanel; opacity: 0 }
                 PropertyChanges { target: helpScreen; opacity: 0 }
@@ -413,7 +498,9 @@ Rectangle {
         ]
 
         transitions: Transition {
-            PropertyAnimation { property: "contentY"; easing.type: Easing.InOutQuart }
+            PropertyAnimation {
+                property: "contentY"; easing.type: Easing.InOutQuart
+            }
             PropertyAnimation { property: "opacity" }
         }
     }

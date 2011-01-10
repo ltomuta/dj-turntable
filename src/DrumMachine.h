@@ -25,7 +25,8 @@ public:
     TYPE_DRUM_SEQ seq() const;
     int currentSeqIndex() const { return m_currentSeqIndex; }
 
-    void setSpeedMultiplier( float speedMul = 1.0f );           // you must call setBpm after this one.
+    // You must call setBpm after this one.
+    void setSpeedMultiplier( float speedMul = 1.0f );
     void setBpm(int bpm);
     void setSeq(const TYPE_DRUM_SEQ &seq);
     void setRunning(bool running) { m_running = running; }

@@ -37,7 +37,8 @@ TurnTable::TurnTable(QSettings *settings)
     m_audioMixer->addAudioSource(this);
     m_audioOut = new GE::AudioOut(this, m_audioMixer);
 
-    m_audioMixer->setGeneralVolume(m_Settings->value("Volume", 0.65f).toFloat());
+    m_audioMixer->setGeneralVolume(m_Settings->value("Volume",
+                                                     0.65f).toFloat());
 
 
 #ifdef Q_OS_SYMBIAN
@@ -64,14 +65,17 @@ int TurnTable::pullAudio(AUDIO_SAMPLE_TYPE *target, int bufferLength)
     AUDIO_SAMPLE_TYPE *t_target = target + bufferLength;
     SAMPLE_FUNCTION_TYPE sfunc = m_source->getSampleFunction();
 
-    int channelLength = ((m_source->getDataLength()) / (m_source->getNofChannels() * m_source->getBytesPerSample())) - 2;
+    int channelLength = ((m_source->getDataLength()) /
+                         (m_source->getNofChannels() *
+                          m_source->getBytesPerSample())) - 2;
     channelLength<<=11;
 
     int p;
     int fixedReso = (m_resonanceValue * 4096.0f);
     int fixedCutoff = (m_cutOffValue * 4096.0f);
 
-    float speedmul = (float)m_source->getSamplesPerSec() / (float)AUDIO_FREQUENCY * 2048.0f;
+    float speedmul = (float)m_source->getSamplesPerSec() /
+                     (float)AUDIO_FREQUENCY * 2048.0f;
     int inc = (int)(m_speed * speedmul);
 
     if (m_headOn == false) {
@@ -119,7 +123,8 @@ int TurnTable::pullAudio(AUDIO_SAMPLE_TYPE *target, int bufferLength)
 
         p = (m_pos >> 11);
 
-        input = (((sfunc)(m_source, p, 0) * (2047^(m_pos & 2047)) + (sfunc)(m_source, p+1, 0) * (m_pos & 2047)) >> 11);
+        input = (((sfunc)(m_source, p, 0) * (2047^(m_pos & 2047)) +
+                  (sfunc)(m_source, p+1, 0) * (m_pos & 2047)) >> 11);
         m_lp[0] += ((m_bp[0] * fixedCutoff) >> 12);
         m_hp[0] = input - m_lp[0] - ((m_bp[0] * fixedReso) >> 12);
         m_bp[0] += ((m_hp[0] * fixedCutoff) >> 12);
@@ -134,7 +139,8 @@ int TurnTable::pullAudio(AUDIO_SAMPLE_TYPE *target, int bufferLength)
 
         target[0] = input;
 
-        input = (((sfunc)(m_source, p, 1) * (2047 ^ (m_pos & 2047)) + (sfunc)(m_source, p+1, 1) * (m_pos & 2047)) >> 11);
+        input = (((sfunc)(m_source, p, 1) * (2047 ^ (m_pos & 2047)) +
+                  (sfunc)(m_source, p+1, 1) * (m_pos & 2047)) >> 11);
         m_lp[1] += ((m_bp[1] * fixedCutoff) >> 12);
         m_hp[1] = input - m_lp[1] - ((m_bp[1] * fixedReso) >> 12);
         m_bp[1] += ((m_hp[1] * fixedCutoff) >> 12);
@@ -152,8 +158,10 @@ int TurnTable::pullAudio(AUDIO_SAMPLE_TYPE *target, int bufferLength)
         m_pos += inc;
     }
 
-    // Emit signal about the audio position to draw advance the needle to correct position
-    emit audioPosition(1.0 / maxloops * (m_pos * 1.0f / channelLength + m_loops));
+    // Emit signal about the audio position to advance the needle to
+    // correct position
+    emit audioPosition(1.0 / maxloops * (m_pos * 1.0f / channelLength
+                                         + m_loops));
 
     return bufferLength;
 }

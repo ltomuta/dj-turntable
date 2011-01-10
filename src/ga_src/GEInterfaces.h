@@ -16,33 +16,37 @@ namespace GE {
         IAudioSource();
         virtual ~IAudioSource();
 
-        virtual int pullAudio( AUDIO_SAMPLE_TYPE *target, int bufferLength ) = 0;
+        virtual int pullAudio(AUDIO_SAMPLE_TYPE *target,
+                              int bufferLength ) = 0;
         virtual bool canBeDestroyed() { return false; }
 
-        IAudioSource *m_next;				// for listing, do not touch if you dont know what you are doing.
+        // For listing, do not touch if you dont know what you are doing.
+        IAudioSource *m_next;
     };
-
 
     class CAudioMixer : public IAudioSource {
     public:
         CAudioMixer();
         virtual ~CAudioMixer();
-        void destroyList();						// destroy all the sources in the list
+        // Destroy all the sources in the list
+        void destroyList();
 
 
-        IAudioSource* addAudioSource( IAudioSource *s );		// add new audio source to the list
+        // Add new audio source to the list
+        IAudioSource* addAudioSource(IAudioSource *s);
         int getAudioSourceCount();
-        bool removeAudioSource( IAudioSource *s );	// remove an audio source from the list
-        int pullAudio( AUDIO_SAMPLE_TYPE *target, int bufferLength );
+        // Remove an audio source from the list
+        bool removeAudioSource(IAudioSource *s);
+        int pullAudio(AUDIO_SAMPLE_TYPE *target, int bufferLength);
 
-        void setAbsoluteVolume( float vol );
-        float getAbsoluteVolume() { return (float)m_fixedGeneralVolume/4096.0f; };
+        void setAbsoluteVolume(float vol);
+        float getAbsoluteVolume() {
+            return (float)m_fixedGeneralVolume / 4096.0f;
+        }
 
-        void setGeneralVolume( float vol );         // relative to the channelcount (audiosourcecount)
+        // Relative to the channelcount (audiosourcecount)
+        void setGeneralVolume(float vol);
         float getGeneralVolume();
-
-
-
 
     protected:
         QMutex m_mutex;
@@ -51,8 +55,6 @@ namespace GE {
         int m_mixingBufferLength;
         IAudioSource *m_sourceList;
     };
-
 };
-
 
 #endif

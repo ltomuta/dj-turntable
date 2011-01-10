@@ -27,12 +27,14 @@ Image {
     }
 
     MouseArea {
-        anchors { top: parent.top; bottom: parent.bottom; left: parent.left; right: parent.horizontalCenter }
+        anchors { top: parent.top; bottom: parent.bottom }
+        anchors { left: parent.left; right: parent.horizontalCenter }
         onClicked: toggleSwitch.selectedTickGroup = 1
     }
 
     MouseArea {
-        anchors { top: parent.top; bottom: parent.bottom; left: parent.horizontalCenter; right: parent.right;  }
+        anchors { top: parent.top; bottom: parent.bottom }
+        anchors { left: parent.horizontalCenter; right: parent.right }
         onClicked: toggleSwitch.selectedTickGroup = 2
     }
 
@@ -44,8 +46,11 @@ Image {
         width: parent.width / 2; height: parent.height
         source: "../images/tickgroupselectorslider.png"
 
-        Behavior on x { NumberAnimation { easing.type: Easing.InOutQuad; duration: 100 } }
         x: toggleSwitch.selectedTickGroup == 2 ? toggleSwitch.width / 2 - 4 : 4
+
+        Behavior on x {
+            NumberAnimation { easing.type: Easing.InOutQuad; duration: 100 }
+        }
 
         MouseArea {
             anchors.fill: parent

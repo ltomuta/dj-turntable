@@ -25,7 +25,8 @@ Rectangle {
         property bool lit: false
 
         anchors { left: parent.left; right: parent.right; top: parent.top }
-        anchors { leftMargin: display.segmentWidth + 1; rightMargin: display.segmentWidth + 1 }
+        anchors { leftMargin: display.segmentWidth + 1 }
+        anchors { rightMargin: display.segmentWidth + 1 }
         height: display.segmentWidth
         color: lit ? display.segmentColor : display.segmentOffColor
     }
@@ -35,8 +36,8 @@ Rectangle {
 
         property bool lit: false
 
-        anchors { left: parent.left; bottom: parent.verticalCenter; top: parent.top }
-        anchors { topMargin: 0; bottomMargin: 1 }
+        anchors { left: parent.left; bottom: parent.verticalCenter }
+        anchors { top: parent.top; topMargin: 0; bottomMargin: 1 }
         width: display.segmentWidth
         color: lit ? display.segmentColor : display.segmentOffColor
     }
@@ -46,8 +47,8 @@ Rectangle {
 
         property bool lit: false
 
-        anchors { right: parent.right; bottom: parent.verticalCenter; top: parent.top }
-        anchors { topMargin: 0; bottomMargin: 1 }
+        anchors { right: parent.right; bottom: parent.verticalCenter }
+        anchors { top: parent.top; topMargin: 0; bottomMargin: 1 }
         width: display.segmentWidth
         color: lit ? display.segmentColor : display.segmentOffColor
     }
@@ -57,8 +58,9 @@ Rectangle {
 
         property bool lit: false
 
-        anchors { verticalCenter: parent.verticalCenter; left: parent.left; right: parent.right }
-        anchors { leftMargin: display.segmentWidth + 1; rightMargin: display.segmentWidth + 1 }
+        anchors { verticalCenter: parent.verticalCenter; left: parent.left }
+        anchors { right: parent.right; leftMargin: display.segmentWidth + 1 }
+        anchors { rightMargin: display.segmentWidth + 1 }
         height: display.segmentWidth
         color: lit ? display.segmentColor : display.segmentOffColor
     }
@@ -68,8 +70,8 @@ Rectangle {
 
         property bool lit: false
 
-        anchors { left: parent.left; bottom: parent.bottom; top: parent.verticalCenter }
-        anchors { topMargin: 0; bottomMargin: 0 }
+        anchors { left: parent.left; bottom: parent.bottom }
+        anchors { top: parent.verticalCenter; topMargin: 0; bottomMargin: 0 }
         width: display.segmentWidth
         color: lit ? display.segmentColor : display.segmentOffColor
     }
@@ -79,8 +81,8 @@ Rectangle {
 
         property bool lit: false
 
-        anchors { right: parent.right; bottom: parent.bottom; top: parent.verticalCenter }
-        anchors { topMargin: 0; bottomMargin: 0 }
+        anchors { right: parent.right; bottom: parent.bottom }
+        anchors { top: parent.verticalCenter; topMargin: 0; bottomMargin: 0 }
         width: display.segmentWidth
         color: lit ? display.segmentColor : display.segmentOffColor
     }
@@ -90,8 +92,9 @@ Rectangle {
 
         property bool lit: false
 
-        anchors { left: parent.left; right: parent.right; bottom: parent.bottom }
-        anchors { leftMargin: display.segmentWidth + 1; rightMargin: display.segmentWidth + 1 }
+        anchors { left: parent.left; right: parent.right }
+        anchors { bottom: parent.bottom; leftMargin: display.segmentWidth + 1 }
+        anchors { rightMargin: display.segmentWidth + 1 }
         height: display.segmentWidth
         color: lit ? display.segmentColor : display.segmentOffColor
     }

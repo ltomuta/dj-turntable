@@ -21,7 +21,8 @@ Item {
 
         anchors.fill: parent
         source: "images/knobdial.png"
-        rotation: knob.minimumrotation + knob.value / knob.maximumvalue * -knob.maximumrotation
+        rotation: knob.minimumrotation + knob.value / knob.maximumvalue *
+                  -knob.maximumrotation
     }
 
     /*

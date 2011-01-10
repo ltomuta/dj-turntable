@@ -96,7 +96,8 @@ protected:
     {
     public:
         Observer(TurnTable *turnTable) : m_TurnTable(turnTable) {}
-        virtual void MrccatoCommand(TRemConCoreApiOperationId aOperationId, TRemConCoreApiButtonAction /*aButtonAct*/)
+        virtual void MrccatoCommand(TRemConCoreApiOperationId aOperationId,
+                                    TRemConCoreApiButtonAction /*aButtonAct*/)
         {
             switch( aOperationId ) {
             case ERemConCoreApiVolumeDown:

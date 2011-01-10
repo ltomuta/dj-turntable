@@ -10,35 +10,44 @@ namespace GE {
 
     class CAudioBufferPlayInstance;
     class CAudioBuffer;         // forward declaration
-    typedef AUDIO_SAMPLE_TYPE(*SAMPLE_FUNCTION_TYPE)(CAudioBuffer *abuffer, int pos, int channel);
+    typedef AUDIO_SAMPLE_TYPE(*SAMPLE_FUNCTION_TYPE)(CAudioBuffer *abuffer,
+                                                     int pos,
+                                                     int channel);
 
-    class CAudioBuffer : public QObject {			// container for a sound
+    // Container for a sound
+    class CAudioBuffer : public QObject {
     public:
         CAudioBuffer();
         virtual ~CAudioBuffer();
 
         static CAudioBuffer* loadWav( QString fileName );
-        static CAudioBuffer* loadWav( FILE *wavFile );          // support for stdio
+        // Support for stdio
+        static CAudioBuffer* loadWav( FILE *wavFile );
         void reallocate( int length );
 
 
         inline void* getRawData() { return m_data; }
         inline int getDataLength() { return m_dataLength; }
 
-        inline int getBytesPerSample() { return (m_bitsPerSample>>3); }
+        inline int getBytesPerSample() { return (m_bitsPerSample >> 3); }
         inline int getBitsPerSample() { return m_bitsPerSample; }
         inline int getSamplesPerSec() { return m_samplesPerSec; }
         inline short getNofChannels() { return m_nofChannels; }
-        inline SAMPLE_FUNCTION_TYPE getSampleFunction() { return m_sampleFunction; }
+        inline SAMPLE_FUNCTION_TYPE getSampleFunction() {
+            return m_sampleFunction;
+        }
 
+        // Static implementations of sample functions
+        static AUDIO_SAMPLE_TYPE sampleFunction8bitMono(
+            CAudioBuffer *abuffer, int pos, int channel);
+        static AUDIO_SAMPLE_TYPE sampleFunction16bitMono(
+            CAudioBuffer *abuffer, int pos, int channel);
+        static AUDIO_SAMPLE_TYPE sampleFunction8bitStereo(
+            CAudioBuffer *abuffer, int pos, int channel);
+        static AUDIO_SAMPLE_TYPE sampleFunction16bitStereo(
+            CAudioBuffer *abuffer, int pos, int channel);
 
-        // static implementations of sample functions
-        static AUDIO_SAMPLE_TYPE sampleFunction8bitMono( CAudioBuffer *abuffer, int pos, int channel );
-        static AUDIO_SAMPLE_TYPE sampleFunction16bitMono( CAudioBuffer *abuffer, int pos, int channel );
-        static AUDIO_SAMPLE_TYPE sampleFunction8bitStereo( CAudioBuffer *abuffer, int pos, int channel );
-        static AUDIO_SAMPLE_TYPE sampleFunction16bitStereo( CAudioBuffer *abuffer, int pos, int channel );
-
-        CAudioBufferPlayInstance *playWithMixer( GE::CAudioMixer &mixer );
+        CAudioBufferPlayInstance *playWithMixer(GE::CAudioMixer &mixer);
 
     protected:
         SAMPLE_FUNCTION_TYPE m_sampleFunction;
@@ -51,31 +60,36 @@ namespace GE {
     };
 
 
-
     class CAudioBufferPlayInstance : public IAudioSource {
     public:
         CAudioBufferPlayInstance();
-        CAudioBufferPlayInstance( CAudioBuffer *start_playing );
+        CAudioBufferPlayInstance(CAudioBuffer *start_playing);
         virtual ~CAudioBufferPlayInstance();
-        void playBuffer( CAudioBuffer *startPlaying, float volume, float fixedSpeed, int loopTimes = 0 );			// looptimes -1 = loop forever
+        // Looptimes -1 = loop forever
+        void playBuffer(CAudioBuffer *startPlaying, float volume,
+                        float fixedSpeed, int loopTimes = 0);
 
-        void setSpeed( float speed );
-        void setLeftVolume( float lvol );
-        void setRightVolume( float rvol );
+        void setSpeed(float speed);
+        void setLeftVolume(float lvol);
+        void setRightVolume(float rvol);
 
-
-        inline void setLoopTimes( int ltimes ) { m_loopTimes = ltimes; }
+        inline void setLoopTimes(int ltimes) { m_loopTimes = ltimes; }
         void stop();
 
-
-
-        int pullAudio( AUDIO_SAMPLE_TYPE *target, int bufferLength );
+        int pullAudio(AUDIO_SAMPLE_TYPE *target, int bufferLength);
         bool canBeDestroyed();
 
-        bool isPlaying() { if (m_buffer) return true; else return false; }
+        bool isPlaying() {
+            if (m_buffer)
+                return true;
+            else
+                return false;
+        }
         inline bool isFinished() { return m_finished; }
         inline bool destroyWhenFinished() { return m_destroyWhenFinished; }
-        inline void setDestroyWhenFinished( bool set ) { m_destroyWhenFinished = set; }
+        inline void setDestroyWhenFinished( bool set ) {
+            m_destroyWhenFinished = set;
+        }
 
     protected:
         int mixBlock( AUDIO_SAMPLE_TYPE *target, int bufferLength );
@@ -90,7 +104,6 @@ namespace GE {
         int m_loopTimes;
         CAudioBuffer *m_buffer;
     };
-
 };
 
 

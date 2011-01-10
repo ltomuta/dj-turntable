@@ -45,12 +45,20 @@ Rectangle {
         smooth: true
         source: {
             if(drumMachineButtonPressed) {
-                if(drumMachineLedOn) { return "images/drummachine_on_play.png" }
-                else {return "images/drummachine_on_noplay.png" }
+                if(drumMachineLedOn) {
+                    return "images/drummachine_on_play.png"
+                }
+                else {
+                    return "images/drummachine_on_noplay.png"
+                }
             }
             else {
-                if(drumMachineLedOn) { return "images/drummachine_off_play.png" }
-                else { return "images/drummachine_off_noplay.png" }
+                if(drumMachineLedOn) {
+                    return "images/drummachine_off_play.png"
+                }
+                else {
+                    return "images/drummachine_off_noplay.png"
+                }
             }
         }
 

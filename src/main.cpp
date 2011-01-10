@@ -63,7 +63,11 @@ int main(int argc, char *argv[])
     // Lock orientation in Symbian
 #ifdef Q_OS_SYMBIAN
     CAknAppUi* appUi = dynamic_cast<CAknAppUi*> (CEikonEnv::Static()->AppUi());
-    TRAP_IGNORE( if(appUi) { appUi->SetOrientationL(CAknAppUi::EAppUiOrientationLandscape); } );
+    TRAP_IGNORE(
+        if(appUi) {
+            appUi->SetOrientationL(CAknAppUi::EAppUiOrientationLandscape);
+        }
+    );
 #endif
 
     QDeclarativeView view;
@@ -103,10 +107,11 @@ int main(int argc, char *argv[])
     QObject *turnTableQML = dynamic_cast<QObject*>(view.rootObject());
     QObject *drumMachineQML = findQMLElement(turnTableQML, "drumMachine");
 
-    // If there are errors in QML code and the elements does not exist, they won't be found
-    // in Qt side either, check existance of the elements.
+    // If there are errors in QML code and the elements does not exist,
+    // they won't be found Qt side either, check existance of the elements.
     if(turnTableQML == NULL || drumMachineQML == NULL) {
-        QMessageBox::warning(NULL, "Warning", "Failed to resolve QML elements in main.cpp");
+        QMessageBox::warning(NULL, "Warning",
+                             "Failed to resolve QML elements in main.cpp");
         return -1;
     }
 
@@ -119,27 +124,49 @@ int main(int argc, char *argv[])
     // TurnTable connections
     QObject::connect(turnTableQML, SIGNAL(start()), turnTable, SLOT(start()));
     QObject::connect(turnTableQML, SIGNAL(stop()), turnTable, SLOT(stop()));
-    QObject::connect(turnTableQML, SIGNAL(diskAimSpeed(QVariant)), turnTable, SLOT(setDiscAimSpeed(QVariant)));
-    QObject::connect(turnTableQML, SIGNAL(diskSpeed(QVariant)), turnTable, SLOT(setDiscSpeed(QVariant)));
-    QObject::connect(turnTableQML, SIGNAL(cutOff(QVariant)), turnTable, SLOT(setCutOff(QVariant)));
-    QObject::connect(turnTableQML, SIGNAL(resonance(QVariant)), turnTable, SLOT(setResonance(QVariant)));
-    QObject::connect(turnTableQML, SIGNAL(linkActivated(QVariant)), turnTable, SLOT(linkActivated(QVariant)));
-    QObject::connect(turnTable, SIGNAL(audioPosition(QVariant)), turnTableQML, SLOT(audioPosition(QVariant)));
+    QObject::connect(turnTableQML, SIGNAL(diskAimSpeed(QVariant)),
+                     turnTable, SLOT(setDiscAimSpeed(QVariant)));
+    QObject::connect(turnTableQML, SIGNAL(diskSpeed(QVariant)),
+                     turnTable, SLOT(setDiscSpeed(QVariant)));
+    QObject::connect(turnTableQML, SIGNAL(cutOff(QVariant)),
+                     turnTable, SLOT(setCutOff(QVariant)));
+    QObject::connect(turnTableQML, SIGNAL(resonance(QVariant)),
+                     turnTable, SLOT(setResonance(QVariant)));
+    QObject::connect(turnTableQML, SIGNAL(linkActivated(QVariant)),
+                     turnTable, SLOT(linkActivated(QVariant)));
+    QObject::connect(turnTable, SIGNAL(audioPosition(QVariant)),
+                     turnTableQML, SLOT(audioPosition(QVariant)));
 
     // DrumMachine connections
-    QObject::connect(drumMachineQML, SIGNAL(startBeat()), drumMachine, SLOT(startBeat()));
-    QObject::connect(drumMachineQML, SIGNAL(stopBeat()), drumMachine, SLOT(stopBeat()));
-    QObject::connect(drumMachineQML, SIGNAL(setBeat(QVariant)), drumMachine, SLOT(setBeat(QVariant)));
-    QObject::connect(drumMachineQML, SIGNAL(drumButtonToggled(QVariant, QVariant, QVariant)), drumMachine, SLOT(drumButtonToggled(QVariant, QVariant, QVariant)));
-    QObject::connect(drumMachineQML, SIGNAL(drumMachineSpeed(QVariant)), drumMachine, SLOT(setBeatSpeed(QVariant)));
-    QObject::connect(drumMachine, SIGNAL(drumButtonState(QVariant, QVariant, QVariant)), drumMachineQML, SLOT(setDrumButton(QVariant, QVariant, QVariant)));
-    QObject::connect(drumMachine, SIGNAL(tickChanged(QVariant)), drumMachineQML, SLOT(highlightTick(QVariant)));
+    QObject::connect(drumMachineQML, SIGNAL(startBeat()),
+                     drumMachine, SLOT(startBeat()));
+    QObject::connect(drumMachineQML, SIGNAL(stopBeat()),
+                     drumMachine, SLOT(stopBeat()));
+    QObject::connect(drumMachineQML, SIGNAL(setBeat(QVariant)),
+                     drumMachine, SLOT(setBeat(QVariant)));
+    QObject::connect(drumMachineQML,
+                     SIGNAL(drumButtonToggled(QVariant, QVariant, QVariant)),
+                     drumMachine,
+                     SLOT(drumButtonToggled(QVariant, QVariant, QVariant)));
+    QObject::connect(drumMachineQML, SIGNAL(drumMachineSpeed(QVariant)),
+                     drumMachine, SLOT(setBeatSpeed(QVariant)));
+    QObject::connect(drumMachine,
+                     SIGNAL(drumButtonState(QVariant, QVariant, QVariant)),
+                     drumMachineQML,
+                     SLOT(setDrumButton(QVariant, QVariant, QVariant)));
+    QObject::connect(drumMachine, SIGNAL(tickChanged(QVariant)),
+                     drumMachineQML, SLOT(highlightTick(QVariant)));
 
     // Framework connections
-    QObject::connect((QObject*)view.engine(), SIGNAL(quit()), &app, SLOT(quit()));
+    QObject::connect((QObject*)view.engine(), SIGNAL(quit()),
+                     &app, SLOT(quit()));
 #if defined(Q_OS_SYMBIAN) || defined(Q_WS_MAEMO_5)
-    QObject::connect(filter, SIGNAL(rotationChanged(QVariant)), turnTableQML, SLOT(inclination(QVariant)));
-    QObject::connect(deviceInfo, SIGNAL(currentProfileChanged(QSystemDeviceInfo::Profile)), turnTable, SLOT(profile(QSystemDeviceInfo::Profile)));
+    QObject::connect(filter, SIGNAL(rotationChanged(QVariant)),
+                     turnTableQML, SLOT(inclination(QVariant)));
+    QObject::connect(deviceInfo,
+                     SIGNAL(currentProfileChanged(QSystemDeviceInfo::Profile)),
+                     turnTable,
+                     SLOT(profile(QSystemDeviceInfo::Profile)));
 #endif
 
     // Start with beat 0

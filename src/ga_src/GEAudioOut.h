@@ -17,8 +17,6 @@ class QAudioOutput;
 
 namespace GE {
 
-
-
     class AudioOut : public QThread {
         Q_OBJECT
 
@@ -26,16 +24,14 @@ namespace GE {
         AudioOut(QObject *parent, GE::IAudioSource *source);
         virtual ~AudioOut();
 
-
-
     private slots:
-        void audioNotify();         // for internal notify "solution"
-
+        // For internal notify "solution"
+        void audioNotify();
 
     protected:
          void tick();
-        virtual void run();         // this is for the threaded mode only
-
+         // This is for the threaded mode only
+         virtual void run();
 
         qint64 m_samplesMixed;
 

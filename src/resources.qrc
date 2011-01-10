@@ -40,6 +40,7 @@
         <file>qml/images/exit.png</file>
         <file>qml/images/exit_on.png</file>
         <file>qml/images/knobdial.png</file>
+        <file>qml/images/knobdialpointer.png</file>
         <file>qml/images/info.png</file>
         <file>qml/images/info_on.png</file>
         <file>qml/images/back.png</file>

@@ -56,8 +56,8 @@ Image {
             anchors.fill: parent
             drag.target: knob
             drag.axis: Drag.XAxis
-            drag.minimumX: 0
-            drag.maximumX: parent.width
+            drag.minimumX: 1
+            drag.maximumX: parent.width - 1
             onReleased: {
                 if(knob.x > (toggleSwitch.width / 4)) {
                     toggleSwitch.selectedTickGroup = 1

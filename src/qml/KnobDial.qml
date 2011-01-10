@@ -1,6 +1,6 @@
 import Qt 4.7
 
-Item {
+Image {
     id: knob
 
     property real minimumvalue: 0
@@ -15,14 +15,18 @@ Item {
     property real value: 0
 
     width: 300; height: 300
+    source: "images/knobdial.png"
+    smooth: true
+
 
     Image {
         id: knobImage
 
         anchors.fill: parent
-        source: "images/knobdial.png"
+        source: "images/knobdialpointer.png"
         rotation: knob.minimumrotation + knob.value / knob.maximumvalue *
                   -knob.maximumrotation
+        smooth: true
     }
 
     /*

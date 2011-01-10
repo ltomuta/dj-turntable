@@ -2,7 +2,6 @@
 #ifndef __GE_IGA_AUDIOBUFFER__
 #define __GE_IGA_AUDIOBUFFER__
 
-#include <QFile>
 #include "GEInterfaces.h"
 
 

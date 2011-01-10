@@ -1,5 +1,6 @@
 
 #include <math.h>
+#include <QFile>
 #include <QDebug>
 #include "GEAudioBuffer.h"
 
@@ -213,7 +214,8 @@ CAudioBuffer* CAudioBuffer::loadWav(FILE *wavFile) {
 AUDIO_SAMPLE_TYPE CAudioBuffer::sampleFunction8bitMono(CAudioBuffer *abuffer,
                                                        int pos,
                                                        int /*channel*/) {
-    return (AUDIO_SAMPLE_TYPE)(((unsigned char*)(abuffer->m_data))[pos]-128)<<8;
+    return (AUDIO_SAMPLE_TYPE)(((unsigned char*)(abuffer->m_data))[pos] -
+                               128) << 8;
 }
 
 

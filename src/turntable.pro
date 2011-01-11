@@ -1,7 +1,7 @@
 QT       += core gui declarative opengl
 
-TARGET   = turntable
 TEMPLATE = app
+
 
 VERSION = 1.1.0
 
@@ -24,7 +24,8 @@ HEADERS   +=   TurnTable.h \
                ga_src/GEInterfaces.h \
                ga_src/GEAudioBuffer.h
 
-win32 {
+win32:!maemo5 {
+    TARGET = DjTurntable
     QT += multimedia
     RC_FILE = turntable.rc
 }
@@ -32,16 +33,17 @@ win32 {
 
 unix:!symbian {
     maemo5 {
-        QT += multimedia
-        CONFIG   += mobility
-        MOBILITY += sensors systeminfo
+        TARGET    = turntable
+        QT        += multimedia
+        CONFIG    += mobility
+        MOBILITY  += sensors systeminfo
 
-        HEADERS  += accelerometerfilter.h
+        HEADERS   += accelerometerfilter.h
 
-        BINDIR  = /usr/bin
-        DATADIR = /usr/share
-        DEFINES += DATADIR=\\\"$$DATADIR\\\" \
-                   PKGDATADIR=\\\"$$PKGDATADIR\\\"
+        BINDIR    = /usr/bin
+        DATADIR   = /usr/share
+        DEFINES  += DATADIR=\\\"$$DATADIR\\\" \
+                    PKGDATADIR=\\\"$$PKGDATADIR\\\"
         INSTALLS += target \
                     desktop \
                     iconxpm \
@@ -71,6 +73,7 @@ unix:!symbian {
 
 
 symbian {
+    TARGET = DjTurntable
     CONFIG   += mobility
     MOBILITY += sensors multimedia systeminfo
 

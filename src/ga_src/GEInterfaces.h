@@ -7,7 +7,7 @@
 
 namespace GE {
 
-#define AUDIO_FREQUENCY 22050
+#define AUDIO_FREQUENCY 44100//22050
 #define AUDIO_SAMPLE_TYPE short
 #define AUDIO_SAMPLE_BITS 16
 

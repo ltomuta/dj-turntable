@@ -16,7 +16,7 @@ OTHER_FILES += qml/*.qml \
                qml/DrumMachine/*.qml \
                qml/HelpScreen/*.qml
 
-RESOURCES +=   resources.qrc
+RESOURCES +=   turntable.qrc
 
 HEADERS   +=   TurnTable.h \
                DrumMachine.h \

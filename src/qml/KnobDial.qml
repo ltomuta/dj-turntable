@@ -6,11 +6,8 @@ Image {
     property real minimumvalue: 0
     property real maximumvalue: 99
 
-
     property real minimumrotation: 35
-    property real maximumrotation: -285
-    //property real minimumrotation: 0
-    //property real maximumrotation: -315
+    property real maximumrotation: 290
 
     property real value: 0
 
@@ -24,7 +21,7 @@ Image {
         anchors.fill: parent
         source: "images/knobdialpointer.png"
         rotation: knob.minimumrotation + knob.value / knob.maximumvalue *
-                  -knob.maximumrotation
+                  knob.maximumrotation
         smooth: true
     }
 

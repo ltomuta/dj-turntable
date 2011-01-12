@@ -3,7 +3,8 @@ DJ Turntable v1.1.0
 
 Dj Turntable demonstrates integrating a Qt Quick application to Qt audio
 interface. The application is compatible with Symbian^3 devices with Qt 4.7.1
-or higher.
+or higher, Maemo devices with Qt 4.7.0 and Windows desktop computers starting
+with Windows XP (the Qt libraries are provided with executable).
 
 
 FILES
@@ -59,8 +60,7 @@ install/
 KNOWN ISSUES
 -------------------------------------------------------------------------------
 
-- The application is not yet optimized for Maemo devices. Maemo support
-  will be implemented later.
+
 
 DESIGN CONSIDERATIONS
 -------------------------------------------------------------------------------
@@ -70,8 +70,8 @@ DESIGN CONSIDERATIONS
 INSTALLATION INSTRUCTIONS
 -------------------------------------------------------------------------------
 
-Mobile device (S60 5th Edition and Symbian^3)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Mobile device (Symbian^3)
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 There are two ways to install the application into the device.
 
@@ -90,6 +90,29 @@ There are two ways to install the application into the device.
    select the Applications folder.
    
 3. Locate the turntable icon and select it to launch the application.
+
+
+Maemo device
+~~~~~~~~~~~~
+
+Mobile device (Maemo)
+~~~~~~~~~~~~~~~~~~~~~
+0. The Qt 4.7.0 or higher libraries must be installed, see COMPATIBILITY
+   chapter for more information about the install.
+
+1. Copy the turntable_1.1.0_armel.deb file into a
+   specific folder of the device (for example "MyDocs").
+
+2. Start the XTerm. Type "sudo gainroot" to get root access.
+
+3. "cd" into the directory to which you copied the package (e.g. "cd MyDocs").
+
+4. As root, install the package:
+   "dpkg -i turntable_1.1.0_armel.deb".
+
+5. Launch the Applications menu.
+
+6. Locate the Dj Turntable icon and select it to launch the application.
 
 
 Windows desktop
@@ -160,11 +183,20 @@ COMPATIBILITY
      folder of the Qt 4.7.1 or higher for Symbian.
      
      
+- Maemo with PR1.3 which includes Qt 4.7.0
+
+  1. Use Nokia Ovi Suite for updating the devices firmware to PR1.3
+
+  
+- Windows desktop, the needed Qt libraries are provided with the
+  turntable binary.
+    
     
 Tested on:
 
 - Nokia N8
 - Nokia E7
+- Nokia N900
 - Windows XP
 
 RELATED RESOURCES

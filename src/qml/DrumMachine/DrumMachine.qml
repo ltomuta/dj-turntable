@@ -174,10 +174,8 @@ Image {
                 DrumButton {
                     width: drumGrid.drumButtonWidth
                     height: drumGrid.drumButtonHeight
-
                     unselectedSource: "../images/drumbutton.png"
                     selectedSource: "../images/drumbuttonselected.png"
-
                     tick: index % 32
                     sample: Math.floor(index / 32)
                     onButtonToggled: drumMachine.drumButtonToggled(tick,

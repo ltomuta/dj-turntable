@@ -34,10 +34,10 @@ Rectangle {
             event.accepted = true
         }
         else if(event.key == Qt.Key_PageDown) {
-            diskReflection.rotation += 45
+            diskReflection.rotation += 11.25
         }
         else if(event.key == Qt.Key_PageUp) {
-            diskReflection.rotation -= 45
+            diskReflection.rotation -= 11.25
         }
         else if(event.key == Qt.Key_Backspace) {
             if(flickable.state == "Help") {

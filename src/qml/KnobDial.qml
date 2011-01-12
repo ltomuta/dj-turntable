@@ -18,7 +18,6 @@ Image {
     source: "images/knobdial.png"
     smooth: true
 
-
     Image {
         id: knobImage
 
@@ -28,20 +27,6 @@ Image {
                   -knob.maximumrotation
         smooth: true
     }
-
-    /*
-    Image {
-        source: "images/arrowup.png"
-        anchors.centerIn: parent
-        anchors.verticalCenterOffset: parent.height / -6
-    }
-
-    Image {
-        source: "images/arrowdown.png"
-        anchors.centerIn: parent
-        anchors.verticalCenterOffset: parent.height / 6
-    }
-    */
 
     LCDDisplay {
         anchors.centerIn: parent

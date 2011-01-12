@@ -34,8 +34,6 @@
         <file>qml/images/armcasing.png</file>
         <file>qml/images/armcasingshadow.png</file>
         <file>qml/images/armshadow.png</file>
-        <file>qml/images/arrowdown.png</file>
-        <file>qml/images/arrowup.png</file>
         <file>qml/images/powerbutton.png</file>
         <file>qml/images/exit.png</file>
         <file>qml/images/exit_on.png</file>

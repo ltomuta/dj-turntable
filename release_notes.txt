@@ -1,10 +1,10 @@
 DJ Turntable v1.1.0
 ===================
 
-Dj Turntable demonstrates integrating a Qt Quick application to Qt audio
+Dj Turntable demonstrates integrating a Qt Quick application to the Qt audio
 interface. The application is compatible with Symbian^3 devices with Qt 4.7.1
-or higher, Maemo devices with Qt 4.7.0 and Windows desktop computers starting
-with Windows XP (the Qt libraries are provided with executable).
+or higher, Maemo devices with Qt 4.7.0, and Windows desktop computers starting 
+with Windows XP (the Qt libraries are provided with the executable).
 
 
 FILES
@@ -12,40 +12,40 @@ FILES
 
 src/main.cpp
 
-- Creates all needed Qt objects and initializes the Declarative runtime.
-  Integration of the QML and Qt code is done here.
+- Creates all the required Qt objects and initialises the Declarative runtime.
+  The integration of the QML and Qt code is done here.
   
 src/TurnTable.h
 src/TurnTable.cpp
 
-- Represents the logic of the turntable section of the UI. Turntable object
-  contains the main audio mixer to which the drum beats and the disc sample
-  is mixed.
+- Represents the logic of the turntable section of the UI. The Turntable 
+  object contains the main audio mixer to which the drum beats and the disc 
+  sample are mixed.
   
 src/DrumMachine.h
 src/DrumMachine.cpp
 
 - Represents the logic of the drum machine section of the UI. Signals of the 
-  drum machine QML are mapped directly to this object's slots. Storing /
-  loading of the drum sequences are done here.
+  drum machine QML are mapped directly to this object's slots. The storing and 
+  loading of the drum sequences is done here.
 
 src/accelerometerfilter.h
 
 - Handles the accelerometer information from the device's sensor. The signals
-  about the accelerometer data change are mapped directly to the QML slots to
-  rotate the reflection on the turntable's disc.
+  about changes in accelerometer data are mapped directly to the QML slots to 
+  rotate the reflection on the record on the turntable.
   
 src/sounds/*
 
-- Contains all of the audio samples used by Dj Turntable.
+- Contains the audio samples used by DJ Turntable.
   
 src/qml/DrumMachine/*
 
-- QML files containing UI controls of the Drum Machine.
+- QML files containing the UI controls of the drum machine.
 
 src/qml/InfoScreen/*
 
-- QML files containing UI controls of the Info Screen.
+- QML files containing the UI controls of the info screen.
 
 src/qml/TurnTable.qml
 
@@ -60,26 +60,22 @@ install/
 KNOWN ISSUES
 -------------------------------------------------------------------------------
 
+- There is currently some latency when playing audio in Symbian.
 
 
-DESIGN CONSIDERATIONS
--------------------------------------------------------------------------------
-
-
-  
 INSTALLATION INSTRUCTIONS
 -------------------------------------------------------------------------------
 
 Mobile device (Symbian^3)
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-There are two ways to install the application into the device.
+There are two ways to install the application on the device.
 
-0. The Qt 4.7.1 or higher libraries must be installed, see COMPATIBILITY
-   chapter for more information about the installation.
+0. The Qt libraries (4.7.1 or higher) must be installed. See the section 
+   COMPATIBILITY for more information about the installation.
 
-1. a) Drag the turntable.sis file to the Nokia Ovi Suite when
-      the phone is connected with the USB cable.
+1. a) Drag the turntable.sis file to the Nokia Ovi Suite when the device is 
+      connected with the USB cable.
    
    OR
    
@@ -89,7 +85,7 @@ There are two ways to install the application into the device.
 2. After the installation is complete, return to the Application menu and
    select the Applications folder.
    
-3. Locate the turntable icon and select it to launch the application.
+3. Locate the DJ Turntable icon and select it to launch the application.
 
 
 Maemo device
@@ -97,56 +93,56 @@ Maemo device
 
 Mobile device (Maemo)
 ~~~~~~~~~~~~~~~~~~~~~
-0. The Qt 4.7.0 or higher libraries must be installed, see COMPATIBILITY
-   chapter for more information about the install.
+0. The Qt libraries (4.7.0 or higher) must be installed. See the section 
+   COMPATIBILITY for more information about the installation.
 
-1. Copy the turntable_1.1.0_armel.deb file into a
-   specific folder of the device (for example "MyDocs").
+1. Copy the turntable_1.1.0_armel.deb file into a specific folder on the 
+   device (for example, 'MyDocs').
 
-2. Start the XTerm. Type "sudo gainroot" to get root access.
+2. Start XTerm. Type 'sudo gainroot' to get root access.
 
-3. "cd" into the directory to which you copied the package (e.g. "cd MyDocs").
+3. 'cd' to the directory to which you copied the package 
+   (for example, 'cd MyDocs').
 
 4. As root, install the package:
-   "dpkg -i turntable_1.1.0_armel.deb".
+   dpkg -i turntable_1.1.0_armel.deb
 
 5. Launch the Applications menu.
 
-6. Locate the Dj Turntable icon and select it to launch the application.
+6. Locate the DJ Turntable icon and select it to launch the application.
 
 
 Windows desktop
 ~~~~~~~~~~~~~~~
 
-1. Extract the turntable.zip to the folder of your choosing
+1. Extract turntable.zip to the folder of your choosing.
 
 2. Launch the application from turntable.exe.
-
 
 
 RUNNING THE APPLICATION
 -------------------------------------------------------------------------------
 
-Dj Turntable is a Forum Nokia example that demonstrates integrating a Qt Quick
-application to Qt audio interface.
+DJ Turntable is a Forum Nokia example that demonstrates integrating a Qt Quick 
+application to the Qt audio interface.
 
 Turntable
 
-Play the looping sample with a realistic turntable. The sample can be scratched
-with the finger, played faster, slower and backwards. The speed of the disk can
-be adjusted with the speed slider, the default 1x speed can be obtained by
-double clicking the speed slider knob. Dj Turntable offers Cutoff and Resonance
-to alternate the sample in real time. The knobs are rotated by moving the
-finger up and down on top of the knobs.
+Play the looping sample with a realistic turntable. The sample can be 
+scratched with the finger, played faster, slower, and backwards. The speed of 
+the record can be adjusted with the speed slider, the default 1x speed can be 
+obtained by double-clicking the speed slider knob. DJ Turntable includes 
+Cutoff and Resonance control knobs to alter the sample in real time. The knobs 
+are rotated by moving a finger up and down on top of them.
 
 Drum machine
                       
 Play and edit the drum beats. There are three predefined beats which can be
 played and edited but the edits are not stored. For the user there are three
 beats that are saved to the device memory whenever they are edited. Use the
-beat selector buttons on the bottom of the view to switch between the beats.
+beat selector buttons in the bottom of the view to switch between the beats.
 All the beats are 32 ticks long and they contain 6 different drum
-samples: hi-hat, hi-hat open, bass drum, snare, cymbal and cow bell.
+samples: hi-hat, hi-hat open, bass drum, snare, cymbal, and cow bell.
 
 Keyboard shortcuts
 
@@ -170,25 +166,24 @@ downloaded from http://www.freesound.org. The sample follows the
 http://creativecommons.org/licenses/sampling+/1.0/ license.
 
 
-
 COMPATIBILITY
 -------------------------------------------------------------------------------
 
 - Symbian^3 with Qt version 4.7.1 or higher.
 
-  1. Download the Qt 4.7.1 or higher for Symbian from qt.nokia.com
+  1. Download Qt for Symbian (4.7.1 or higher) from qt.nokia.com.
   
-  2. Drag the qt_installer.sis on top of the device in Nokia Ovi Suite while
-     the device is connected. The sis package is found from the installation
-     folder of the Qt 4.7.1 or higher for Symbian.
+  2. Drag qt_installer.sis on top of the device in Nokia Ovi Suite while the 
+     device is connected. The SIS package is found in the installation folder 
+     of Qt for SYmbian (4.7.1 or higher).
      
      
-- Maemo with PR1.3 which includes Qt 4.7.0
+- Maemo with PR1.3 which includes Qt 4.7.0.
 
-  1. Use Nokia Ovi Suite for updating the devices firmware to PR1.3
+  1. Use Nokia Ovi Suite to update the device's firmware to PR1.3.
 
   
-- Windows desktop, the needed Qt libraries are provided with the
+- Windows desktop, the required Qt libraries are provided with the
   turntable binary.
     
     
@@ -199,5 +194,9 @@ Tested on:
 - Nokia N900
 - Windows XP
 
-RELATED RESOURCES
+
+VERSION HISTORY
 -------------------------------------------------------------------------------
+
+v1.1 Updated version for Forum Nokia. 
+v1.0 Initial version published in Forum Nokia Projects only.

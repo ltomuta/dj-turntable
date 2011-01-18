@@ -48,13 +48,21 @@ public slots:
 
 #if defined(Q_OS_SYMBIAN) || defined(Q_WS_MAEMO_5)
     void profile(QSystemDeviceInfo::Profile profile) {
-        switch(profile) {
-        case QSystemDeviceInfo::SilentProfile:
+        if(profile == QSystemDeviceInfo::SilentProfile) {
             m_audioMixer->setGeneralVolume(0.0f);
-            break;
-        default:
-            break;
         }
+    #ifdef Q_WS_MAEMO_5
+        // In Maemo where there is no way to get volume
+        // back if it is set to 0, we set the volume
+        // to the default volume when getting out of
+        // silent profile. In Maemo the devices volume
+        // buttons control the devices volume, in Symbian
+        // the devices volume buttons control application
+        // specific volume.
+        else {
+            m_audioMixer->setGeneralVolume(m_defaultVolume);
+        }
+    #endif
     }
 #endif
 
@@ -66,6 +74,8 @@ signals:
     void audioPosition(QVariant position);
 
 protected:
+    const float m_defaultVolume;
+
     bool m_headOn;
 
     int m_loops;

@@ -13,7 +13,8 @@ using namespace GE;
 
 
 TurnTable::TurnTable(QSettings *settings)
-    : m_Settings(settings)
+    : m_defaultVolume(0.65f),
+      m_Settings(settings)
 {
     m_loops = 0;
     m_pos = 0;
@@ -38,7 +39,7 @@ TurnTable::TurnTable(QSettings *settings)
     m_audioOut = new GE::AudioOut(this, m_audioMixer);
 
     m_audioMixer->setGeneralVolume(m_Settings->value("Volume",
-                                                     0.65f).toFloat());
+                                                     m_defaultVolume).toFloat());
 
 
 #ifdef Q_OS_SYMBIAN

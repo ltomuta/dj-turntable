@@ -57,6 +57,66 @@ install/
 - The compiled binaries.
 
 
+CLASSES AND ELEMENTS USED
+-------------------------------------------------------------------------------
+
+The most important Qt classes and QML elements used in the application are
+listed here.
+
+Qt / C++ classes
+~~~~~~~~~~~~~~~~
+ QDeclarativeView - used to interpret QML files 
+ QGLWidget        - used to draw QDeclarativeView with Qt OpenGL
+ QPointer         - relaxes the use of pointers
+ QSettings        - used to store and retrieve user defined beats to / from
+                    permanent storage
+ QMessageBox      - used to report serious errors
+ QVariant         - used as parameters in Qt Signals and Slots between Qt and
+                    QML
+ QDesktopServices - used to launch web browser from Info screen's hyperlinks
+ QVector          - used to store beat sequences in memory
+ std::vector      - used to convert predefined beats stored as byte arrays to
+                    QVectors
+
+Qt Mobility classes
+~~~~~~~~~~~~~~~~~~~
+ QAccelerometer       - gets the inclination of the mobile device
+ QAccelerometerFilter - used to filter values of QAccelerometer to save CPU
+                        cycles
+ QSystemDeviceInfo    - used to detect the profile of the device, for 
+                        instance, when the mobile is on silent the volume is 
+                        set to 0
+ QAudioOutput         - used to access audio device (part of QtMultimediaKit 
+                        in Symbian target)
+
+Qt classes used in GE audio engine
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ QAudioOutput   - used to access audio device (part of Qt multimedia module in 
+                  desktop and Maemo targets)
+ QThread        - used to implement audio functionality in worker thread
+ QIODevice      - used to handle audio buffers
+ QMutex         - used to synchronise critical sections between worker thread
+                  and GUI thread
+ QFile          - used to read WAV files
+
+Symbian specific classes
+~~~~~~~~~~~~~~~~~~~~~~~~
+ MRemConCoreApiTargetObserver,
+ CRemConInterfaceSelector,
+ CRemConCoreApiTarget          - used to handle volume up/down HW keys on
+                                 Symbian devices
+ CMMFDevSound                  - used to set the master volume in Symbian
+                                 devies, involves a nasty hack
+
+QML elements
+~~~~~~~~~~~~
+ Flickable         - used to implement view change between the info screen,
+                     the turntable, and the drum machine, also used to switch
+                     between 1-16 and 17-32 ticks in drum machine
+ Repeater          - used to create 32 x 6 drum buttons in drum machine
+ Rotation          - used to rotate the 'arm' on top of the record
+
+
 KNOWN ISSUES
 -------------------------------------------------------------------------------
 

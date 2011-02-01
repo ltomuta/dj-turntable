@@ -26,6 +26,7 @@ Image {
         highligher.x = drumGrid.children[tick].x
     }
 
+
     property bool ledOn: false
     property alias running: powerbutton.pressed
     property alias selectedTickGroup: tickGroupSelector.selectedTickGroup
@@ -117,7 +118,8 @@ Image {
         anchors { left: parent.left; leftMargin: 6 }
         anchors { top: tickGroupSelector.bottom; topMargin: 2 }
         anchors { bottom: controlButtons.top }
-        width: height / 6; spacing: 3
+        width: parent.width / 20
+        spacing: 3
 
         Image {
             width: sampleIcons.width; height: drumGrid.drumButtonHeight
@@ -191,7 +193,6 @@ Image {
             // Hides the sometimes visible column of drumbuttons when in
             // state "Ticks1". When moving to state "Ticks2" this rectangle
             // is hidden.
-
             x: drumGrid.children[16].x
             width: drumGrid.drumButtonWidth; height: drumFlickable.height
             color: "#999999"
@@ -236,17 +237,21 @@ Image {
     Item {
         id: controlButtons
 
-        anchors { left: parent.left; right: parent.right }
-        anchors { bottom: parent.bottom; leftMargin: 10; rightMargin: 10 }
-        anchors { bottomMargin: 3 }
+        anchors {
+            left: parent.left; right: parent.right
+            bottom: parent.bottom; leftMargin: 10; rightMargin: 10
+            bottomMargin: 3
+        }
 
         height: parent.height / 7
 
         BeatSelector {
             id: beatSelector
 
-            anchors { left: parent.left; right: powerButtonArea.left }
-            anchors { rightMargin: 30 }
+            anchors {
+                left: parent.left; right: powerButtonArea.left
+                rightMargin: 30
+            }
 
             height: parent.height
             onIndexChanged: drumMachine.setBeat(index)
@@ -255,8 +260,11 @@ Image {
         Item {
             id: powerButtonArea
 
-            anchors { top: parent.top; bottom: parent.bottom }
-            anchors { right: parent.right }
+            anchors {
+                top: parent.top; bottom: parent.bottom
+                right: parent.right
+            }
+
             width: parent.width / 7
 
             Text {

@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/">
+        <file>qml/SplashScreen.qml</file>
         <file>qml/TurnTable.qml</file>
         <file>qml/SpeedSlider.qml</file>
         <file>qml/Arm.qml</file>
@@ -13,6 +14,7 @@
         <file>qml/DrumMachine/TickGroupSelector.qml</file>
         <file>qml/DrumMachine/ImageButton.qml</file>
         <file>qml/HelpScreen/HelpScreen.qml</file>
+        <file>qml/images/splashscreen.png</file>
         <file>qml/images/buttonedge.png</file>
         <file>qml/images/button1.png</file>
         <file>qml/images/button2.png</file>

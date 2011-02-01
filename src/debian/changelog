@@ -1,3 +1,9 @@
+turntable (1.2.0) unstable; urgency=low
+
+  * Added splash screen
+  
+ -- fn.documentation@nokia.com
+
 turntable (1.1.0) unstable; urgency=low
 
   * Sync drum machine to turntable speed

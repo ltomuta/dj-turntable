@@ -3,18 +3,20 @@ QT       += core gui declarative opengl
 TEMPLATE = app
 
 
-VERSION = 1.1.0
+VERSION = 1.2.0
 
 SOURCES += main.cpp \
            TurnTable.cpp \
            DrumMachine.cpp \
            ga_src/GEAudioBuffer.cpp \
            ga_src/GEInterfaces.cpp \
-           ga_src/GEAudioOut.cpp
+           ga_src/GEAudioOut.cpp \
+    mainwindow.cpp
 
 OTHER_FILES += qml/*.qml \
                qml/DrumMachine/*.qml \
-               qml/HelpScreen/*.qml
+               qml/HelpScreen/*.qml \
+    qml/SplashScreen.qml
 
 RESOURCES +=   turntable.qrc
 
@@ -22,7 +24,8 @@ HEADERS   +=   TurnTable.h \
                DrumMachine.h \
                ga_src/GEAudioOut.h \
                ga_src/GEInterfaces.h \
-               ga_src/GEAudioBuffer.h
+               ga_src/GEAudioBuffer.h \
+    mainwindow.h
 
 win32:!maemo5 {
     TARGET = DjTurntable

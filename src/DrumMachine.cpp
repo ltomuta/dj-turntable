@@ -1,7 +1,7 @@
 
+#include <QSettings>
 #include <QStringList>
 #include <vector>
-#include <QSettings>
 #include <limits>
 #include "DrumMachine.h"
 

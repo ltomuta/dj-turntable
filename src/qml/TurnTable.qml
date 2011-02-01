@@ -6,6 +6,15 @@ Rectangle {
     id: ui
 
     property bool lowPerf: false
+    property alias logText: l.text
+
+    Text {
+        id: l
+        anchors.centerIn: parent
+        color: "red"
+        z: 200
+    }
+
 
     signal diskSpeed(variant speed)
     signal diskAimSpeed(variant speed)
@@ -316,6 +325,7 @@ Rectangle {
 
                     source: pressed ? "images/exit_on.png" : "images/exit.png"
                     smooth: true
+                    asynchronous: true
 
                     MouseArea {
                         anchors.fill: parent

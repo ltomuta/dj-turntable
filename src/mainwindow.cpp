@@ -34,6 +34,8 @@ MainWindow::MainWindow(QWidget *parent) :
     view->setResizeMode(QDeclarativeView::SizeRootObjectToView);
     setCentralWidget(view);
 
+    // To delay the loading of main QML file so the splachscreen
+    // would show we use single shot timer.
     QTimer::singleShot(0, this, SLOT(initializeQMLComponent()));
 }
 
@@ -69,6 +71,8 @@ void MainWindow::initializeQMLComponent()
     #endif
 
     // TurnTable connections
+    connect(turnTableQML, SIGNAL(setSample(QVariant)),
+            turnTable, SLOT(setSample(QVariant)));
     connect(turnTableQML, SIGNAL(start()), turnTable, SLOT(start()));
     connect(turnTableQML, SIGNAL(stop()), turnTable, SLOT(stop()));
     connect(turnTableQML, SIGNAL(diskAimSpeed(QVariant)),

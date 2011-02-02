@@ -74,7 +74,24 @@ IAudioSource* CAudioMixer::addAudioSource(IAudioSource *source) {
 
 
 bool CAudioMixer::removeAudioSource( IAudioSource *source ) {
-    return true;
+    QMutexLocker locker(&m_mutex);
+
+    GE::IAudioSource *prev = 0;
+    GE::IAudioSource *l = m_sourceList;
+    while (l) {
+        if (l==source) {
+            if (prev) prev->m_next=l->m_next;
+                else m_sourceList = l->m_next;
+
+            l->m_next = 0;
+            return true;
+        }
+
+        prev = l;
+        l = l->m_next;
+    }
+
+    return false;
 }
 
 int CAudioMixer::getAudioSourceCount() {
@@ -110,7 +127,7 @@ int CAudioMixer::pullAudio(AUDIO_SAMPLE_TYPE *target, int bufferLength) {
     if (!m_sourceList)
         return 0;
 
-    m_mutex.lock();
+    QMutexLocker locker(&m_mutex);
 
     if (m_mixingBufferLength < bufferLength) {
         if (m_mixingBuffer)
@@ -160,8 +177,6 @@ int CAudioMixer::pullAudio(AUDIO_SAMPLE_TYPE *target, int bufferLength) {
         prev = l;
         l = next;
     }
-
-    m_mutex.unlock();
 
     return bufferLength;
 }

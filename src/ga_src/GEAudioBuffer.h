@@ -20,10 +20,8 @@ namespace GE {
         virtual ~CAudioBuffer();
 
         static CAudioBuffer* loadWav( QString fileName );
-        // Support for stdio
-        static CAudioBuffer* loadWav( FILE *wavFile );
-        void reallocate( int length );
 
+        void reallocate( int length );
 
         inline void* getRawData() { return m_data; }
         inline int getDataLength() { return m_dataLength; }
@@ -41,9 +39,13 @@ namespace GE {
             CAudioBuffer *abuffer, int pos, int channel);
         static AUDIO_SAMPLE_TYPE sampleFunction16bitMono(
             CAudioBuffer *abuffer, int pos, int channel);
+        static AUDIO_SAMPLE_TYPE sampleFunction32bitMono(
+            CAudioBuffer *abuffer, int pos, int channel);
         static AUDIO_SAMPLE_TYPE sampleFunction8bitStereo(
             CAudioBuffer *abuffer, int pos, int channel);
         static AUDIO_SAMPLE_TYPE sampleFunction16bitStereo(
+            CAudioBuffer *abuffer, int pos, int channel);
+        static AUDIO_SAMPLE_TYPE sampleFunction32bitStereo(
             CAudioBuffer *abuffer, int pos, int channel);
 
         CAudioBufferPlayInstance *playWithMixer(GE::CAudioMixer &mixer);

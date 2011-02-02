@@ -34,6 +34,8 @@ public:
 
 public slots:
 
+    void setSample(QVariant value);
+
     void start() { m_headOn = true; }
     void stop() { m_headOn = false; }
 
@@ -96,12 +98,13 @@ protected:
 
     QSettings *m_Settings;
 
-    QPointer<GE::CAudioBuffer> m_source;
+    QPointer<GE::CAudioBuffer> m_buffer;
     QPointer<GE::CAudioMixer> m_audioMixer;
     QPointer<GE::AudioOut> m_audioOut;
 
 #ifdef Q_OS_SYMBIAN
 
+    // To handle the hardware volume keys on Symbian
     class Observer : public MRemConCoreApiTargetObserver
     {
     public:

@@ -1,7 +1,8 @@
-#include <math.h>
 #include <QSettings>
 #include <QDesktopServices>
 #include <QUrl>
+#include <QDebug>
+#include <math.h>
 #include "TurnTable.h"
 
 #ifdef Q_OS_SYMBIAN
@@ -33,7 +34,7 @@ TurnTable::TurnTable(QSettings *settings)
     m_cutOffValue = m_cutOffTarget;
     m_resonanceValue = m_resonanceTarget;
 
-    m_source = CAudioBuffer::loadWav(QString(":/sounds/ivory.wav"));
+    m_buffer = CAudioBuffer::loadWav(QString(":/sounds/ivory.wav"));
     m_audioMixer = new CAudioMixer;
     m_audioMixer->addAudioSource(this);
     m_audioOut = new GE::AudioOut(this, m_audioMixer);
@@ -63,26 +64,29 @@ TurnTable::~TurnTable()
 
 int TurnTable::pullAudio(AUDIO_SAMPLE_TYPE *target, int bufferLength)
 {
-    AUDIO_SAMPLE_TYPE *t_target = target + bufferLength;
-    SAMPLE_FUNCTION_TYPE sfunc = m_source->getSampleFunction();
+    if(m_headOn == false || m_buffer.isNull()) {
+        return 0;
+    }
 
-    int channelLength = ((m_source->getDataLength()) /
-                         (m_source->getNofChannels() *
-                          m_source->getBytesPerSample())) - 2;
+
+    AUDIO_SAMPLE_TYPE *t_target = target + bufferLength;
+    SAMPLE_FUNCTION_TYPE sfunc = m_buffer->getSampleFunction();
+    if(sfunc == NULL) {
+        return 0;
+    }
+
+    int channelLength = ((m_buffer->getDataLength()) /
+                         (m_buffer->getNofChannels() *
+                          m_buffer->getBytesPerSample())) - 2;
     channelLength<<=11;
 
     int p;
     int fixedReso = (m_resonanceValue * 4096.0f);
     int fixedCutoff = (m_cutOffValue * 4096.0f);
 
-    float speedmul = (float)m_source->getSamplesPerSec() /
+    float speedmul = (float)m_buffer->getSamplesPerSec() /
                      (float)AUDIO_FREQUENCY * 2048.0f;
     int inc = (int)(m_speed * speedmul);
-
-    if (m_headOn == false) {
-        m_pos = bufferLength / 2 * inc;
-        return 0;
-    }
 
     const int maxloops = 5;
 
@@ -124,8 +128,8 @@ int TurnTable::pullAudio(AUDIO_SAMPLE_TYPE *target, int bufferLength)
 
         p = (m_pos >> 11);
 
-        input = (((sfunc)(m_source, p, 0) * (2047^(m_pos & 2047)) +
-                  (sfunc)(m_source, p+1, 0) * (m_pos & 2047)) >> 11);
+        input = (((sfunc)(m_buffer, p, 0) * (2047^(m_pos & 2047)) +
+                  (sfunc)(m_buffer, p+1, 0) * (m_pos & 2047)) >> 11);
         m_lp[0] += ((m_bp[0] * fixedCutoff) >> 12);
         m_hp[0] = input - m_lp[0] - ((m_bp[0] * fixedReso) >> 12);
         m_bp[0] += ((m_hp[0] * fixedCutoff) >> 12);
@@ -140,8 +144,8 @@ int TurnTable::pullAudio(AUDIO_SAMPLE_TYPE *target, int bufferLength)
 
         target[0] = input;
 
-        input = (((sfunc)(m_source, p, 1) * (2047 ^ (m_pos & 2047)) +
-                  (sfunc)(m_source, p+1, 1) * (m_pos & 2047)) >> 11);
+        input = (((sfunc)(m_buffer, p, 1) * (2047 ^ (m_pos & 2047)) +
+                  (sfunc)(m_buffer, p+1, 1) * (m_pos & 2047)) >> 11);
         m_lp[1] += ((m_bp[1] * fixedCutoff) >> 12);
         m_hp[1] = input - m_lp[1] - ((m_bp[1] * fixedReso) >> 12);
         m_bp[1] += ((m_hp[1] * fixedCutoff) >> 12);
@@ -171,6 +175,26 @@ int TurnTable::pullAudio(AUDIO_SAMPLE_TYPE *target, int bufferLength)
 void TurnTable::addAudioSource(GE::IAudioSource *source)
 {
     m_audioMixer->addAudioSource(source);
+}
+
+
+void TurnTable::setSample(QVariant value)
+{
+    QString filePath = value.toString();
+    filePath.replace(QString("file:///"), QString(""));
+
+    if(m_audioMixer->removeAudioSource(this) == false) {
+        return;
+    }
+
+    delete m_buffer;
+    m_pos = 0;
+
+    m_buffer = CAudioBuffer::loadWav(filePath);
+
+    if(m_buffer.isNull() == false) {
+        m_audioMixer->addAudioSource(this);
+    }
 }
 
 

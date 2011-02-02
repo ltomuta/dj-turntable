@@ -1,4 +1,5 @@
 import Qt 4.7
+import Qt.labs.folderlistmodel 1.0
 import "DrumMachine"
 import "HelpScreen"
 
@@ -6,16 +7,8 @@ Rectangle {
     id: ui
 
     property bool lowPerf: false
-    property alias logText: l.text
 
-    Text {
-        id: l
-        anchors.centerIn: parent
-        color: "red"
-        z: 200
-    }
-
-
+    signal setSample(variant samplePath)
     signal diskSpeed(variant speed)
     signal diskAimSpeed(variant speed)
     signal start()
@@ -68,8 +61,10 @@ Rectangle {
         id: sidepanel
 
         width: 0.09375 * ui.width; height: ui.height
+        z: 1
         onTurnTableClicked: flickable.setState("TurnTable")
         onDrumMachineClicked: flickable.setState("DrumMachine")
+        onOpenSampleSelector: flickable.setState("SampleSelector")
         turnTableLedOn: turntable.playing
         drumMachineLedOn: drumMachine.ledOn
     }
@@ -88,7 +83,7 @@ Rectangle {
 
         anchors { left: sidepanel.right; right: parent.right }
         anchors { bottom: parent.bottom; top: parent.top }
-        contentWidth: parent.width; contentHeight: parent.height * 3
+        contentWidth: parent.width * 2; contentHeight: parent.height * 3
         interactive: false
 
         HelpScreen {
@@ -108,7 +103,7 @@ Rectangle {
 
             width:  flickable.width - mixerpanel.width - 2
             height: flickable.height
-            source: "images/turntable.png"
+            source: "images/backgroundaluminium.png"
             fillMode: Image.Stretch
 
             Image {
@@ -477,6 +472,18 @@ Rectangle {
             }
         }
 
+        SampleSelector {
+            id: sampleSelector
+
+            x: ui.width
+            width: flickable.width; height: flickable.height
+            onBackPressed: flickable.setState(flickable.prevState)
+            onSampleSelected: {
+                flickable.setState("TurnTable")
+                ui.setSample(sampleFile)
+            }
+        }
+
         DrumMachine {
             id: drumMachine
 
@@ -495,6 +502,17 @@ Rectangle {
                 }
                 PropertyChanges { target: drumMachine; opacity: 0 }
                 PropertyChanges { target: helpScreen; opacity: 0 }
+                PropertyChanges { target: sampleSelector; opacity: 0 }
+            },
+            State {
+                name: "SampleSelector"
+                PropertyChanges {
+                    target: flickable; contentX: ui.width; contentY: 0
+                }
+                PropertyChanges { target: turntable; opacity: 0 }
+                PropertyChanges { target: mixerpanel; opacity: 0 }
+                PropertyChanges { target: drumMachine; opacity: 0 }
+                PropertyChanges { target: helpScreen; opacity: 0 }
             },
             State {
                 name: "DrumMachine"
@@ -505,6 +523,7 @@ Rectangle {
                 PropertyChanges { target: turntable; opacity: 0 }
                 PropertyChanges { target: mixerpanel; opacity: 0 }
                 PropertyChanges { target: helpScreen; opacity: 0 }
+                PropertyChanges { target: sampleSelector; opacity: 0 }
             },
             State {
                 name: "Help"
@@ -512,12 +531,13 @@ Rectangle {
                 PropertyChanges { target: turntable; opacity: 0 }
                 PropertyChanges { target: mixerpanel; opacity: 0 }
                 PropertyChanges { target: drumMachine; opacity: 0 }
+                PropertyChanges { target: sampleSelector; opacity: 0 }
             }
         ]
 
         transitions: Transition {
             PropertyAnimation {
-                property: "contentY"; easing.type: Easing.InOutQuart
+                properties: "contentX,contentY"; easing.type: Easing.InOutQuart
             }
             PropertyAnimation { property: "opacity" }
         }

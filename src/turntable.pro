@@ -76,6 +76,12 @@ unix:!symbian {
 
 
 symbian {
+    # in Symbian1 we don't have OpenGL available
+    contains(SYMBIAN_VERSION, 9.4) {
+        QT -= opengl
+        DEFINES += QT_NO_OPENGL
+    }
+
     TARGET = DjTurntable
     CONFIG   += mobility
     MOBILITY += sensors multimedia systeminfo

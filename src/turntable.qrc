@@ -2,6 +2,7 @@
     <qresource prefix="/">
         <file>qml/SplashScreen.qml</file>
         <file>qml/TurnTable.qml</file>
+        <file>qml/SampleSelector.qml</file>
         <file>qml/SpeedSlider.qml</file>
         <file>qml/Arm.qml</file>
         <file>qml/SidePanel.qml</file>
@@ -14,6 +15,9 @@
         <file>qml/DrumMachine/TickGroupSelector.qml</file>
         <file>qml/DrumMachine/ImageButton.qml</file>
         <file>qml/HelpScreen/HelpScreen.qml</file>
+        <file>qml/images/sampleselectorlisting.png</file>
+        <file>qml/images/iconfolder.png</file>
+        <file>qml/images/iconsample.png</file>
         <file>qml/images/splashscreen.png</file>
         <file>qml/images/buttonedge.png</file>
         <file>qml/images/button1.png</file>
@@ -30,7 +34,7 @@
         <file>qml/images/discplate.png</file>
         <file>qml/images/disk.png</file>
         <file>qml/images/diskreflection.png</file>
-        <file>qml/images/turntable.png</file>
+        <file>qml/images/backgroundaluminium.png</file>
         <file>qml/images/arm.png</file>
         <file>qml/images/pedal.png</file>
         <file>qml/images/armcasing.png</file>

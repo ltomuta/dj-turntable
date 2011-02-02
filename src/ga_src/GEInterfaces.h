@@ -7,7 +7,7 @@
 
 namespace GE {
 
-#define AUDIO_FREQUENCY 44100//22050
+#define AUDIO_FREQUENCY 44100
 #define AUDIO_SAMPLE_TYPE short
 #define AUDIO_SAMPLE_BITS 16
 
@@ -30,7 +30,6 @@ namespace GE {
         virtual ~CAudioMixer();
         // Destroy all the sources in the list
         void destroyList();
-
 
         // Add new audio source to the list
         IAudioSource* addAudioSource(IAudioSource *s);

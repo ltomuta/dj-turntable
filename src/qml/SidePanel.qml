@@ -5,6 +5,7 @@ Rectangle {
 
     signal turnTableClicked()
     signal drumMachineClicked()
+    signal openSampleSelector()
 
     property bool turnTableButtonPressed: false
     property bool drumMachineButtonPressed: false
@@ -33,8 +34,8 @@ Rectangle {
         MouseArea {
             anchors.fill: parent
             onPressed: sidepanel.turnTableClicked()
+            onPressAndHold: sidepanel.openSampleSelector()
         }
-
     }
 
     Image {

@@ -35,7 +35,7 @@ Image {
     onSpeedChanged: drumMachineSpeed(speed)
 
     width: 600; height: 360
-    source: "../images/turntable.png"
+    source: "../images/backgroundaluminium.png"
 
     Text {
         anchors { right: tickGroupSelector.left; rightMargin: 15 }

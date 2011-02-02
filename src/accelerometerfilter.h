@@ -29,10 +29,10 @@ public:
         qreal divider = sqrt(rx * rx + ry * ry + rz * rz);
 
 #if defined(Q_OS_SYMBIAN)
-        ry = -(acos(ry / divider) * RADIANS_TO_DEGREES - 90);
+        ry = -(acos(rx / divider) * RADIANS_TO_DEGREES - 90);
         if(fabs(ry - m_PrevValue) > 3.0f) {
-            emit rotationChanged(ry);
-            m_PrevValue = ry;
+            emit rotationChanged(rx);
+            m_PrevValue = rx;
         }
 #else
         rx = acos(rx / divider) * RADIANS_TO_DEGREES - 90;

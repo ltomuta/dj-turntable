@@ -50,20 +50,20 @@ void CAudioBuffer::reallocate(int length) {
 
 
 CAudioBuffer* CAudioBuffer::loadWav( QString fileName ) {
-    QFile *wavFile = new QFile(fileName);
+    QFile wavFile(fileName);
 
-    if (wavFile->open(QIODevice::ReadOnly)) {
+    if (wavFile.open(QIODevice::ReadOnly)) {
         SWavHeader header;
 
-        wavFile->read(header.chunkID, 4);
+        wavFile.read(header.chunkID, 4);
         if (header.chunkID[0] != 'R' || header.chunkID[1] != 'I' ||
             header.chunkID[2] != 'F' || header.chunkID[3] != 'F') {
             // Incorrect header
             return 0;
         }
 
-        wavFile->read((char*)&header.chunkSize, 4);
-        wavFile->read((char*)&header.format, 4);
+        wavFile.read((char*)&header.chunkSize, 4);
+        wavFile.read((char*)&header.format, 4);
 
         if (header.format[0] != 'W' || header.format[1] != 'A' ||
             header.format[2] != 'V' || header.format[3] != 'E') {
@@ -71,27 +71,27 @@ CAudioBuffer* CAudioBuffer::loadWav( QString fileName ) {
             return 0;
         }
 
-        wavFile->read((char*)&header.subchunk1id, 4);
+        wavFile.read((char*)&header.subchunk1id, 4);
         if (header.subchunk1id[0] != 'f' || header.subchunk1id[1] != 'm' ||
             header.subchunk1id[2] != 't' || header.subchunk1id[3] != ' ') {
             // Incorrect header
             return 0;
         }
 
-        wavFile->read((char*)&header.subchunk1size, 4);
-        wavFile->read((char*)&header.audioFormat, 2);
-        wavFile->read((char*)&header.nofChannels, 2);
-        wavFile->read((char*)&header.sampleRate, 4);
-        wavFile->read((char*)&header.byteRate, 4);
-        wavFile->read((char*)&header.blockAlign, 2);
-        wavFile->read((char*)&header.bitsPerSample, 2);
+        wavFile.read((char*)&header.subchunk1size, 4);
+        wavFile.read((char*)&header.audioFormat, 2);
+        wavFile.read((char*)&header.nofChannels, 2);
+        wavFile.read((char*)&header.sampleRate, 4);
+        wavFile.read((char*)&header.byteRate, 4);
+        wavFile.read((char*)&header.blockAlign, 2);
+        wavFile.read((char*)&header.bitsPerSample, 2);
 
         qDebug() << fileName << " opened";
 
         while (1) {
-            if (wavFile->read((char*)&header.subchunk2id, 4 ) != 4)
+            if (wavFile.read((char*)&header.subchunk2id, 4 ) != 4)
                 return 0;
-            if (wavFile->read((char*)&header.subchunk2size,4 ) != 4)
+            if (wavFile.read((char*)&header.subchunk2size,4 ) != 4)
                 return 0;
             if (header.subchunk2id[0]=='d' && header.subchunk2id[1] == 'a' &&
                 header.subchunk2id[2]=='t' && header.subchunk2id[3] == 'a')
@@ -100,14 +100,13 @@ CAudioBuffer* CAudioBuffer::loadWav( QString fileName ) {
             if (header.subchunk2size < 1)
                 return 0; // error in file
             char *unused = new char[header.subchunk2size];
-            wavFile->read(unused, header.subchunk2size);
+            wavFile.read(unused, header.subchunk2size);
             delete [] unused;
         }
 
-
-
         // the data follows.
-        if (header.subchunk2size<1) return 0;
+        if (header.subchunk2size < 1)
+            return 0;
 
         CAudioBuffer *rval = new CAudioBuffer;
         rval->m_nofChannels = header.nofChannels;
@@ -116,7 +115,7 @@ CAudioBuffer* CAudioBuffer::loadWav( QString fileName ) {
         rval->m_signedData = 0; // where to know this?
         rval->reallocate(header.subchunk2size);
 
-        wavFile->read((char*)rval->m_data, header.subchunk2size);
+        wavFile.read((char*)rval->m_data, header.subchunk2size);
 
         // choose a good sampling function.
         rval->m_sampleFunction = 0;
@@ -125,11 +124,23 @@ CAudioBuffer* CAudioBuffer::loadWav( QString fileName ) {
                 rval->m_sampleFunction = sampleFunction8bitMono;
             if (rval->m_bitsPerSample == 16)
                 rval->m_sampleFunction = sampleFunction16bitMono;
+            if (rval->m_bitsPerSample == 32)
+                rval->m_sampleFunction = sampleFunction32bitMono;
         } else {
             if (rval->m_bitsPerSample == 8)
                 rval->m_sampleFunction = sampleFunction8bitStereo;
             if (rval->m_bitsPerSample == 16)
                 rval->m_sampleFunction = sampleFunction16bitStereo;
+            if (rval->m_bitsPerSample == 32)
+                rval->m_sampleFunction = sampleFunction32bitStereo;
+        }
+
+        if(rval->m_sampleFunction == NULL) {
+            // unknown bit rate
+            delete rval;
+
+            qDebug() << fileName << " NOT opened, unsupported bit rate";
+            return 0;
         }
 
         return rval;
@@ -139,82 +150,13 @@ CAudioBuffer* CAudioBuffer::loadWav( QString fileName ) {
         qDebug() << fileName << " NOT opened";
         return 0;
     }
-
-    delete wavFile;
-}
-
-
-CAudioBuffer* CAudioBuffer::loadWav(FILE *wavFile) {
-    // read the header.
-    SWavHeader header;
-    fread(header.chunkID, 4, 1, wavFile);
-    if (header.chunkID[0] != 'R' || header.chunkID[1] != 'I' ||
-        header.chunkID[2] != 'F' || header.chunkID[3] != 'F')
-        return 0; // incorrect header
-
-    fread(&header.chunkSize, 4, 1, wavFile);
-    fread(header.format, 4, 1, wavFile);
-    if (header.format[0] != 'W' || header.format[1] != 'A' ||
-        header.format[2] != 'V' || header.format[3] != 'E')
-        return 0; // incorrect header
-
-    fread(header.subchunk1id, 4, 1, wavFile);
-    if (header.subchunk1id[0] != 'f' || header.subchunk1id[1] != 'm' ||
-        header.subchunk1id[2] != 't' || header.subchunk1id[3] != ' ')
-        return 0; // incorrect header
-
-    fread(&header.subchunk1size, 4, 1, wavFile);
-    fread(&header.audioFormat, 2, 1, wavFile);
-    fread(&header.nofChannels, 2, 1, wavFile);
-    fread(&header.sampleRate, 4, 1, wavFile);
-    fread(&header.byteRate, 4, 1, wavFile);
-
-    fread(&header.blockAlign, 2, 1, wavFile);
-    fread(&header.bitsPerSample, 2, 1, wavFile);
-
-    fread(header.subchunk2id, 4, 1, wavFile);
-    if (header.subchunk2id[0] != 'd' || header.subchunk2id[1] != 'a' ||
-        header.subchunk2id[2] != 't' || header.subchunk2id[3] != 'a')
-        return 0; // incorrect header
-    fread(&header.subchunk2size, 4, 1, wavFile);
-
-
-    // the data follows.
-    if (header.subchunk2size < 1)
-        return 0;
-
-    CAudioBuffer *rval = new CAudioBuffer;
-    rval->m_nofChannels = header.nofChannels;
-    rval->m_bitsPerSample = header.bitsPerSample;
-    rval->m_samplesPerSec = header.sampleRate;
-    rval->m_signedData = 0; // where to know this?
-    rval->reallocate(header.subchunk2size);
-
-    fread(rval->m_data, 1, header.subchunk2size, wavFile);
-
-
-    // choose a good sampling function.
-    rval->m_sampleFunction = 0;
-    if (rval->m_nofChannels == 1) {
-        if (rval->m_bitsPerSample == 8)
-            rval->m_sampleFunction = sampleFunction8bitMono;
-        if (rval->m_bitsPerSample == 16)
-            rval->m_sampleFunction = sampleFunction16bitMono;
-    } else {
-        if (rval->m_bitsPerSample == 8)
-            rval->m_sampleFunction = sampleFunction8bitStereo;
-        if (rval->m_bitsPerSample == 16)
-            rval->m_sampleFunction = sampleFunction16bitStereo;
-    }
-
-    return rval;
 }
 
 
 AUDIO_SAMPLE_TYPE CAudioBuffer::sampleFunction8bitMono(CAudioBuffer *abuffer,
                                                        int pos,
                                                        int /*channel*/) {
-    return (AUDIO_SAMPLE_TYPE)(((unsigned char*)(abuffer->m_data))[pos] -
+    return (AUDIO_SAMPLE_TYPE)(((quint8*)(abuffer->m_data))[pos] -
                                128) << 8;
 }
 
@@ -222,7 +164,15 @@ AUDIO_SAMPLE_TYPE CAudioBuffer::sampleFunction8bitMono(CAudioBuffer *abuffer,
 AUDIO_SAMPLE_TYPE CAudioBuffer::sampleFunction16bitMono(CAudioBuffer *abuffer,
                                                         int pos,
                                                         int /*channel*/) {
-    return (AUDIO_SAMPLE_TYPE)(((short*)(abuffer->m_data))[pos]);
+    return (AUDIO_SAMPLE_TYPE)(((quint16*)(abuffer->m_data))[pos]);
+}
+
+
+AUDIO_SAMPLE_TYPE CAudioBuffer::sampleFunction32bitMono(CAudioBuffer *abuffer,
+                                                        int pos,
+                                                        int /*channel*/) {
+    return (((float*)(abuffer->m_data))[pos * abuffer->m_nofChannels]) *
+           65536.0f / 2.0f;
 }
 
 
@@ -230,7 +180,7 @@ AUDIO_SAMPLE_TYPE CAudioBuffer::sampleFunction8bitStereo(CAudioBuffer *abuffer,
                                                          int pos,
                                                          int channel) {
     return ((AUDIO_SAMPLE_TYPE)
-            (((char*)(abuffer->m_data))[pos * abuffer->m_nofChannels +
+            (((quint8*)(abuffer->m_data))[pos * abuffer->m_nofChannels +
                                         channel]) << 8);
 }
 
@@ -239,8 +189,16 @@ AUDIO_SAMPLE_TYPE CAudioBuffer::sampleFunction16bitStereo(CAudioBuffer *abuffer,
                                                           int pos,
                                                           int channel) {
     return (AUDIO_SAMPLE_TYPE)
-            (((short*)(abuffer->m_data))[pos * abuffer->m_nofChannels +
+            (((quint16*)(abuffer->m_data))[pos * abuffer->m_nofChannels +
                                          channel]);
+}
+
+
+AUDIO_SAMPLE_TYPE CAudioBuffer::sampleFunction32bitStereo(CAudioBuffer *abuffer,
+                                                          int pos,
+                                                          int channel) {
+    return (((float*)(abuffer->m_data))[pos * abuffer->m_nofChannels +
+            channel]) * 65536.0f / 2.0f;
 }
 
 

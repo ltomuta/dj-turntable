@@ -6,8 +6,6 @@ import "HelpScreen"
 Rectangle {
     id: ui
 
-    property bool lowPerf: false
-
     signal setSample(variant samplePath)
     signal diskSpeed(variant speed)
     signal diskAimSpeed(variant speed)
@@ -18,7 +16,7 @@ Rectangle {
     signal linkActivated(variant link)
 
     function audioPosition(pos) { arm.positionOnDisk = pos }
-    function inclination(deg) { diskReflection.rotation = -deg * 2 + 45 }
+    function inclination(deg) { diskReflection.rotation = deg * 8 + 45 }
 
     anchors.fill: parent
     width: 640; height: 360
@@ -118,7 +116,7 @@ Rectangle {
                 anchors.verticalCenterOffset: -0.0055 * parent.paintedHeight
 
                 source: "images/discplate.png"
-                smooth: ui.lowPerf ? false : true
+                smooth: lowPerf ? false : true
             }
 
             Image {
@@ -131,7 +129,7 @@ Rectangle {
 
                 anchors { fill: discPlate; margins: discPlate.width * 0.045 }
                 source: "images/disk.png"
-                smooth: ui.lowPerf ? false : true
+                smooth: lowPerf ? false : true
 
                 onCurrentSpeedChanged: playTimer.running ?
                                            ui.diskSpeed(disc.currentSpeed) :
@@ -141,7 +139,7 @@ Rectangle {
                     id: playTimer
 
                     // 30fps in lowPerf otherwise 60fps
-                    interval: ui.lowPerf ? 32 : 16
+                    interval: lowPerf ? 32 : 16
                     repeat: true
                     onTriggered: {
                         disc.rotation = (disc.rotation + 0.36 *
@@ -482,6 +480,9 @@ Rectangle {
                 flickable.setState("TurnTable")
                 ui.setSample(sampleFile)
             }
+
+            // sampleFolder is context property set in Qt
+            folder: sampleFolder
         }
 
         DrumMachine {

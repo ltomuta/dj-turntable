@@ -4,7 +4,9 @@ import Qt.labs.folderlistmodel 1.0
 Image {
     id: selector
 
-    property string sampleFile: "qrc:/sounds/ivory.wav"
+    property string sampleFile: defaultSampleFile
+    property string defaultSampleFile: ":/sounds/ivory.wav"
+    property alias folder: folderModel.folder
 
     signal backPressed()
     signal sampleSelected()
@@ -19,8 +21,8 @@ Image {
 
         anchors { top: parent.top; right: parent.right }
         anchors { rightMargin: 5; topMargin: 5 }
-        width: selector.width * 0.10
-        height: selector.height / 6
+        width: parent.width * 0.10
+        height: width * 0.83607
         source: pressed ? "images/back_on.png" :
                           "images/back.png"
         smooth: true
@@ -39,19 +41,87 @@ Image {
         }
     }
 
+    Image {
+        id: defaultSampleButton
+
+        property bool pressed: false
+
+        anchors { top: backButton.bottom; right: parent.right }
+        anchors { rightMargin: 5; topMargin: 10 }
+        width: backButton.width
+        height: backButton.height
+        source: pressed ? "images/defaultsample_on.png" :
+                          "images/defaultsample.png"
+        smooth: true
+
+        MouseArea {
+            anchors.fill: parent
+            onPressed: {
+                defaultSampleButton.pressed = true; defaultSampleButton.scale = 0.9
+            }
+
+            onReleased: {
+                defaultSampleButton.pressed = false; defaultSampleButton.scale = 1.0
+            }
+
+            onClicked: {
+                selector.sampleFile = selector.defaultSampleFile
+                selector.sampleSelected()
+            }
+        }
+    }
+
     Item {
         id: title
 
         anchors {
             left: parent.left; leftMargin: 20
-            right: parent.right
+            right: backButton.left; rightMargin: 20
             top: parent.top; topMargin: 20
         }
         height: 20
 
+
+        Image {
+            id: folderUp
+
+            property bool pressed: false
+
+            anchors {
+                verticalCenter: parent.verticalCenter
+                left: parent.left; leftMargin: 15
+            }
+
+            width: height; height: 30
+            source: "images/iconfolderup.png"
+            smooth: true
+
+            MouseArea {
+                anchors.fill: parent
+                onPressed: {
+                    folderUp.pressed = true; folderUp.scale = 0.9
+                }
+
+                onReleased: {
+                    folderUp.pressed = false; folderUp.scale = 1.0
+                }
+
+                onClicked: folderModel.folder = folderModel.parentFolder
+            }
+        }
+
+
         Text {
-            text: "Sample: " + sampleFile
+            anchors {
+                left: folderUp.right; leftMargin: 10
+                right: parent.right
+                top: parent.top
+                bottom: parent.bottom
+            }
+
+            text: sampleFile
             color: "#505050"
+            elide: Text.ElideLeft
         }
     }
 
@@ -59,7 +129,7 @@ Image {
         anchors {
             top: title.bottom; topMargin: 10
             left: parent.left; leftMargin: 20
-            right: backButton.left; rightMargin: 10
+            right: backButton.left; rightMargin: 20
             bottom: parent.bottom; bottomMargin: 20
         }
 
@@ -70,8 +140,7 @@ Image {
             id: folderModel
 
             folder: "file:/c:/"
-            nameFilters: [ "*.wav", "*.mp3" ]
-            showDotAndDotDot: true
+            nameFilters: [ "*.wav" ]
         }
 
         Component {
@@ -105,6 +174,10 @@ Image {
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
+                        if(fileName == "") {
+                            return;
+                        }
+
                         if(folderModel.isFolder(index)) {
                             folderModel.folder = filePath
                         }
@@ -122,7 +195,7 @@ Image {
 
             anchors {
                 fill: parent
-                margins: 20
+                margins: 15
 
             }
 

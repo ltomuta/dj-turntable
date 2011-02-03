@@ -189,6 +189,7 @@ void TurnTable::setSample(QVariant value)
 
     delete m_buffer;
     m_pos = 0;
+    m_loops = 0;
 
     m_buffer = CAudioBuffer::loadWav(filePath);
 

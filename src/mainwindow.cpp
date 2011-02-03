@@ -42,6 +42,22 @@ MainWindow::MainWindow(QWidget *parent) :
 
 void MainWindow::initializeQMLComponent()
 {
+    QDeclarativeContext *context = view->rootContext();
+#ifdef Q_WS_MAEMO_5
+    // Set UI to low performance mode in Maemo5, mostly this disables
+    // antialiasing on some performance costly elements
+    context->setContextProperty("lowPerf", true);
+#else
+    context->setContextProperty("lowPerf", false);
+#endif
+
+#ifdef Q_OS_SYMBIAN
+    context->setContextProperty("sampleFolder", "file:");
+#else
+    context->setContextProperty("sampleFolder", QString("file:/") +
+                                QDir::currentPath());
+#endif
+
     view->setSource(QUrl("qrc:/qml/TurnTable.qml"));
 
     // Create Qt settings object to load / store app settings
@@ -63,12 +79,6 @@ void MainWindow::initializeQMLComponent()
                              "Failed to resolve QML elements in main.cpp");
         return;
     }
-
-    #ifdef Q_WS_MAEMO_5
-        // Set UI to low performance mode in Maemo5, mostly this disables
-        // antialiasing on some performance costly elements
-        turnTableQML->setProperty("lowPerf", QVariant(true));
-    #endif
 
     // TurnTable connections
     connect(turnTableQML, SIGNAL(setSample(QVariant)),

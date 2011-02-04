@@ -34,8 +34,8 @@ MainWindow::MainWindow(QWidget *parent) :
     view->setResizeMode(QDeclarativeView::SizeRootObjectToView);
     setCentralWidget(view);
 
-    // To delay the loading of main QML file so the splachscreen
-    // would show we use single shot timer.
+    // To delay the loading of main QML file so that the splachscreen
+    // would show, we use single shot timer.
     QTimer::singleShot(0, this, SLOT(initializeQMLComponent()));
 }
 

@@ -16,6 +16,15 @@ Image {
     smooth: true
 
     Image {
+        id: knobShadow
+
+        width: parent.width; height: parent.height
+        x: width * 0.04; y: height * 0.04
+        source: "images/armcasingshadow.png"
+        smooth: true
+    }
+
+    Image {
         id: knobImage
 
         anchors.fill: parent
@@ -24,6 +33,14 @@ Image {
                   knob.maximumrotation
         smooth: true
     }
+
+    Image {
+        id: knobHat
+        anchors.fill: parent
+        source: "images/knobhat.png"
+        smooth: true
+    }
+
 
     LCDDisplay {
         anchors.centerIn: parent

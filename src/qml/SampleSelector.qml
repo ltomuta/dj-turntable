@@ -11,6 +11,11 @@ Image {
     signal backPressed()
     signal sampleSelected()
 
+    function setFolder(folder) {
+        folderAnimation.folderToChange = folder
+        folderAnimation.start()
+    }
+
     width: 640; height: 360
     source: "images/backgroundaluminium.png"
 
@@ -81,7 +86,6 @@ Image {
         }
         height: 20
 
-
         Image {
             id: folderUp
 
@@ -106,7 +110,7 @@ Image {
                     folderUp.pressed = false; folderUp.scale = 1.0
                 }
 
-                onClicked: folderModel.folder = folderModel.parentFolder
+                onClicked: selector.setFolder(folderModel.parentFolder)
             }
         }
 
@@ -147,16 +151,13 @@ Image {
             id: folderDelegate
 
             Item {
-                width: view.width
-                height: 30
+                width: view.width; height: 30
 
                 Behavior on scale { PropertyAnimation { duration: 50 } }
 
                 Image {
                     id: icon
-                    height: parent.height
-                    width: height
-
+                    width: height; height: parent.height
                     source: folderModel.isFolder(index) ? "images/iconfolder.png"
                                                         : "images/iconsample.png"
                     smooth: true
@@ -168,7 +169,7 @@ Image {
                         verticalCenter: parent.verticalCenter
                     }
                     text: fileName
-                    color: "white"//"#505050"
+                    color: "white"
                 }
 
                 MouseArea {
@@ -179,7 +180,7 @@ Image {
                         }
 
                         if(folderModel.isFolder(index)) {
-                            folderModel.folder = filePath
+                            selector.setFolder(filePath)
                         }
                         else {
                             sampleFile = filePath
@@ -193,15 +194,20 @@ Image {
         ListView {
             id: view
 
-            anchors {
-                fill: parent
-                margins: 15
-
-            }
+            anchors { fill: parent; margins: 15 }
 
             model: folderModel
-            spacing: 2
+            spacing: 10
             delegate: folderDelegate
+
+            SequentialAnimation {
+                id: folderAnimation
+                property string folderToChange
+
+                PropertyAnimation { target: view; property: "opacity"; to: 0; duration: 100 }
+                PropertyAction { target: folderModel; property: "folder"; value: folderAnimation.folderToChange }
+                PropertyAnimation { target: view; property: "opacity"; to: 1.0; duration: 100 }
+            }
         }
     }
 }

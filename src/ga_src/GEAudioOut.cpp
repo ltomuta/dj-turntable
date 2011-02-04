@@ -56,8 +56,8 @@ AudioOut::AudioOut(QObject *parent, GE::IAudioSource *source) :
     connect(m_audioOutput, SIGNAL(notify()), this, SLOT(audioNotify()));
 
     // Really ugly hack is used as a last resort. This allows us to adjust the
-    // application volume in Symbian. The CMMFDevSound object which lies deep
-    // inside the QAudioOutput in Symbian implementation has the needed
+    // application volume in Symbian. The CMMFDevSound object lies deep
+    // inside the QAudioOutput in Symbian implementation and it has the needed
     // functions. So we get the needed object accessing directly from memory.
     unsigned int *pointer_to_abstract_audio =
             (unsigned int*)((unsigned char*)m_audioOutput + 8);

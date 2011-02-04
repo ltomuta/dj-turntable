@@ -15,17 +15,17 @@ SOURCES += main.cpp \
 
 OTHER_FILES += qml/*.qml \
                qml/DrumMachine/*.qml \
-               qml/HelpScreen/*.qml \
-    qml/SplashScreen.qml
+               qml/HelpScreen/*.qml
 
 RESOURCES +=   turntable.qrc
 
-HEADERS   +=   TurnTable.h \
+HEADERS   +=   mainwindow.h \
+               TurnTable.h \
                DrumMachine.h \
                ga_src/GEAudioOut.h \
                ga_src/GEInterfaces.h \
-               ga_src/GEAudioBuffer.h \
-    mainwindow.h
+               ga_src/GEAudioBuffer.h
+
 
 win32:!maemo5 {
     TARGET = DjTurntable

@@ -3,6 +3,7 @@
 
 #include <QVariant>
 #include <QPointer>
+#include <QMutex>
 
 #include "ga_src/GEAudioOut.h"
 #include "ga_src/GEAudioBuffer.h"
@@ -48,6 +49,8 @@ public slots:
     void volumeUp();
     void volumeDown();
 
+    void seekToPosition(QVariant position);
+
 #if defined(Q_OS_SYMBIAN) || defined(Q_WS_MAEMO_5)
     void profile(QSystemDeviceInfo::Profile profile) {
         if(profile == QSystemDeviceInfo::SilentProfile) {
@@ -80,6 +83,7 @@ protected:
 
     bool m_headOn;
 
+    const int m_maxLoops;
     int m_loops;
     int m_pos;
     int m_cc;
@@ -95,6 +99,8 @@ protected:
     int m_lp[2];
     int m_hp[2];
     int m_bp[2];
+
+    QMutex m_PosMutex;
 
     QSettings *m_Settings;
 

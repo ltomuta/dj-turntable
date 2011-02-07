@@ -15,7 +15,8 @@ using namespace GE;
 
 TurnTable::TurnTable(QSettings *settings)
     : m_defaultVolume(0.65f),
-      m_Settings(settings)
+      m_Settings(settings),
+      m_maxLoops(1)
 {
     m_loops = 0;
     m_pos = 0;
@@ -64,6 +65,8 @@ TurnTable::~TurnTable()
 
 int TurnTable::pullAudio(AUDIO_SAMPLE_TYPE *target, int bufferLength)
 {
+    QMutexLocker locker(&m_PosMutex);
+
     if(m_headOn == false || m_buffer.isNull()) {
         return 0;
     }
@@ -88,8 +91,6 @@ int TurnTable::pullAudio(AUDIO_SAMPLE_TYPE *target, int bufferLength)
                      (float)AUDIO_FREQUENCY * 2048.0f;
     int inc = (int)(m_speed * speedmul);
 
-    const int maxloops = 5;
-
     int input;
     while(target != t_target) {
         if(m_cc > 64) {
@@ -105,13 +106,13 @@ int TurnTable::pullAudio(AUDIO_SAMPLE_TYPE *target, int bufferLength)
             m_cc++;
         }
 
-        if(m_loops >= maxloops && m_pos >= channelLength) {
+        if(m_loops >= m_maxLoops && m_pos >= channelLength) {
             m_pos = channelLength - 1;
         }
         else if(m_pos >= channelLength) {
             m_pos %= channelLength;
             m_loops++;
-            if(m_loops >= maxloops) {
+            if(m_loops >= m_maxLoops) {
                 m_loops = 0;
             }
         }
@@ -165,8 +166,8 @@ int TurnTable::pullAudio(AUDIO_SAMPLE_TYPE *target, int bufferLength)
 
     // Emit signal about the audio position to advance the needle to
     // correct position
-    emit audioPosition(1.0 / maxloops * (m_pos * 1.0f / channelLength
-                                         + m_loops));
+    emit audioPosition(1.0 / m_maxLoops * (m_pos * 1.0f / channelLength
+                                           + m_loops));
 
     return bufferLength;
 }
@@ -180,6 +181,8 @@ void TurnTable::addAudioSource(GE::IAudioSource *source)
 
 void TurnTable::setSample(QVariant value)
 {
+    QMutexLocker locker(&m_PosMutex);
+
     QString filePath = value.toString();
     filePath.replace(QString("file:///"), QString(""));
 
@@ -253,6 +256,26 @@ void TurnTable::volumeDown()
 
     m_audioMixer->setGeneralVolume(volume);
     m_Settings->setValue("Volume", volume);
+}
+
+
+// The parameter position should be in range 0 - 1.0
+void TurnTable::seekToPosition(QVariant position)
+{
+    QMutexLocker locker(&m_PosMutex);
+
+    int channelLength = ((m_buffer->getDataLength()) /
+                         (m_buffer->getNofChannels() *
+                          m_buffer->getBytesPerSample())) - 2;
+    channelLength <<= 11;
+
+    float value = position.toFloat();
+    m_loops = value / (1.0 / m_maxLoops);
+    if(m_loops >= m_maxLoops) {
+        m_loops = 0;
+    }
+
+    m_pos = (value / (1.0 / m_maxLoops) - m_loops) * channelLength;
 }
 
 

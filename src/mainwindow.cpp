@@ -95,6 +95,8 @@ void MainWindow::initializeQMLComponent()
             turnTable, SLOT(setResonance(QVariant)));
     connect(turnTableQML, SIGNAL(linkActivated(QVariant)),
             turnTable, SLOT(linkActivated(QVariant)));
+    connect(turnTableQML, SIGNAL(seekToPosition(QVariant)),
+            turnTable, SLOT(seekToPosition(QVariant)));
     connect(turnTable, SIGNAL(audioPosition(QVariant)),
             turnTableQML, SLOT(audioPosition(QVariant)));
 

@@ -6,6 +6,10 @@ import "HelpScreen"
 Rectangle {
     id: ui
 
+    // Used when developing with QML Viewer, property is added as
+    // context property by Qt in the real application
+    property bool lowPerf: false
+
     signal setSample(variant samplePath)
     signal diskSpeed(variant speed)
     signal diskAimSpeed(variant speed)
@@ -13,9 +17,10 @@ Rectangle {
     signal stop()
     signal cutOff(variant value)
     signal resonance(variant value)
+    signal seekToPosition(variant value)
     signal linkActivated(variant link)
 
-    function audioPosition(pos) { arm.positionOnDisk = pos }
+    function audioPosition(pos) { arm.setPositionOnDisk(pos) }
     function inclination(deg) { diskReflection.rotation = deg * 8 + 45 }
 
     anchors.fill: parent
@@ -288,6 +293,7 @@ Rectangle {
                 anchors { leftMargin: discPlate.width * -0.05 }
 
                 onArmdownChanged: armdown ? ui.start() : ui.stop()
+                onArmReleasedByUser: ui.seekToPosition(position)
             }
         }
 
@@ -449,6 +455,7 @@ Rectangle {
                     function press() {
                         turntable.playing = !turntable.playing
                         if(turntable.playing) {
+                            ui.seekToPosition(0)
                             arm.moveIn()
                         }
                         else {

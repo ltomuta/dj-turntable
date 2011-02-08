@@ -14,9 +14,10 @@ using namespace GE;
 
 
 TurnTable::TurnTable(QSettings *settings)
-    : m_defaultVolume(0.65f),
-      m_Settings(settings),
-      m_maxLoops(1)
+    : m_defaultSample(":/sounds/ivory.wav"),
+      m_defaultVolume(0.65f),
+      m_maxLoops(1),
+      m_Settings(settings)
 {
     m_loops = 0;
     m_pos = 0;
@@ -35,7 +36,6 @@ TurnTable::TurnTable(QSettings *settings)
     m_cutOffValue = m_cutOffTarget;
     m_resonanceValue = m_resonanceTarget;
 
-    m_buffer = CAudioBuffer::loadWav(QString(":/sounds/ivory.wav"));
     m_audioMixer = new CAudioMixer;
     m_audioMixer->addAudioSource(this);
     m_audioOut = new GE::AudioOut(this, m_audioMixer);
@@ -179,12 +179,18 @@ void TurnTable::addAudioSource(GE::IAudioSource *source)
 }
 
 
-void TurnTable::setSample(QVariant value)
+void TurnTable::openSample(const QString &filePath)
 {
     QMutexLocker locker(&m_PosMutex);
 
-    QString filePath = value.toString();
-    filePath.replace(QString("file:///"), QString(""));
+    QString parsedFilePath;
+    if(filePath.isEmpty()) {
+        parsedFilePath = m_defaultSample;
+    }
+    else {
+        parsedFilePath = filePath;
+        parsedFilePath.replace(QString("file:///"), QString(""));
+    }
 
     if(m_audioMixer->removeAudioSource(this) == false) {
         return;
@@ -194,11 +200,38 @@ void TurnTable::setSample(QVariant value)
     m_pos = 0;
     m_loops = 0;
 
-    m_buffer = CAudioBuffer::loadWav(filePath);
+    m_buffer = CAudioBuffer::loadWav(parsedFilePath);
 
-    if(m_buffer.isNull() == false) {
+    if(m_buffer.isNull()) {
+        // Failed to load sample
+        return;
+    }
+    else {
         m_audioMixer->addAudioSource(this);
     }
+
+    // Save the succesfully loaded sample to the persistent storage
+    m_Settings->setValue("LastSample", parsedFilePath);
+
+    emit sampleOpened(parsedFilePath);
+}
+
+
+void TurnTable::openLastSample()
+{
+    openSample(m_Settings->value("LastSample", m_defaultSample).toString());
+}
+
+
+void TurnTable::setSample(QVariant value)
+{
+    openSample(value.toString());
+}
+
+
+void TurnTable::openDefaultSample()
+{
+    openSample();
 }
 
 

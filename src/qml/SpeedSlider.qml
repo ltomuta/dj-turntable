@@ -10,7 +10,7 @@ Item {
 
     function calculateYPos(value) {
         return (value - minimum) * handle.yMax
-               / (maximum - minimum) + handle.height * 0.358
+                / (maximum - minimum) + handle.height * 0.358 + 2
     }
 
     width: 100; height: 200
@@ -42,6 +42,14 @@ Item {
         drag { minimumY: 0; maximumY: handle.yMax }
 
         onPositionChanged: value = (maximum - minimum) * (handle.y) / handle.yMax + minimum
-        onDoubleClicked: value = defaultValue
+        onDoubleClicked: moveToDefault.start()
+    }
+
+    SequentialAnimation {
+        id: moveToDefault
+
+        SmoothedAnimation {
+            target: slider; property: "value"; to: slider.defaultValue; velocity: 0.8
+        }
     }
 }

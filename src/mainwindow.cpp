@@ -70,19 +70,18 @@ void MainWindow::initializeQMLComponent()
 
     // Find out the interesting Qt objects of the QML elements
     QObject *turnTableQML = dynamic_cast<QObject*>(view->rootObject());
+    QObject *sampleSelectorQML = findQMLElement(turnTableQML, "sampleSelector");
     QObject *drumMachineQML = findQMLElement(turnTableQML, "drumMachine");
 
     // If there are errors in QML code and the elements does not exist,
     // they won't be found Qt side either, check existance of the elements.
-    if(turnTableQML == NULL || drumMachineQML == NULL) {
+    if(turnTableQML == NULL || sampleSelectorQML == NULL || drumMachineQML == NULL) {
         QMessageBox::warning(NULL, "Warning",
                              "Failed to resolve QML elements in main.cpp");
         return;
     }
 
     // TurnTable connections
-    connect(turnTableQML, SIGNAL(setSample(QVariant)),
-            turnTable, SLOT(setSample(QVariant)));
     connect(turnTableQML, SIGNAL(start()), turnTable, SLOT(start()));
     connect(turnTableQML, SIGNAL(stop()), turnTable, SLOT(stop()));
     connect(turnTableQML, SIGNAL(diskAimSpeed(QVariant)),
@@ -99,6 +98,14 @@ void MainWindow::initializeQMLComponent()
             turnTable, SLOT(seekToPosition(QVariant)));
     connect(turnTable, SIGNAL(audioPosition(QVariant)),
             turnTableQML, SLOT(audioPosition(QVariant)));
+
+    // SampleSelector connections
+    connect(sampleSelectorQML, SIGNAL(sampleSelected(QVariant)),
+            turnTable, SLOT(setSample(QVariant)));
+    connect(sampleSelectorQML, SIGNAL(defaultSample()),
+            turnTable, SLOT(openDefaultSample()));
+    connect(turnTable, SIGNAL(sampleOpened(QVariant)),
+            sampleSelectorQML, SLOT(setCurrentSample(QVariant)));
 
 
     // DrumMachine connections
@@ -146,6 +153,7 @@ void MainWindow::initializeQMLComponent()
         accelerometer->start();
     #endif
 
+    turnTable->openLastSample();
     drumMachine->setBeat(0);
 }
 

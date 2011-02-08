@@ -1,5 +1,6 @@
 import Qt 4.7
 import Qt.labs.folderlistmodel 1.0
+import "SampleSelector"
 import "DrumMachine"
 import "HelpScreen"
 
@@ -8,9 +9,8 @@ Rectangle {
 
     // Used when developing with QML Viewer, property is added as
     // context property by Qt in the real application
-    //property bool lowPerf: false
+    property bool lowPerf: false
 
-    signal setSample(variant samplePath)
     signal diskSpeed(variant speed)
     signal diskAimSpeed(variant speed)
     signal start()
@@ -257,9 +257,15 @@ Rectangle {
                 }
 
                 Text {
-                    y: speedslider.calculateYPos(0.75)
+                    y: speedslider.calculateYPos(0.85)
                     anchors.right: parent.right
-                    text: "-25"; color: "#505050"; font.pixelSize: 10
+                    text: "-15"; color: "#505050"; font.pixelSize: 10
+                }
+
+                Text {
+                    y: speedslider.calculateYPos(0.70)
+                    anchors.right: parent.right
+                    text: "-30"; color: "#505050"; font.pixelSize: 10
                 }
 
                 Text {
@@ -287,7 +293,7 @@ Rectangle {
                     bottom: parent.bottom; bottomMargin: 15
                 }
 
-                maximum: 1.25; minimum: 0.50; value: 1.0; defaultValue: 1.0
+                maximum: 1.30; minimum: 0.50; value: 1.0; defaultValue: 1.0
                 mouseAreaScale: 3
             }
 
@@ -489,10 +495,6 @@ Rectangle {
             x: ui.width
             width: flickable.width; height: flickable.height
             onBackPressed: flickable.setState(flickable.prevState)
-            onSampleSelected: {
-                flickable.setState("TurnTable")
-                ui.setSample(sampleFile)
-            }
 
             // sampleFolder is context property set in Qt
             folder: sampleFolder

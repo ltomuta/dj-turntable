@@ -32,10 +32,13 @@ public:
     ~TurnTable();
 
     void addAudioSource(GE::IAudioSource *source);
+    void openSample(const QString &filePath = "");
+    void openLastSample();
 
 public slots:
 
     void setSample(QVariant value);
+    void openDefaultSample();
 
     void start() { m_headOn = true; }
     void stop() { m_headOn = false; }
@@ -76,9 +79,11 @@ public slots:
     void linkActivated(QVariant link);
 
 signals:
+    void sampleOpened(QVariant filePath);
     void audioPosition(QVariant position);
 
 protected:
+    const QString m_defaultSample;
     const float m_defaultVolume;
 
     bool m_headOn;

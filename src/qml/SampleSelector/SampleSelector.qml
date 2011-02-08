@@ -3,21 +3,31 @@ import Qt.labs.folderlistmodel 1.0
 
 Image {
     id: selector
+    objectName: "sampleSelector"
 
-    property string sampleFile: defaultSampleFile
-    property string defaultSampleFile: ":/sounds/ivory.wav"
+    property string sampleFile
     property alias folder: folderModel.folder
 
-    signal backPressed()
-    signal sampleSelected()
+    // Used as Qt signals
+    signal sampleSelected(variant sample)
+    signal defaultSample()
 
+    // QML signal
+    signal backPressed()
+
+    // Called by Qt
+    function setCurrentSample(filePath) {
+        sampleFile = filePath
+    }
+
+    // QML function
     function setFolder(folder) {
         folderAnimation.folderToChange = folder
         folderAnimation.start()
     }
 
     width: 640; height: 360
-    source: "images/backgroundaluminium.png"
+    source: "../images/backgroundaluminium.png"
 
     Image {
         id: backButton
@@ -26,10 +36,9 @@ Image {
 
         anchors { top: parent.top; right: parent.right }
         anchors { rightMargin: 5; topMargin: 5 }
-        width: parent.width * 0.10
-        height: width * 0.83607
-        source: pressed ? "images/back_on.png" :
-                          "images/back.png"
+        width: parent.width * 0.10; height: width * 0.83607
+        source: pressed ? "../images/back_on.png"
+                        : "../images/back.png"
         smooth: true
 
         MouseArea {
@@ -55,8 +64,8 @@ Image {
         anchors { rightMargin: 5; topMargin: 10 }
         width: backButton.width
         height: backButton.height
-        source: pressed ? "images/defaultsample_on.png" :
-                          "images/defaultsample.png"
+        source: pressed ? "../images/defaultsample_on.png"
+                        : "../images/defaultsample.png"
         smooth: true
 
         MouseArea {
@@ -69,75 +78,67 @@ Image {
                 defaultSampleButton.pressed = false; defaultSampleButton.scale = 1.0
             }
 
-            onClicked: {
-                selector.sampleFile = selector.defaultSampleFile
-                selector.sampleSelected()
-            }
+            onClicked: selector.defaultSample()
         }
     }
 
-    Item {
-        id: title
+
+    Image {
+        id: folderUp
+
+        property bool pressed: false
 
         anchors {
-            left: parent.left; leftMargin: 20
-            right: backButton.left; rightMargin: 20
-            top: parent.top; topMargin: 20
-        }
-        height: 20
-
-        Image {
-            id: folderUp
-
-            property bool pressed: false
-
-            anchors {
-                verticalCenter: parent.verticalCenter
-                left: parent.left; leftMargin: 15
-            }
-
-            width: height; height: 30
-            source: "images/iconfolderup.png"
-            smooth: true
-
-            MouseArea {
-                anchors.fill: parent
-                onPressed: {
-                    folderUp.pressed = true; folderUp.scale = 0.9
-                }
-
-                onReleased: {
-                    folderUp.pressed = false; folderUp.scale = 1.0
-                }
-
-                onClicked: selector.setFolder(folderModel.parentFolder)
-            }
+            top: parent.top; topMargin: 10
+            left: parent.left; leftMargin: 35
         }
 
+        width: height; height: 40
+        source: "../images/iconfolderup.png"
+        smooth: true
 
-        Text {
-            anchors {
-                left: folderUp.right; leftMargin: 10
-                right: parent.right
-                top: parent.top
-                bottom: parent.bottom
+        MouseArea {
+            anchors.fill: parent
+            scale: 1.5
+
+            onPressed: {
+                folderUp.pressed = true; folderUp.scale = 0.9
             }
 
-            text: sampleFile
-            color: "#505050"
-            elide: Text.ElideLeft
+            onReleased: {
+                folderUp.pressed = false; folderUp.scale = 1.0
+            }
+
+            onClicked: selector.setFolder(folderModel.parentFolder)
         }
     }
+
+
+    Text {
+        id: title
+        anchors {
+            verticalCenter: folderUp.verticalCenter
+            left: folderUp.right; leftMargin: 10
+            right: backButton.left; rightMargin: 20
+        }
+
+        text: folderModel.folder
+        color: "#505050"
+        elide: Text.ElideLeft
+    }
+
 
     BorderImage {
+        id: folderHole
+
         anchors {
-            top: title.bottom; topMargin: 10
+            top: folderUp.bottom; topMargin: 10
             left: parent.left; leftMargin: 20
             right: backButton.left; rightMargin: 20
-            bottom: parent.bottom; bottomMargin: 20
+            bottom: nowPlayingText.top; bottomMargin: 10
         }
 
-        source: "images/buttonpressed.sci"
+        source: "../images/buttonpressed.sci"
         clip: true
 
         FolderListModel {
@@ -151,15 +152,15 @@ Image {
             id: folderDelegate
 
             Item {
-                width: view.width; height: 30
+                width: view.width; height: 40
 
                 Behavior on scale { PropertyAnimation { duration: 50 } }
 
                 Image {
                     id: icon
                     width: height; height: parent.height
-                    source: folderModel.isFolder(index) ? "images/iconfolder.png"
-                                                        : "images/iconsample.png"
+                    source: folderModel.isFolder(index) ? "../images/iconfolder.png"
+                                                        : "../images/iconsample.png"
                     smooth: true
                 }
 
@@ -183,8 +184,7 @@ Image {
                             selector.setFolder(filePath)
                         }
                         else {
-                            sampleFile = filePath
-                            selector.sampleSelected()
+                            selector.sampleSelected(filePath)
                         }
                     }
                 }
@@ -208,6 +208,29 @@ Image {
                 PropertyAction { target: folderModel; property: "folder"; value: folderAnimation.folderToChange }
                 PropertyAnimation { target: view; property: "opacity"; to: 1.0; duration: 100 }
             }
+        }
+    }
+
+    Text {
+        id: nowPlayingText
+
+        anchors {
+            left: folderHole.left; leftMargin: 5
+            bottom: parent.bottom; bottomMargin: 10
+        }
+
+        text: "Now playing: "
+        color: "#505050"
+    }
+
+    Text {
+        color: "white"
+        text: selector.sampleFile
+        elide: Text.ElideLeft
+        anchors {
+            left: nowPlayingText.right; leftMargin: 5
+            top: nowPlayingText.top
+            right: backButton.left
         }
     }
 }

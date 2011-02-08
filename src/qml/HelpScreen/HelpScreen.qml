@@ -41,7 +41,7 @@ Rectangle {
                     textFormat: Text.RichText
                     font.pointSize: helpScreen.textSize
 
-                    text: "<b><h2>Dj Turntable</b></h2>" +
+                    text: "<b><h2>Dj Turntable v.1.2.0</b></h2>" +
                           "Dj Turntable is a Forum Nokia example that " +
                           "demonstrates integrating a Qt Quick application " +
                           "to Qt audio interface. See more information " +

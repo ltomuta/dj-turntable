@@ -14,6 +14,7 @@ SOURCES += main.cpp \
     mainwindow.cpp
 
 OTHER_FILES += qml/*.qml \
+               qml/SampleSelector/*.qml \
                qml/DrumMachine/*.qml \
                qml/HelpScreen/*.qml
 

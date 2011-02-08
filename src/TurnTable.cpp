@@ -206,7 +206,7 @@ void TurnTable::setDiscAimSpeed(QVariant value)
 {
     float speed = value.toFloat();
     if(speed > -100.0f && speed < 100.0f) {
-        m_targetSpeed = m_targetSpeed * (1.0f - 0.05f) + speed * 0.05f;
+        m_targetSpeed = m_targetSpeed * (1.0f - 0.10f) + speed * 0.10f;
     }
 }
 

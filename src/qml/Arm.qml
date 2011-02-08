@@ -4,9 +4,11 @@ Item {
     id: arm
 
     property real angle: 0
-    property real armOnDiskOffset: 0
     property bool armdown: false
     property real positionOnDisk: 0   // Values from 0.0 - 1.0
+
+    property int minAngleOnDisk: 23
+    property int maxAngleOnDisk: 43
 
     signal armReleasedByUser(real position)
 
@@ -15,13 +17,15 @@ Item {
     function setPositionOnDisk(position) {
         if(armdown) {
             positionOnDisk = position
-            angle = (43 - 23) * position + 23
+            angle = (maxAngleOnDisk - minAngleOnDisk) * position
+                    + minAngleOnDisk
         }
     }
 
     function updateArmDown(userMoving) {
-        if(angle > 23 && userMoving == false) {
-            arm.armReleasedByUser((angle - 23) / (43 - 23))
+        if(angle > minAngleOnDisk && userMoving == false) {
+            arm.armReleasedByUser((angle - minAngleOnDisk)
+                                  / (maxAngleOnDisk - minAngleOnDisk))
             armdown = true
         }
         else {
@@ -48,10 +52,18 @@ Item {
             left: parent.left; right: parent.right
         }
 
-        transform: Rotation {
-            origin.x: width / 2; origin.y: 0
-            angle: arm.angle
-        }
+        transform: [
+            Rotation {
+                origin.x: width / 2; origin.y: 0
+                angle: arm.angle
+            },
+            Rotation {
+                axis { x: 1; y: 0; z: 0 }
+                origin.x: width / 2; origin.y: 0
+                angle: arm.armdown ? 0 : 4
+                Behavior on angle { SmoothedAnimation { velocity: 40 } }
+            }
+        ]
 
         Image {
             anchors {
@@ -90,8 +102,8 @@ Item {
                 var xdistance = -(object.x - pedal.centerX)
                 var ydistance = object.y - pedal.centerY
                 var angle = Math.atan(xdistance / ydistance) * 57.2957795
-                if(angle > 43)
-                    angle = 43
+                if(angle > arm.maxAngleOnDisk)
+                    angle = arm.maxAngleOnDisk
                 else if(angle < 0)
                     angle = 0
 
@@ -120,18 +132,23 @@ Item {
     SequentialAnimation {
         id: moveToDisk
 
+        ScriptAction { script: dragMouse.enabled = false }
+        ScriptAction { script: arm.armdown = false }
         SmoothedAnimation {
-            target: arm; property: "angle"; to: 23; velocity: 23
+            target: arm; property: "angle"; to: arm.minAngleOnDisk; velocity: 23
         }
         ScriptAction { script: { arm.armdown = true } }
+        ScriptAction { script: dragMouse.enabled = true }
     }
 
     SequentialAnimation {
         id: moveToStop
 
+        ScriptAction { script: dragMouse.enabled = false }
         ScriptAction { script: arm.armdown = false }
         SmoothedAnimation {
             target: arm; property: "angle"; to: 0; velocity: 23
         }
+        ScriptAction { script: dragMouse.enabled = true }
     }
 }

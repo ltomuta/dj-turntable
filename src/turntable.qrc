@@ -15,9 +15,13 @@
         <file>qml/DrumMachine/TickGroupSelector.qml</file>
         <file>qml/DrumMachine/ImageButton.qml</file>
         <file>qml/HelpScreen/HelpScreen.qml</file>
+        <file>qml/images/iconsampleselector.png</file>
+        <file>qml/images/buttonpressed.png</file>
+        <file>qml/images/buttonpressed.sci</file>
+        <file>qml/images/buttonup.png</file>
+        <file>qml/images/buttonup.sci</file>
         <file>qml/images/defaultsample_on.png</file>
         <file>qml/images/defaultsample.png</file>
-        <file>qml/images/sampleselectorlisting.png</file>
         <file>qml/images/iconfolderup.png</file>
         <file>qml/images/iconfolder.png</file>
         <file>qml/images/iconsample.png</file>
@@ -32,7 +36,6 @@
         <file>qml/images/dr_icon_snare.png</file>
         <file>qml/images/dr_icon_crash.png</file>
         <file>qml/images/dr_icon_cowbell.png</file>
-        <file>qml/images/tickgroupselectorback.png</file>
         <file>qml/images/tickgroupselectorslider.png</file>
         <file>qml/images/discplate.png</file>
         <file>qml/images/disk.png</file>

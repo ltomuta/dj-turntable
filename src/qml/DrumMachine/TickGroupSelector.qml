@@ -1,12 +1,12 @@
 import Qt 4.7
 
-Image {
+BorderImage {
     id: toggleSwitch
 
     property int selectedTickGroup: 1
 
     width: 300; height: 40
-    source: "../images/tickgroupselectorback.png"
+    source: "../images/buttonpressed.sci"
 
     Text {
         anchors.verticalCenter: parent.verticalCenter

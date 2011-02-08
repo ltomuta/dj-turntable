@@ -129,7 +129,7 @@ Image {
         }
     }
 
-    Image {
+    BorderImage {
         anchors {
             top: title.bottom; topMargin: 10
             left: parent.left; leftMargin: 20
@@ -137,7 +137,7 @@ Image {
             bottom: parent.bottom; bottomMargin: 20
         }
 
-        source: "images/sampleselectorlisting.png"
+        source: "images/buttonpressed.sci"
         clip: true
 
         FolderListModel {

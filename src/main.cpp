@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
     mainWindow.setGeometry(QApplication::desktop()->screenGeometry());
     mainWindow.showFullScreen();
 #else
-    mainWindow.setGeometry(QRect(100, 100, 800, 480));
+    mainWindow.setGeometry(QRect(100, 100, 640, 360));
     mainWindow.show();
 #endif
 

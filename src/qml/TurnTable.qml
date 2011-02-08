@@ -8,7 +8,7 @@ Rectangle {
 
     // Used when developing with QML Viewer, property is added as
     // context property by Qt in the real application
-    property bool lowPerf: false
+    //property bool lowPerf: false
 
     signal setSample(variant samplePath)
     signal diskSpeed(variant speed)
@@ -67,7 +67,7 @@ Rectangle {
         z: 1
         onTurnTableClicked: flickable.setState("TurnTable")
         onDrumMachineClicked: flickable.setState("DrumMachine")
-        onOpenSampleSelector: flickable.setState("SampleSelector")
+        onSampleSelectorClicked: flickable.setState("SampleSelector")
         turnTableLedOn: turntable.playing
         drumMachineLedOn: drumMachine.ledOn
     }
@@ -516,6 +516,9 @@ Rectangle {
                 name: "SampleSelector"
                 PropertyChanges {
                     target: flickable; contentX: ui.width; contentY: 0
+                }
+                PropertyChanges {
+                    target: sidepanel; sampleSelectorButtonPressed: true
                 }
                 PropertyChanges { target: turntable; opacity: 0 }
                 PropertyChanges { target: mixerpanel; opacity: 0 }

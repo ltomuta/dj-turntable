@@ -239,27 +239,33 @@ Rectangle {
                 anchors { right: speedslider.left; rightMargin: 5 }
 
                 Text {
-                    y: speedslider.calculateYPos(0)
+                    y: speedslider.calculateYPos(1.30)
                     anchors.right: parent.right
-                    text: "0"; color: "#505050"; font.pixelSize: 10
+                    text: "+30"; color: "#505050"; font.pixelSize: 10
                 }
 
                 Text {
-                    y: speedslider.calculateYPos(0.5)
+                    y: speedslider.calculateYPos(1.15)
                     anchors.right: parent.right
-                    text: "75"; color: "#505050"; font.pixelSize: 10
+                    text: "+15"; color: "#505050"; font.pixelSize: 10
                 }
 
                 Text {
                     y: speedslider.calculateYPos(1.0)
                     anchors.right: parent.right
-                    text: "150"; color: "#505050"; font.pixelSize: 10
+                    text: "0"; color: "#505050"; font.pixelSize: 10
                 }
 
                 Text {
-                    y: speedslider.calculateYPos(1.5)
+                    y: speedslider.calculateYPos(0.75)
                     anchors.right: parent.right
-                    text: "225"; color: "#505050"; font.pixelSize: 10
+                    text: "-25"; color: "#505050"; font.pixelSize: 10
+                }
+
+                Text {
+                    y: speedslider.calculateYPos(0.50)
+                    anchors.right: parent.right
+                    text: "-50"; color: "#505050"; font.pixelSize: 10
                 }
 
                 Text {
@@ -274,14 +280,14 @@ Rectangle {
                 id: speedslider
 
                 width: parent.paintedWidth * 0.085
-                height: parent.paintedHeight * 0.4
+                height: parent.paintedHeight * 0.6
 
-                anchors.centerIn: parent
-                anchors.horizontalCenterOffset: 0.4 * parent.paintedWidth
-                anchors.verticalCenterOffset: 0.25 * parent.paintedHeight
+                anchors {
+                    right: arm.right; rightMargin: 10
+                    bottom: parent.bottom; bottomMargin: 15
+                }
 
-                maximum: 1.5; minimum: 0.0; value: 1.0; defaultValue: 1.0
-                scaleFactor: 150
+                maximum: 1.25; minimum: 0.50; value: 1.0; defaultValue: 1.0
                 mouseAreaScale: 3
             }
 

@@ -2,16 +2,15 @@ import Qt 4.7
 
 Item {
     id: slider
-    property real value: 1
-    property real maximum: 2
-    property real minimum: 1
+    property real value: defaultValue
+    property real maximum: 1.08
+    property real minimum: 0.92
     property alias mouseAreaScale: mouseArea.scale
-    property real defaultValue: maximum
-    property real scaleFactor: 10
+    property real defaultValue: 1.0
 
     function calculateYPos(value) {
-        return handle.yMax - (value - minimum) * handle.yMax /
-               (maximum - minimum) + handle.height * 0.358
+        return (value - minimum) * handle.yMax
+               / (maximum - minimum) + handle.height * 0.358
     }
 
     width: 100; height: 200
@@ -30,7 +29,7 @@ Item {
 
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.horizontalCenterOffset: 1
-        y: handle.yMax - (value - minimum) * handle.yMax / (maximum - minimum)
+        y: (value - minimum) * handle.yMax / (maximum - minimum)
         width: sliderimage.width * 1.4; height: parent.height * 0.3
         source: "images/speedslider.png"
     }
@@ -42,9 +41,7 @@ Item {
         drag { target: handle; axis: "YAxis" }
         drag { minimumY: 0; maximumY: handle.yMax }
 
-        onPositionChanged: value = maximum - (maximum - minimum) * (handle.y) /
-                           handle.yMax + minimum
-
+        onPositionChanged: value = (maximum - minimum) * (handle.y) / handle.yMax + minimum
         onDoubleClicked: value = defaultValue
     }
 }

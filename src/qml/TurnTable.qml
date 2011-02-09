@@ -236,7 +236,7 @@ Rectangle {
 
             Item {
                 anchors { top: speedslider.top; bottom: speedslider.bottom }
-                anchors { right: speedslider.left; rightMargin: 5 }
+                anchors { right: speedslider.left; rightMargin: speedslider.width * 0.12 }
 
                 Text {
                     y: speedslider.calculateYPos(1.30)
@@ -285,7 +285,7 @@ Rectangle {
             SpeedSlider {
                 id: speedslider
 
-                width: parent.paintedWidth * 0.085
+                width: parent.paintedWidth * 0.075
                 height: parent.paintedHeight * 0.6
 
                 anchors {

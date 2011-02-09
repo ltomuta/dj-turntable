@@ -30,7 +30,7 @@ Rectangle {
 
         Image {
             anchors.centerIn: parent
-            width: parent.width * 0.5 ; height: width
+            width: parent.width * 0.7 ; height: width
             source: "images/iconsampleselector.png"
             smooth: true
         }

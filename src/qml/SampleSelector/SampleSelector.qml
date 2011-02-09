@@ -115,7 +115,8 @@ Image {
 
 
     Text {
-        id: title
+        id: currentFolderTitle
+
         anchors {
             verticalCenter: folderUp.verticalCenter
             left: folderUp.right; leftMargin: 10
@@ -202,6 +203,7 @@ Image {
 
             SequentialAnimation {
                 id: folderAnimation
+
                 property string folderToChange
 
                 PropertyAnimation { target: view; property: "opacity"; to: 0; duration: 100 }

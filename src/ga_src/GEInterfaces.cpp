@@ -1,3 +1,7 @@
+/*
+ * Copyright  2011 Nokia Corporation.
+ */
+
 #include <memory.h>
 #include "GEInterfaces.h"
 
@@ -26,6 +30,7 @@ IAudioSource::~IAudioSource()
 CAudioMixer::CAudioMixer(QObject *parent)
     : IAudioSource(parent)
 {
+    m_enabled = true;
     m_sourceList = 0;
     m_mixingBuffer = 0;
     m_mixingBufferLength = 0;

@@ -1,3 +1,6 @@
+/*
+ * Copyright  2011 Nokia Corporation.
+ */
 
 #ifndef __GE_IGA_INTERFACES__
 #define __GE_IGA_INTERFACES__
@@ -28,14 +31,19 @@ namespace GE {
     public:
         CAudioMixer(QObject *parent = 0);
         virtual ~CAudioMixer();
-        // Destroy all the sources in the list
+	bool enabled() { return m_enabled; }
+	void setEnabled( bool set ) { m_enabled = set; }
+
+        // Destroy all the sources in the list.
         void destroyList();
 
-        // Add new audio source to the list
-        IAudioSource* addAudioSource(IAudioSource *s);
+        // Add new audio source to the list. Return added source to caller.
+        IAudioSource* addAudioSource( IAudioSource *s );
         int getAudioSourceCount();
-        // Remove an audio source from the list
-        bool removeAudioSource(IAudioSource *s);
+
+        // Remove a single audio source from the list
+        bool removeAudioSource( IAudioSource *s );
+
         int pullAudio(AUDIO_SAMPLE_TYPE *target, int bufferLength);
 
         void setAbsoluteVolume(float vol);
@@ -48,6 +56,7 @@ namespace GE {
         float getGeneralVolume();
 
     protected:
+	bool m_enabled;
         QMutex m_mutex;
         int m_fixedGeneralVolume;
         AUDIO_SAMPLE_TYPE *m_mixingBuffer;

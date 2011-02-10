@@ -1,3 +1,8 @@
+/*
+ * Copyright  2011 Nokia Corporation.
+ *
+ */
+
 
 #ifndef __GE_QTAUDIOOUT__
 #define __GE_QTAUDIOOUT__
@@ -24,12 +29,19 @@ namespace GE {
         AudioOut(QObject *parent, GE::IAudioSource *source);
         virtual ~AudioOut();
 
+    /*
+     * call this manually only if you are not using thread(with Symbian)
+     * Note, when using GE, windowwg owning the audioout will handle of
+     * calling this.
+     */
+    void tick();
+
     private slots:
         // For internal notify "solution"
         void audioNotify();
 
     protected:
-         void tick();
+
          // This is for the threaded mode only
          virtual void run();
 

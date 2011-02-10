@@ -1,3 +1,6 @@
+/*
+ * Copyright  2011 Nokia Corporation.
+ */
 
 #include <math.h>
 #include <QFile>
@@ -7,6 +10,7 @@
 using namespace GE;
 
 
+// Header for "Wav"-data
 struct SWavHeader {
     char chunkID[4];
     unsigned int chunkSize;
@@ -153,6 +157,61 @@ CAudioBuffer* CAudioBuffer::loadWav( QString fileName ) {
 }
 
 
+CAudioBuffer* CAudioBuffer::loadWav( FILE *wavFile ) {
+    // read the header.
+    SWavHeader header;
+    fread( header.chunkID, 4, 1, wavFile );
+    if (header.chunkID[0]!='R' || header.chunkID[1]!='I' || header.chunkID[2]!='F' || header.chunkID[3]!='F') return 0;	//  incorrect header
+
+    fread( &header.chunkSize, 4, 1, wavFile );
+    fread( header.format, 4, 1, wavFile );
+    if (header.format[0]!='W' || header.format[1]!='A' || header.format[2]!='V' || header.format[3]!='E') return 0;	//  incorrect header
+
+    fread( header.subchunk1id, 4, 1, wavFile );
+    if (header.subchunk1id[0]!='f' || header.subchunk1id[1]!='m' || header.subchunk1id[2]!='t' || header.subchunk1id[3]!=' ') return 0;	//  incorrect header
+
+    fread( &header.subchunk1size, 4, 1, wavFile );
+    fread( &header.audioFormat, 2, 1, wavFile );
+    fread( &header.nofChannels, 2, 1, wavFile );
+    fread( &header.sampleRate, 4, 1, wavFile );
+    fread( &header.byteRate, 4, 1, wavFile );
+
+    fread( &header.blockAlign, 2, 1, wavFile );
+    fread( &header.bitsPerSample, 2, 1, wavFile );
+
+    fread( header.subchunk2id, 4, 1, wavFile );
+    if (header.subchunk2id[0]!='d' || header.subchunk2id[1]!='a' || header.subchunk2id[2]!='t' || header.subchunk2id[3]!='a') return 0;	//  incorrect header
+    fread( &header.subchunk2size, 4, 1, wavFile );
+
+
+    // the data follows.
+    if (header.subchunk2size<1) return 0;
+
+    CAudioBuffer *rval = new CAudioBuffer;
+    rval->m_nofChannels = header.nofChannels;
+    rval->m_bitsPerSample = header.bitsPerSample;
+    rval->m_samplesPerSec = header.sampleRate;
+    rval->m_signedData = 0;		// where to know this?
+    rval->reallocate( header.subchunk2size );
+
+    fread( rval->m_data, 1, header.subchunk2size, wavFile );
+
+
+
+    // choose a good sampling function.
+    rval->m_sampleFunction = 0;
+    if (rval->m_nofChannels==1) {
+        if (rval->m_bitsPerSample == 8) rval->m_sampleFunction = sampleFunction8bitMono;
+        if (rval->m_bitsPerSample == 16) rval->m_sampleFunction = sampleFunction16bitMono;
+    } else {
+        if (rval->m_bitsPerSample == 8) rval->m_sampleFunction = sampleFunction8bitStereo;
+        if (rval->m_bitsPerSample == 16) rval->m_sampleFunction = sampleFunction16bitStereo;
+    }
+
+    return rval;
+}
+
+// mix to  mono-versions.
 AUDIO_SAMPLE_TYPE CAudioBuffer::sampleFunction8bitMono(CAudioBuffer *abuffer,
                                                        int pos,
                                                        int /*channel*/) {
@@ -175,7 +234,7 @@ AUDIO_SAMPLE_TYPE CAudioBuffer::sampleFunction32bitMono(CAudioBuffer *abuffer,
            65536.0f / 2.0f;
 }
 
-
+// mix to stereo-versions.
 AUDIO_SAMPLE_TYPE CAudioBuffer::sampleFunction8bitStereo(CAudioBuffer *abuffer,
                                                          int pos,
                                                          int channel) {
@@ -203,6 +262,8 @@ AUDIO_SAMPLE_TYPE CAudioBuffer::sampleFunction32bitStereo(CAudioBuffer *abuffer,
 
 
 CAudioBufferPlayInstance *CAudioBuffer::playWithMixer(CAudioMixer &mixer) {
+    if (mixer.enabled() == false)
+	return 0;
     CAudioBufferPlayInstance *i =
             (CAudioBufferPlayInstance*)mixer.addAudioSource(
                 new CAudioBufferPlayInstance(this));

@@ -1,3 +1,7 @@
+/*
+ * Copyright  2011 Nokia Corporation.
+ */
+
 #include <QtCore/qstring.h>
 #include <QAudioOutput>
 
@@ -17,8 +21,9 @@ const QAudioFormat::SampleType SAMTYPE = QAudioFormat::SignedInt;
 
 
 
-AudioOut::AudioOut(QObject *parent, GE::IAudioSource *source) :
-        QThread(parent) {
+AudioOut::AudioOut(QObject *parent, GE::IAudioSource *source)
+    : QThread(parent)
+{
     m_source = source;
     QAudioFormat format;
     format.setFrequency(AUDIO_FREQUENCY);
@@ -73,7 +78,8 @@ AudioOut::AudioOut(QObject *parent, GE::IAudioSource *source) :
 }
 
 
-AudioOut::~AudioOut() {
+AudioOut::~AudioOut()
+{
     if (m_runstate == 0)
         m_runstate = 1;
 
@@ -92,11 +98,13 @@ AudioOut::~AudioOut() {
 }
 
 
-void AudioOut::audioNotify() {
+void AudioOut::audioNotify()
+{
     tick();
 }
 
-void AudioOut::tick() {
+void AudioOut::tick()
+{
     // fill data to buffer as much as free space is available..
     int samplesToWrite = m_audioOutput->bytesFree() /
                          (CHANNELS*AUDIO_SAMPLE_BITS/8);
@@ -114,7 +122,8 @@ void AudioOut::tick() {
 }
 
 
-void AudioOut::run() {
+void AudioOut::run()
+{
     if (!m_source) {
         m_runstate = 2;
         return;

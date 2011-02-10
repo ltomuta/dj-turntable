@@ -1,4 +1,12 @@
 
+/*
+ * Copyright  2011 Nokia Corporation.
+ *
+ *
+ */
+
+
+
 #ifndef __GE_IGA_AUDIOBUFFER__
 #define __GE_IGA_AUDIOBUFFER__
 
@@ -8,19 +16,23 @@
 namespace GE {
 
     class CAudioBufferPlayInstance;
-    class CAudioBuffer;         // forward declaration
+    class CAudioBuffer;
+// Prototype function for audio sampling
     typedef AUDIO_SAMPLE_TYPE(*SAMPLE_FUNCTION_TYPE)(CAudioBuffer *abuffer,
                                                      int pos,
                                                      int channel);
 
-    // Container for a sound
+/*
+ * Class to hold audio information (a buffer).
+ *
+ */
     class CAudioBuffer : public QObject {
     public:
         CAudioBuffer();
         virtual ~CAudioBuffer();
 
         static CAudioBuffer* loadWav( QString fileName );
-
+	static CAudioBuffer* loadWav( FILE *wavFile );
         void reallocate( int length );
 
         inline void* getRawData() { return m_data; }

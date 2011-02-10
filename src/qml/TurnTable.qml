@@ -38,15 +38,26 @@ Rectangle {
             flickable.setState("Help")
             event.accepted = true
         }
+        else if(event.key == 115 || event.key == Qt.Key_S) {
+            flickable.setState("SampleSelector")
+            event.accepted = true
+        }
         else if(event.key == Qt.Key_PageDown) {
             diskReflection.rotation += 11.25
+            event.accepted = true
         }
         else if(event.key == Qt.Key_PageUp) {
             diskReflection.rotation -= 11.25
+            event.accepted = true
         }
         else if(event.key == Qt.Key_Backspace) {
             if(flickable.state == "Help") {
                 helpScreen.backPressed()
+                event.accepted = true
+            }
+            else if(flickable.state == "SampleSelector") {
+                sampleSelector.backPressed()
+                event.accepted = true
             }
         }
         else if(event.key == Qt.Key_Return || event.key == Qt.Key_Enter) {
@@ -492,11 +503,11 @@ Rectangle {
         SampleSelector {
             id: sampleSelector
 
-            x: ui.width
+            anchors.left: mixerpanel.right
             width: flickable.width; height: flickable.height
             onBackPressed: flickable.setState(flickable.prevState)
 
-            // sampleFolder is context property set in Qt
+            // sampleFolder is context property and it is set from Qt
             folder: sampleFolder
         }
 
@@ -523,7 +534,7 @@ Rectangle {
             State {
                 name: "SampleSelector"
                 PropertyChanges {
-                    target: flickable; contentX: ui.width; contentY: 0
+                    target: flickable; contentX: sampleSelector.x; contentY: 0
                 }
                 PropertyChanges {
                     target: sidepanel; sampleSelectorButtonPressed: true

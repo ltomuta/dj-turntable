@@ -1,7 +1,4 @@
-#include <QSettings>
-#include <QDesktopServices>
-#include <QUrl>
-#include <QDebug>
+#include <QtGui>
 #include <math.h>
 #include "TurnTable.h"
 
@@ -13,8 +10,9 @@
 using namespace GE;
 
 
-TurnTable::TurnTable(QSettings *settings)
-    : m_defaultSample(":/sounds/ivory.wav"),
+TurnTable::TurnTable(QSettings *settings, QObject *parent)
+    : GE::IAudioSource(parent),
+      m_defaultSample(":/sounds/ivory.wav"),
       m_defaultVolume(0.65f),
       m_maxLoops(1),
       m_Settings(settings)
@@ -43,7 +41,6 @@ TurnTable::TurnTable(QSettings *settings)
     m_audioMixer->setGeneralVolume(m_Settings->value("Volume",
                                                      m_defaultVolume).toFloat());
 
-
 #ifdef Q_OS_SYMBIAN
     Observer *m_Observer = new Observer(this);
     m_Selector = CRemConInterfaceSelector::NewL();
@@ -55,10 +52,18 @@ TurnTable::TurnTable(QSettings *settings)
 
 TurnTable::~TurnTable()
 {
+    m_PosMutex.lock();
+
+    m_audioMixer->removeAudioSource(this);
+    delete m_buffer;
+
+    m_PosMutex.unlock();
+
+    delete m_audioOut;
+    delete m_audioMixer;
+
 #ifdef Q_OS_SYMBIAN
     delete m_Target;
-    delete m_Selector;
-    delete m_Observer;
 #endif
 }
 

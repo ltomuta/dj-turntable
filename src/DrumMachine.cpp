@@ -1,6 +1,5 @@
 
-#include <QSettings>
-#include <QStringList>
+#include <QtGui>
 #include <vector>
 #include <limits>
 #include "DrumMachine.h"
@@ -24,13 +23,14 @@ const unsigned char drum_seq2[] = { 5, 0, 1, 0,33, 0, 5, 0,
                                     5, 0, 1, 0,33, 0, 2, 0};
 
 
-DrumMachine::DrumMachine(QSettings *settings) :
-                               m_tickCount(0),
-                               m_Settings(settings),
-                               m_running(false),
-                               m_samplesPerTick(0),
-                               m_sampleCounter(0),
-                               m_currentSeqIndex(-1)
+DrumMachine::DrumMachine(QSettings *settings, QObject *parent)
+    : GE::IAudioSource(parent),
+      m_tickCount(0),
+      m_Settings(settings),
+      m_running(false),
+      m_samplesPerTick(0),
+      m_sampleCounter(0),
+      m_currentSeqIndex(-1)
 {
     m_mixer = new CAudioMixer;
 
@@ -58,13 +58,16 @@ DrumMachine::DrumMachine(QSettings *settings) :
 
 DrumMachine::~DrumMachine()
 {
+    foreach (GE::CAudioBufferPlayInstance* playInstance, m_playInstances) {
+        m_mixer->removeAudioSource(playInstance);
+        delete playInstance;
+    }
+
     foreach (GE::CAudioBuffer* sample, m_drumSamples) {
         delete sample;
     }
 
-    foreach (GE::CAudioBufferPlayInstance* playInstance, m_playInstances) {
-        delete playInstance;
-    }
+    delete m_mixer;
 }
 
 
@@ -242,16 +245,16 @@ void DrumMachine::setBeat(QVariant index)
         tempvec.assign(drum_seq2, drum_seq2 + SEQUENCE_LENGTH);
         m_seq = QVector<unsigned char>::fromStdVector(tempvec);
         break;
-    // User defined sequences
-    //
+        // User defined sequences
+        //
     case 3:
     case 4:
     case 5:
         m_seq = readUserBeat(index.toInt());
         break;
 
-    // Invalid index, do nothing
-    //
+        // Invalid index, do nothing
+        //
     default:
         return;
     };

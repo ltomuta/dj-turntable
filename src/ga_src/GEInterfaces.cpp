@@ -9,20 +9,23 @@ using namespace GE;
  * common functionality
  *
  */
-IAudioSource::IAudioSource() {
+IAudioSource::IAudioSource(QObject *parent)
+    : QObject(parent)
+{
     m_next = 0;
 }
 
-IAudioSource::~IAudioSource() {
-
-
+IAudioSource::~IAudioSource()
+{
 }
 
 /**
  * CAudioMixer
  *
  */
-CAudioMixer::CAudioMixer() {
+CAudioMixer::CAudioMixer(QObject *parent)
+    : IAudioSource(parent)
+{
     m_sourceList = 0;
     m_mixingBuffer = 0;
     m_mixingBufferLength = 0;

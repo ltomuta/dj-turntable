@@ -4,14 +4,14 @@
 #include "mainwindow.h"
 
 #ifndef QT_NO_OPENGL
-    #include <QGLWidget>
+#include <QGLWidget>
 #endif
 
 #if defined(Q_OS_SYMBIAN) || defined(Q_WS_MAEMO_5)
-    #include <QSystemDeviceInfo>
-    #include "accelerometerfilter.h"
+#include <QSystemDeviceInfo>
+#include "accelerometerfilter.h"
 
-    QTM_USE_NAMESPACE
+QTM_USE_NAMESPACE
 #endif
 
 
@@ -34,7 +34,7 @@ MainWindow::MainWindow(QWidget *parent) :
     view->setResizeMode(QDeclarativeView::SizeRootObjectToView);
     setCentralWidget(view);
 
-    // To delay the loading of main QML file so that the splachscreen
+    // To delay the loading of main QML file so that the splash screen
     // would show, we use single shot timer.
     QTimer::singleShot(0, this, SLOT(initializeQMLComponent()));
 }
@@ -61,11 +61,11 @@ void MainWindow::initializeQMLComponent()
     view->setSource(QUrl("qrc:/qml/TurnTable.qml"));
 
     // Create Qt settings object to load / store app settings
-    settings = new QSettings("Nokia", "DJTurntable", this);
+    settings = new QSettings("Nokia", "DJTurntable");
 
     // Create Qt objects to handle Turntable and Drum machine
-    turnTable = new TurnTable(settings);
-    drumMachine = new DrumMachine(settings);
+    turnTable = new TurnTable(settings, this);
+    drumMachine = new DrumMachine(settings, this);
     turnTable->addAudioSource(drumMachine);
 
     // Find out the interesting Qt objects of the QML elements
@@ -127,7 +127,6 @@ void MainWindow::initializeQMLComponent()
             SLOT(setDrumButton(QVariant, QVariant, QVariant)));
     connect(drumMachine, SIGNAL(tickChanged(QVariant)),
             drumMachineQML, SLOT(highlightTick(QVariant)));
-
 
     // Framework connections
     connect((QObject*)view->engine(), SIGNAL(quit()), qApp, SLOT(quit()));

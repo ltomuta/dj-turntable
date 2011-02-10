@@ -147,7 +147,7 @@ Item {
         ScriptAction { script: dragMouse.enabled = false }
         ScriptAction { script: arm.armdown = false }
         SmoothedAnimation {
-            target: arm; property: "angle"; to: 0; velocity: 23
+            target: arm; property: "angle"; to: -0.1; velocity: 23
         }
         ScriptAction { script: dragMouse.enabled = true }
     }

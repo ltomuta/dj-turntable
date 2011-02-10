@@ -28,7 +28,7 @@ class TurnTable : public GE::IAudioSource
     Q_OBJECT
 
 public:
-    TurnTable(QSettings *settings);
+    TurnTable(QSettings *settings, QObject *parent = 0);
     ~TurnTable();
 
     void addAudioSource(GE::IAudioSource *source);
@@ -83,6 +83,7 @@ signals:
     void audioPosition(QVariant position);
 
 protected:
+
     const QString m_defaultSample;
     const float m_defaultVolume;
 
@@ -114,7 +115,6 @@ protected:
     QPointer<GE::AudioOut> m_audioOut;
 
 #ifdef Q_OS_SYMBIAN
-
     // To handle the hardware volume keys on Symbian
     class Observer : public MRemConCoreApiTargetObserver
     {

@@ -38,7 +38,7 @@ Image {
     source: "../images/backgroundaluminium.png"
 
     Text {
-        anchors { right: tickGroupSelector.left; rightMargin: 15 }
+        anchors { right: tickGroupSelector.left; rightMargin: 10 }
         anchors { top: tickGroupSelector.top; topMargin: 10 }
         text: "Ticks"
         color: "#505050"

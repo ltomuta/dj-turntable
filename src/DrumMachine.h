@@ -18,7 +18,7 @@ public:
     // Shortens writing of the type later on
     typedef QVector<unsigned char> TYPE_DRUM_SEQ;
 
-    DrumMachine(QSettings *settings);
+    DrumMachine(QSettings *settings, QObject *parent = 0);
     virtual ~DrumMachine();
 
     int bpm() const;

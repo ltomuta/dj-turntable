@@ -13,7 +13,7 @@ namespace GE {
 
     class IAudioSource : public QObject {
     public:
-        IAudioSource();
+        IAudioSource(QObject *parent = 0);
         virtual ~IAudioSource();
 
         virtual int pullAudio(AUDIO_SAMPLE_TYPE *target,
@@ -26,7 +26,7 @@ namespace GE {
 
     class CAudioMixer : public IAudioSource {
     public:
-        CAudioMixer();
+        CAudioMixer(QObject *parent = 0);
         virtual ~CAudioMixer();
         // Destroy all the sources in the list
         void destroyList();

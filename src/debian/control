@@ -1,7 +1,7 @@
 Source: turntable
 Section: user/games
 Priority: extra
-Maintainer: Antonio Aloisio <antonio.aloisio@nokia.com>
+Maintainer: Forum Nokia <FN.Documentation@nokia.com>
 Build-Depends: debhelper (>= 5)
 Standards-Version: 3.7.2
 

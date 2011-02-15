@@ -20,7 +20,7 @@ Rectangle {
     signal seekToPosition(variant value)
 
     function audioPosition(pos) { arm.setPositionOnDisk(pos) }
-    function inclination(deg) { diskReflection.rotation = deg * 8 + 45 }
+    function inclination(deg) { diskReflection.rotation = deg + 45 }
 
     anchors.fill: parent
     width: 640; height: 360

@@ -1,4 +1,4 @@
-DJ Turntable v1.1.0
+DJ Turntable v1.2.0
 ===================
 
 Dj Turntable demonstrates integrating a Qt Quick application to the Qt audio
@@ -47,6 +47,10 @@ src/qml/InfoScreen/*
 
 - QML files containing the UI controls of the info screen.
 
+src/qml/SampleSelector/*
+
+- QML files containing the UI controls of the sample selector screen.
+
 src/qml/TurnTable.qml
 
 - The main QML file that represents the whole UI of the application.
@@ -73,7 +77,6 @@ Qt / C++ classes
  QMessageBox      - used to report serious errors
  QVariant         - used as parameters in Qt Signals and Slots between Qt and
                     QML
- QDesktopServices - used to launch web browser from Info screen's hyperlinks
  QVector          - used to store beat sequences in memory
  std::vector      - used to convert predefined beats stored as byte arrays to
                     QVectors
@@ -122,7 +125,12 @@ KNOWN ISSUES
 
 - There is currently some latency when playing audio in Symbian.
 
+- Symbian^1 target is currently not supported due to missing mmfdevsound, 
+  remconcoreapi and remconinterfacebase libraries in Symbian^1 target in
+  QtSDK 1.1TP. These libraries are required to control the master volume of
+  the application and to handle the HW camera zoom buttons.
 
+  
 INSTALLATION INSTRUCTIONS
 -------------------------------------------------------------------------------
 
@@ -156,7 +164,7 @@ Mobile device (Maemo)
 0. The Qt libraries (4.7.0 or higher) must be installed. See the section 
    COMPATIBILITY for more information about the installation.
 
-1. Copy the turntable_1.1.0_armel.deb file into a specific folder on the 
+1. Copy the turntable_1.2.0_armel.deb file into a specific folder on the 
    device (for example, 'MyDocs').
 
 2. Start XTerm. Type 'sudo gainroot' to get root access.
@@ -165,7 +173,7 @@ Mobile device (Maemo)
    (for example, 'cd MyDocs').
 
 4. As root, install the package:
-   dpkg -i turntable_1.1.0_armel.deb
+   dpkg -i turntable_1.2.0_armel.deb
 
 5. Launch the Applications menu.
 
@@ -195,14 +203,30 @@ obtained by double-clicking the speed slider knob. DJ Turntable includes
 Cutoff and Resonance control knobs to alter the sample in real time. The knobs 
 are rotated by moving a finger up and down on top of them.
 
+Sample selector
+
+Use the sample selector to change the sample that turntable is playing by
+selecting the desired sample from the directory view. Following uncompressed
+wav-formats are supported:
+ 8 bit unsigned
+16 bit unsigned
+32 bit float
+
+The application will open the last selected sample on startup. Use the default
+sample button on the right under the back button to reset back to the default
+sample.
+
 Drum machine
                       
 Play and edit the drum beats. There are three predefined beats which can be
 played and edited but the edits are not stored. For the user there are three
 beats that are saved to the device memory whenever they are edited. Use the
 beat selector buttons in the bottom of the view to switch between the beats.
-All the beats are 32 ticks long and they contain 6 different drum
-samples: hi-hat, hi-hat open, bass drum, snare, cymbal, and cow bell.
+All the beats are 32 ticks long and they contain 6 different drum samples:
+hi-hat, hi-hat open, bass drum, snare, cymbal, and cow bell.
+
+The drum machine will play all drum beats at 150 bpm. Changing the speed of
+the turntable will affect to the playing speed of the drum machine accordingly.
 
 Keyboard shortcuts
 
@@ -216,8 +240,8 @@ Key down = Go to the drum machine view
 Key left = View the 1st tick group in the drum machine
 Key right = View the 2nd tick group in the drum machine
 Key i = Go to the info view
-Backspace = Return from the info view to the previous view
-
+Key s = Go to the sample selector view
+Backspace = Return from the info or sample selector view to the previous view
 
 Samples
 
@@ -251,12 +275,13 @@ Tested on:
 
 - Nokia N8
 - Nokia E7
+- Nokia C6-01
 - Nokia N900
 - Windows XP
 
 
 VERSION HISTORY
 -------------------------------------------------------------------------------
-
+v1.2 Added possibility to play external wav-files.
 v1.1 Updated version for Forum Nokia. 
 v1.0 Initial version published in Forum Nokia Projects only.

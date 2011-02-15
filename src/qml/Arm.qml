@@ -60,7 +60,7 @@ Item {
             Rotation {
                 axis { x: 1; y: 0; z: 0 }
                 origin.x: width / 2; origin.y: 0
-                angle: arm.armdown ? 0 : 4
+                angle: arm.armdown ? 0 : 2
                 Behavior on angle { SmoothedAnimation { velocity: 40 } }
             }
         ]

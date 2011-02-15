@@ -11,7 +11,7 @@ using namespace GE;
 
 
 TurnTable::TurnTable(QSettings *settings, QObject *parent)
-    : GE::IAudioSource(parent),
+    : GE::AudioSource(parent),
       m_defaultSample(":/sounds/ivory.wav"),
       m_defaultVolume(0.65f),
       m_maxLoops(1),
@@ -34,7 +34,7 @@ TurnTable::TurnTable(QSettings *settings, QObject *parent)
     m_cutOffValue = m_cutOffTarget;
     m_resonanceValue = m_resonanceTarget;
 
-    m_audioMixer = new CAudioMixer;
+    m_audioMixer = new AudioMixer;
     m_audioMixer->addAudioSource(this);
     m_audioOut = new GE::AudioOut(this, m_audioMixer);
 
@@ -78,21 +78,21 @@ int TurnTable::pullAudio(AUDIO_SAMPLE_TYPE *target, int bufferLength)
 
 
     AUDIO_SAMPLE_TYPE *t_target = target + bufferLength;
-    SAMPLE_FUNCTION_TYPE sfunc = m_buffer->getSampleFunction();
+    SAMPLE_FUNCTION_TYPE sfunc = m_buffer->sampleFunction();
     if(sfunc == NULL) {
         return 0;
     }
 
-    int channelLength = ((m_buffer->getDataLength()) /
-                         (m_buffer->getNofChannels() *
-                          m_buffer->getBytesPerSample())) - 2;
+    int channelLength = ((m_buffer->dataLength()) /
+                         (m_buffer->nofChannels() *
+                          m_buffer->bytesPerSample())) - 2;
     channelLength<<=11;
 
     int p;
     int fixedReso = (m_resonanceValue * 4096.0f);
     int fixedCutoff = (m_cutOffValue * 4096.0f);
 
-    float speedmul = (float)m_buffer->getSamplesPerSec() /
+    float speedmul = (float)m_buffer->samplesPerSec() /
                      (float)AUDIO_FREQUENCY * 2048.0f;
     int inc = (int)(m_speed * speedmul);
 
@@ -178,7 +178,7 @@ int TurnTable::pullAudio(AUDIO_SAMPLE_TYPE *target, int bufferLength)
 }
 
 
-void TurnTable::addAudioSource(GE::IAudioSource *source)
+void TurnTable::addAudioSource(GE::AudioSource *source)
 {
     m_audioMixer->addAudioSource(source);
 }
@@ -205,7 +205,7 @@ void TurnTable::openSample(const QString &filePath)
     m_pos = 0;
     m_loops = 0;
 
-    m_buffer = CAudioBuffer::loadWav(parsedFilePath);
+    m_buffer = AudioBuffer::loadWav(parsedFilePath);
 
     if(m_buffer.isNull()) {
         // Failed to load sample
@@ -272,7 +272,7 @@ void TurnTable::setResonance(QVariant value)
 
 void TurnTable::volumeUp()
 {
-    float volume = m_audioMixer->getGeneralVolume() * 1.333f;
+    float volume = m_audioMixer->generalVolume() * 1.333f;
     if(volume == 0.0f) {
         volume = 0.01;
     }
@@ -287,7 +287,7 @@ void TurnTable::volumeUp()
 
 void TurnTable::volumeDown()
 {
-    float volume = m_audioMixer->getGeneralVolume() * 0.75f;
+    float volume = m_audioMixer->generalVolume() * 0.75f;
     if(volume < 0.01f) {
         volume = 0.0f;
     }
@@ -302,9 +302,9 @@ void TurnTable::seekToPosition(QVariant position)
 {
     QMutexLocker locker(&m_PosMutex);
 
-    int channelLength = ((m_buffer->getDataLength()) /
-                         (m_buffer->getNofChannels() *
-                          m_buffer->getBytesPerSample())) - 2;
+    int channelLength = ((m_buffer->dataLength()) /
+                         (m_buffer->nofChannels() *
+                          m_buffer->bytesPerSample())) - 2;
     channelLength <<= 11;
 
     float value = position.toFloat();
@@ -314,10 +314,4 @@ void TurnTable::seekToPosition(QVariant position)
     }
 
     m_pos = (value / (1.0 / m_maxLoops) - m_loops) * channelLength;
-}
-
-
-void TurnTable::linkActivated(QVariant link)
-{
-    QDesktopServices::openUrl(QUrl(link.toString(), QUrl::TolerantMode));
 }

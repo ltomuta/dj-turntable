@@ -24,7 +24,7 @@ const unsigned char drum_seq2[] = { 5, 0, 1, 0,33, 0, 5, 0,
 
 
 DrumMachine::DrumMachine(QSettings *settings, QObject *parent)
-    : GE::IAudioSource(parent),
+    : GE::AudioSource(parent),
       m_tickCount(0),
       m_Settings(settings),
       m_running(false),
@@ -32,17 +32,17 @@ DrumMachine::DrumMachine(QSettings *settings, QObject *parent)
       m_sampleCounter(0),
       m_currentSeqIndex(-1)
 {
-    m_mixer = new CAudioMixer;
+    m_mixer = new AudioMixer;
 
-    m_drumSamples << CAudioBuffer::loadWav(QString(":/sounds/hihat.wav"))
-                  << CAudioBuffer::loadWav(QString(":/sounds/hihat_open.wav"))
-                  << CAudioBuffer::loadWav(QString(":/sounds/bassd.wav"))
-                  << CAudioBuffer::loadWav(QString(":/sounds/snare.wav"))
-                  << CAudioBuffer::loadWav(QString(":/sounds/cymbal.wav"))
-                  << CAudioBuffer::loadWav(QString(":/sounds/cowbell.wav"));
+    m_drumSamples << AudioBuffer::loadWav(QString(":/sounds/hihat.wav"))
+                  << AudioBuffer::loadWav(QString(":/sounds/hihat_open.wav"))
+                  << AudioBuffer::loadWav(QString(":/sounds/bassd.wav"))
+                  << AudioBuffer::loadWav(QString(":/sounds/snare.wav"))
+                  << AudioBuffer::loadWav(QString(":/sounds/cymbal.wav"))
+                  << AudioBuffer::loadWav(QString(":/sounds/cowbell.wav"));
 
     for(int i=0; i<m_drumSamples.size(); i++) {
-        CAudioBufferPlayInstance *playInstance = new CAudioBufferPlayInstance;
+        AudioBufferPlayInstance *playInstance = new AudioBufferPlayInstance;
         // Dont destroy object when playing is finished
         playInstance->setDestroyWhenFinished(false);
         m_mixer->addAudioSource(playInstance);
@@ -58,12 +58,12 @@ DrumMachine::DrumMachine(QSettings *settings, QObject *parent)
 
 DrumMachine::~DrumMachine()
 {
-    foreach (GE::CAudioBufferPlayInstance* playInstance, m_playInstances) {
+    foreach (GE::AudioBufferPlayInstance* playInstance, m_playInstances) {
         m_mixer->removeAudioSource(playInstance);
         delete playInstance;
     }
 
-    foreach (GE::CAudioBuffer* sample, m_drumSamples) {
+    foreach (GE::AudioBuffer* sample, m_drumSamples) {
         delete sample;
     }
 

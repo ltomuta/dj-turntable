@@ -5,40 +5,44 @@
 #include <memory.h>
 #include "GEInterfaces.h"
 
-
 using namespace GE;
 
 /**
- * CAudioSource
+ * AudioSource
  * common functionality
  *
  */
-IAudioSource::IAudioSource(QObject *parent)
+AudioSource::AudioSource(QObject *parent)
     : QObject(parent)
 {
-    m_next = 0;
 }
 
-IAudioSource::~IAudioSource()
+
+AudioSource::~AudioSource()
 {
+}
+
+
+bool AudioSource::canBeDestroyed()
+{
+    return false;
 }
 
 /**
- * CAudioMixer
+ * AudioMixer
  *
  */
-CAudioMixer::CAudioMixer(QObject *parent)
-    : IAudioSource(parent)
+AudioMixer::AudioMixer(QObject *parent)
+    : AudioSource(parent)
 {
-    m_enabled = true;
-    m_sourceList = 0;
     m_mixingBuffer = 0;
     m_mixingBufferLength = 0;
     m_fixedGeneralVolume = 4096;
 }
 
 
-CAudioMixer::~CAudioMixer() {
+AudioMixer::~AudioMixer()
+{
     destroyList();
 
     if (m_mixingBuffer) {
@@ -47,95 +51,76 @@ CAudioMixer::~CAudioMixer() {
     }
 }
 
-void CAudioMixer::destroyList() {
-    m_mutex.lock();
-    IAudioSource *l = m_sourceList;
+// Destroy all the sources in the list.
+void AudioMixer::destroyList()
+{
+    QMutexLocker locker(&m_mutex);
 
-    while (l) {
-        IAudioSource *n = l->m_next;
-        delete l;
-        l = n;
+    QList<AudioSource*>::iterator it;
+    for(it = m_sourceList.begin(); it != m_sourceList.end(); it++) {
+        delete *it;
     }
 
-    m_sourceList = 0;
-    m_mutex.unlock();
+    m_sourceList.clear();
 }
 
 
-IAudioSource* CAudioMixer::addAudioSource(IAudioSource *source) {
-    m_mutex.lock();
-    source->m_next = 0;
-    if (m_sourceList) {
-        IAudioSource *l = m_sourceList;
-
-        while (l->m_next)
-            l = l->m_next;
-
-        l->m_next = source;
-    }
-    else
-        m_sourceList = source;
-
-    m_mutex.unlock();
+// Add new audio source to the list. Return added source to caller.
+AudioSource* AudioMixer::addAudioSource(AudioSource *source)
+{
+    QMutexLocker locker(&m_mutex);
+    m_sourceList.push_back(source);
     return source;
 }
 
 
-bool CAudioMixer::removeAudioSource( IAudioSource *source ) {
+// Remove a single audio source from the list
+bool AudioMixer::removeAudioSource(AudioSource *source)
+{
     QMutexLocker locker(&m_mutex);
-
-    GE::IAudioSource *prev = 0;
-    GE::IAudioSource *l = m_sourceList;
-    while (l) {
-        if (l==source) {
-            if (prev) prev->m_next=l->m_next;
-                else m_sourceList = l->m_next;
-
-            l->m_next = 0;
-            return true;
-        }
-
-        prev = l;
-        l = l->m_next;
-    }
-
-    return false;
-}
-
-int CAudioMixer::getAudioSourceCount() {
-    IAudioSource *l = m_sourceList;
-    int rval  = 0;
-
-    while (l) {
-        rval ++;
-        l = l->m_next;
-    }
-
-    return rval;
+    return m_sourceList.removeOne(source);
 }
 
 
-void CAudioMixer::setGeneralVolume(float vol) {
-    m_fixedGeneralVolume = (4096.0f / (float)getAudioSourceCount() * vol);
+int AudioMixer::audioSourceCount()
+{
+    QMutexLocker locker(&m_mutex);
+    return m_sourceList.count();
 }
 
 
-float CAudioMixer::getGeneralVolume() {
+void AudioMixer::setGeneralVolume(float vol)
+{
+    m_fixedGeneralVolume = (4096.0f / (float)audioSourceCount() * vol);
+}
+
+
+// Relative to the channelcount (audiosourcecount)
+float AudioMixer::generalVolume()
+{
     return (float)m_fixedGeneralVolume *
-           (float)getAudioSourceCount() / 4096.0f;
+           (float)audioSourceCount() / 4096.0f;
 }
 
 
-void CAudioMixer::setAbsoluteVolume(float vol) {
+void AudioMixer::setAbsoluteVolume(float vol)
+{
     m_fixedGeneralVolume = (4096.0f * vol);
 }
 
 
-int CAudioMixer::pullAudio(AUDIO_SAMPLE_TYPE *target, int bufferLength) {
-    if (!m_sourceList)
-        return 0;
+float AudioMixer::absoluteVolume()
+{
+    return (float)m_fixedGeneralVolume / 4096.0f;
+}
 
+
+int AudioMixer::pullAudio(AUDIO_SAMPLE_TYPE *target, int bufferLength)
+{
     QMutexLocker locker(&m_mutex);
+
+    if(m_sourceList.isEmpty())
+        return 0;
 
     if (m_mixingBufferLength < bufferLength) {
         if (m_mixingBuffer)
@@ -151,15 +136,10 @@ int CAudioMixer::pullAudio(AUDIO_SAMPLE_TYPE *target, int bufferLength) {
     AUDIO_SAMPLE_TYPE *t_target;
     AUDIO_SAMPLE_TYPE *s;
 
-    IAudioSource *prev = 0;
-    IAudioSource *l = m_sourceList;
-
-    while (l) {
-        IAudioSource *next = l->m_next;
-
-        // process l
-        int mixed = l->pullAudio(m_mixingBuffer, bufferLength);
-        if (mixed > 0) {
+    QList<AudioSource*>::iterator it = m_sourceList.begin();
+    while (it != m_sourceList.end()) {
+        int mixed = (*it)->pullAudio(m_mixingBuffer, bufferLength);
+        if(mixed > 0) {
             // mix to main..
             t = target;
             t_target = t + mixed;
@@ -171,24 +151,17 @@ int CAudioMixer::pullAudio(AUDIO_SAMPLE_TYPE *target, int bufferLength) {
             }
         }
 
-        // autodestroy
-        // NOTE, IS UNDER TESTING,... MIGHT CAUSE UNPREDICTABLE CRASHING
-        // WITH SOME USE CASES!!!
-        if (l->canBeDestroyed() == true) {
-            if (!prev)
-                m_sourceList = next;
-            else prev->m_next = next;
-            delete l;
-            l = 0;
+        if((*it)->canBeDestroyed()) {
+            // autodestroy
+            // NOTE, IS UNDER TESTING,... MIGHT CAUSE UNPREDICTABLE CRASHING
+            // WITH SOME USE CASES!!!
+            delete *it;
+            it = m_sourceList.erase(it);
         }
-
-        prev = l;
-        l = next;
+        else {
+            it++;
+        }
     }
 
     return bufferLength;
 }
-
-
-
-

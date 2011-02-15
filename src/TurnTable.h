@@ -23,7 +23,7 @@
 class QSettings;
 
 
-class TurnTable : public GE::IAudioSource
+class TurnTable : public GE::AudioSource
 {
     Q_OBJECT
 
@@ -31,7 +31,7 @@ public:
     TurnTable(QSettings *settings, QObject *parent = 0);
     ~TurnTable();
 
-    void addAudioSource(GE::IAudioSource *source);
+    void addAudioSource(GE::AudioSource *source);
     void openSample(const QString &filePath = "");
     void openLastSample();
 
@@ -76,8 +76,6 @@ public slots:
 
     int pullAudio(AUDIO_SAMPLE_TYPE *target, int bufferLength);
 
-    void linkActivated(QVariant link);
-
 signals:
     void sampleOpened(QVariant filePath);
     void audioPosition(QVariant position);
@@ -110,8 +108,8 @@ protected:
 
     QSettings *m_Settings;
 
-    QPointer<GE::CAudioBuffer> m_buffer;
-    QPointer<GE::CAudioMixer> m_audioMixer;
+    QPointer<GE::AudioBuffer> m_buffer;
+    QPointer<GE::AudioMixer> m_audioMixer;
     QPointer<GE::AudioOut> m_audioOut;
 
 #ifdef Q_OS_SYMBIAN

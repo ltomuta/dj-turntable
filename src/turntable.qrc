@@ -20,6 +20,10 @@
         <file>qml/images/buttonpressed.sci</file>
         <file>qml/images/buttonup.png</file>
         <file>qml/images/buttonup.sci</file>
+        <file>qml/images/icon_drummachine.png</file>
+        <file>qml/images/icon_turntable.png</file>
+        <file>qml/images/led_off.png</file>
+        <file>qml/images/led_on.png</file>
         <file>qml/images/defaultsample_on.png</file>
         <file>qml/images/defaultsample.png</file>
         <file>qml/images/iconfolderup.png</file>
@@ -60,14 +64,6 @@
         <file>qml/images/speedslider.png</file>
         <file>qml/images/drumbutton.png</file>
         <file>qml/images/drumbuttonselected.png</file>
-        <file>qml/images/drummachine_off_noplay.png</file>
-        <file>qml/images/drummachine_off_play.png</file>
-        <file>qml/images/drummachine_on_noplay.png</file>
-        <file>qml/images/drummachine_on_play.png</file>
-        <file>qml/images/turntable_off_noplay.png</file>
-        <file>qml/images/turntable_off_play.png</file>
-        <file>qml/images/turntable_on_noplay.png</file>
-        <file>qml/images/turntable_on_play.png</file>
         <file>sounds/ivory.wav</file>
         <file>sounds/snare.wav</file>
         <file>sounds/hihat_open.wav</file>

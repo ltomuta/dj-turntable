@@ -3,7 +3,6 @@ import Qt 4.7
 Rectangle {
     id: helpScreen
 
-    signal linkActivated(variant link)
     signal backPressed()
 
     property real textSize: Math.min(width, height) * 0.04 <= 0 ? 8 :
@@ -41,15 +40,15 @@ Rectangle {
                     textFormat: Text.RichText
                     font.pointSize: helpScreen.textSize
 
-                    text: "<b><h2>Dj Turntable v.1.2.0</b></h2>" +
-                          "Dj Turntable is a Forum Nokia example that " +
+                    text: "<b><h2>DJ Turntable v.1.2.0</b></h2>" +
+                          "DJ Turntable is a Forum Nokia example that " +
                           "demonstrates integrating a Qt Quick application " +
                           "to Qt audio interface. See more information " +
                           "about the project at <a href=\"https://projects." +
                           "forum.nokia.com/turntable\">https://projects." +
                           "forum.nokia.com/turntable</a>.<br>"
 
-                    onLinkActivated: helpScreen.linkActivated(link)
+                    onLinkActivated: Qt.openUrlExternally(link)
                 }
 
                 Image {
@@ -97,10 +96,23 @@ Rectangle {
                       "faster, slower and backwards. The speed of the disk " +
                       "can be adjusted with the speed slider, the default " +
                       "1x speed can be obtained by double clicking the " +
-                      "speed slider knob. Dj Turntable offers Cutoff and " +
+                      "speed slider knob. DJ Turntable offers Cutoff and " +
                       "Resonance to alternate the sample in real time. The " +
                       "knobs are rotated by moving the finger up and down " +
-                      "on top of the knobs. <b><h3>Drum machine</h3></b>" +
+                      "on top of the knobs." +
+                      "<b><h3>Sample selector</h3></b>" +
+                      "Use the sample selector to change the sample that " +
+                      "turntable is playing by selecting the desired sample " +
+                      "from the directory view. Following uncompressed " +
+                      "wav-formats are supported<br><br>" +
+                      "8 bit unsigned<br>" +
+                      "16 bit unsigned<br>" +
+                      "32 bit float<br><br>" +
+                      "The application will open the last selected sample " +
+                      "on startup. Use the default sample button on the " +
+                      "right under the back button to reset back to the " +
+                      "default sample." +
+                      "<b><h3>Drum machine</h3></b>" +
                       "Play and edit the drum beats. There are three " +
                       "predefined beats which can be played and edited but " +
                       "the edits are not stored. For the user there are " +
@@ -109,7 +121,10 @@ Rectangle {
                       "buttons on the bottom of the view to switch " +
                       "between the beats. All the beats are 32 ticks long " +
                       "and they contain 6 different drum samples: hi-hat, " +
-                      "hi-hat open, bass drum, snare, cymbal and cow bell.<br>"
+                      "hi-hat open, bass drum, snare, cymbal and cow bell." +
+                      "The drum machine will play all drum beats at 150 bpm. " +
+                      "Changing the speed of the turntable will affect " +
+                      "to the playing speed of the drum machine accordingly.<br>"
             }
 
             Text {
@@ -134,6 +149,7 @@ Rectangle {
                       "Key right = View the 2nd tick group in the drum " +
                       "machine<br>" +
                       "Key i = Go to the info view<br>" +
+                      "Key s = Go to the sample selector view<br>" +
                       "Backspace = Return from the info view to the " +
                       "previous view<br>"
             }
@@ -156,7 +172,7 @@ Rectangle {
                       "sampling+/1.0/\">Creative Commons Sampling Plus " +
                       "1.0</a> license.<br>"
 
-                onLinkActivated: helpScreen.linkActivated(link)
+                onLinkActivated: Qt.openUrlExternally(link)
             }
         }
     }

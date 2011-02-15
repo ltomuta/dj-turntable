@@ -8,7 +8,7 @@
 
 class QSettings;
 
-class DrumMachine : public GE::IAudioSource
+class DrumMachine : public GE::AudioSource
 {
     Q_OBJECT
 
@@ -75,9 +75,9 @@ protected:
     int m_sampleCounter;
     int m_currentSeqIndex;
 
-    QPointer<GE::CAudioMixer> m_mixer;
-    QVector<GE::CAudioBufferPlayInstance*> m_playInstances;
-    QVector<GE::CAudioBuffer*> m_drumSamples;
+    QPointer<GE::AudioMixer> m_mixer;
+    QVector<GE::AudioBufferPlayInstance*> m_playInstances;
+    QVector<GE::AudioBuffer*> m_drumSamples;
 
     // Called when the sequence advances a tick
     void tick();

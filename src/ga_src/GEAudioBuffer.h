@@ -4,21 +4,21 @@
  *
  *
  */
-
-
-
 #ifndef __GE_IGA_AUDIOBUFFER__
 #define __GE_IGA_AUDIOBUFFER__
 
+
+#include <QString>
+#include <QFile>
 #include "GEInterfaces.h"
 
 
 namespace GE {
 
-    class CAudioBufferPlayInstance;
-    class CAudioBuffer;
-// Prototype function for audio sampling
-    typedef AUDIO_SAMPLE_TYPE(*SAMPLE_FUNCTION_TYPE)(CAudioBuffer *abuffer,
+    class AudioBufferPlayInstance;
+    class AudioBuffer;
+    // Prototype function for audio sampling
+    typedef AUDIO_SAMPLE_TYPE(*SAMPLE_FUNCTION_TYPE)(AudioBuffer *abuffer,
                                                      int pos,
                                                      int channel);
 
@@ -26,41 +26,43 @@ namespace GE {
  * Class to hold audio information (a buffer).
  *
  */
-    class CAudioBuffer : public QObject {
+    class AudioBuffer : public QObject {
     public:
-        CAudioBuffer();
-        virtual ~CAudioBuffer();
+        AudioBuffer();
+        virtual ~AudioBuffer();
 
-        static CAudioBuffer* loadWav( QString fileName );
-	static CAudioBuffer* loadWav( FILE *wavFile );
+        static AudioBuffer* loadWav(const QString &fileName);
+        static AudioBuffer* loadWav(FILE *wavFile);
+        static AudioBuffer* loadWav(QFile &wavFile);
+
         void reallocate( int length );
 
-        inline void* getRawData() { return m_data; }
-        inline int getDataLength() { return m_dataLength; }
+        inline void* rawData() { return m_data; }
+        inline int dataLength() { return m_dataLength; }
 
-        inline int getBytesPerSample() { return (m_bitsPerSample >> 3); }
-        inline int getBitsPerSample() { return m_bitsPerSample; }
-        inline int getSamplesPerSec() { return m_samplesPerSec; }
-        inline short getNofChannels() { return m_nofChannels; }
-        inline SAMPLE_FUNCTION_TYPE getSampleFunction() {
+        inline int bytesPerSample() { return (m_bitsPerSample >> 3); }
+        inline int bitsPerSample() { return m_bitsPerSample; }
+        inline int samplesPerSec() { return m_samplesPerSec; }
+        inline short nofChannels() { return m_nofChannels; }
+        inline SAMPLE_FUNCTION_TYPE sampleFunction() {
             return m_sampleFunction;
         }
 
         // Static implementations of sample functions
         static AUDIO_SAMPLE_TYPE sampleFunction8bitMono(
-            CAudioBuffer *abuffer, int pos, int channel);
+            AudioBuffer *abuffer, int pos, int channel);
         static AUDIO_SAMPLE_TYPE sampleFunction16bitMono(
-            CAudioBuffer *abuffer, int pos, int channel);
+            AudioBuffer *abuffer, int pos, int channel);
         static AUDIO_SAMPLE_TYPE sampleFunction32bitMono(
-            CAudioBuffer *abuffer, int pos, int channel);
+            AudioBuffer *abuffer, int pos, int channel);
         static AUDIO_SAMPLE_TYPE sampleFunction8bitStereo(
-            CAudioBuffer *abuffer, int pos, int channel);
+            AudioBuffer *abuffer, int pos, int channel);
         static AUDIO_SAMPLE_TYPE sampleFunction16bitStereo(
-            CAudioBuffer *abuffer, int pos, int channel);
+            AudioBuffer *abuffer, int pos, int channel);
         static AUDIO_SAMPLE_TYPE sampleFunction32bitStereo(
-            CAudioBuffer *abuffer, int pos, int channel);
+            AudioBuffer *abuffer, int pos, int channel);
 
-        CAudioBufferPlayInstance *playWithMixer(GE::CAudioMixer &mixer);
+        AudioBufferPlayInstance *playWithMixer(GE::AudioMixer &mixer);
 
     protected:
         SAMPLE_FUNCTION_TYPE m_sampleFunction;
@@ -73,13 +75,13 @@ namespace GE {
     };
 
 
-    class CAudioBufferPlayInstance : public IAudioSource {
+    class AudioBufferPlayInstance : public AudioSource {
     public:
-        CAudioBufferPlayInstance();
-        CAudioBufferPlayInstance(CAudioBuffer *start_playing);
-        virtual ~CAudioBufferPlayInstance();
+        AudioBufferPlayInstance();
+        AudioBufferPlayInstance(AudioBuffer *start_playing);
+        virtual ~AudioBufferPlayInstance();
         // Looptimes -1 = loop forever
-        void playBuffer(CAudioBuffer *startPlaying, float volume,
+        void playBuffer(AudioBuffer *startPlaying, float volume,
                         float fixedSpeed, int loopTimes = 0);
 
         void setSpeed(float speed);
@@ -115,7 +117,8 @@ namespace GE {
         int m_fixedRightVolume;
         int m_fixedCenter;
         int m_loopTimes;
-        CAudioBuffer *m_buffer;
+
+        AudioBuffer *m_buffer;
     };
 };
 

@@ -18,7 +18,6 @@ Rectangle {
     signal cutOff(variant value)
     signal resonance(variant value)
     signal seekToPosition(variant value)
-    signal linkActivated(variant link)
 
     function audioPosition(pos) { arm.setPositionOnDisk(pos) }
     function inclination(deg) { diskReflection.rotation = deg * 8 + 45 }
@@ -107,7 +106,6 @@ Rectangle {
             y: -flickable.height
 
             onBackPressed: flickable.setState(flickable.prevState)
-            onLinkActivated: ui.linkActivated(link)
         }
 
         Image {
@@ -288,7 +286,7 @@ Rectangle {
                 Text {
                     anchors { right: parent.right; rightMargin: 15 }
                     anchors { bottom: parent.bottom; bottomMargin: 0 }
-                    text: "Disk / drum speed"
+                    text: "Disk / drum speed %"
                     color: "#505050"; font.pixelSize: 10
                 }
             }

@@ -25,12 +25,12 @@ Rectangle {
         }
         height: width
         source: sidepanel.sampleSelectorButtonPressed
-                    ? "images/buttonpressed.sci"
-                    : "images/buttonup.sci"
+                ? "images/buttonpressed.sci"
+                : "images/buttonup.sci"
 
         Image {
             anchors.centerIn: parent
-            width: parent.width * 0.7 ; height: width
+            width: parent.width * 0.5 ; height: width
             source: "images/iconsampleselector.png"
             smooth: true
         }
@@ -41,7 +41,7 @@ Rectangle {
         }
     }
 
-    Image {
+    BorderImage {
         id: turnTableButton
 
         anchors {
@@ -51,18 +51,32 @@ Rectangle {
         }
 
         height: (parent.height - settingsButton.height) / 2 - 1
-
-
         smooth: true
-        source: {
-            if(turnTableButtonPressed) {
-                if(turnTableLedOn) { return "images/turntable_on_play.png" }
-                else {return "images/turntable_on_noplay.png" }
+        source: sidepanel.turnTableButtonPressed
+                ? "images/buttonpressed.sci"
+                : "images/buttonup.sci"
+
+        Image {
+            anchors {
+                top: parent.top; topMargin: parent.height * 0.1
+                horizontalCenter: parent.horizontalCenter
             }
-            else {
-                if(turnTableLedOn) { return "images/turntable_off_play.png" }
-                else { return "images/turntable_off_noplay.png" }
+            width: parent.width * 0.6; height: width
+            smooth: true
+
+            source: sidepanel.turnTableLedOn
+                    ? "images/led_on.png"
+                    : "images/led_off.png"
+        }
+
+        Image {
+            anchors {
+                horizontalCenter: parent.horizontalCenter
+                bottom: parent.bottom; bottomMargin: parent.height * 0.05
             }
+            width: parent.width * 0.6; height: width
+            smooth: true
+            source: "images/icon_turntable.png"
         }
 
 
@@ -72,7 +86,7 @@ Rectangle {
         }
     }
 
-    Image {
+    BorderImage {
         id: drumMachineButton
 
         anchors {
@@ -84,24 +98,33 @@ Rectangle {
 
         smooth: true
 
-        source: {
-            if(drumMachineButtonPressed) {
-                if(drumMachineLedOn) {
-                    return "images/drummachine_on_play.png"
-                }
-                else {
-                    return "images/drummachine_on_noplay.png"
-                }
+        source: sidepanel.drumMachineButtonPressed
+                ? "images/buttonpressed.sci"
+                : "images/buttonup.sci"
+
+        Image {
+            anchors {
+                top: parent.top; topMargin: parent.height * 0.1
+                horizontalCenter: parent.horizontalCenter
             }
-            else {
-                if(drumMachineLedOn) {
-                    return "images/drummachine_off_play.png"
-                }
-                else {
-                    return "images/drummachine_off_noplay.png"
-                }
-            }
+            width: parent.width * 0.6; height: width
+            smooth: true
+
+            source: sidepanel.drumMachineLedOn
+                    ? "images/led_on.png"
+                    : "images/led_off.png"
         }
+
+        Image {
+            anchors {
+                horizontalCenter: parent.horizontalCenter
+                bottom: parent.bottom; bottomMargin: parent.height * 0.05
+            }
+            width: parent.width * 0.6 ; height: width
+            smooth: true
+            source: "images/icon_drummachine.png"
+        }
+
 
         MouseArea {
             anchors.fill: parent

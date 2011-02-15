@@ -18,7 +18,10 @@ protected:
     qreal m_PrevValue;
 
 public:
-    AccelerometerFilter() : m_PrevValue(0.0f) {}
+    AccelerometerFilter()
+        : m_PrevValue(0.0f)
+    {
+    }
 
     bool filter(QAccelerometerReading *reading)
     {
@@ -36,7 +39,7 @@ public:
         }
 #else
         ry = acos(ry / divider) * RADIANS_TO_DEGREES - 90;
-        if(fabs(ry - m_PrevValue) > 1.0f) {
+        if(fabs(ry - m_PrevValue) > 3.0f) {
             emit rotationChanged(ry);
             m_PrevValue = ry;
         }

@@ -1,4 +1,4 @@
-DJ Turntable v1.2.0
+DJ Turntable v1.2.1
 ===================
 
 Dj Turntable demonstrates integrating a Qt Quick application to the Qt audio
@@ -164,7 +164,7 @@ Mobile device (Maemo)
 0. The Qt libraries (4.7.0 or higher) must be installed. See the section 
    COMPATIBILITY for more information about the installation.
 
-1. Copy the turntable_1.2.0_armel.deb file into a specific folder on the 
+1. Copy the turntable_1.2.1_armel.deb file into a specific folder on the 
    device (for example, 'MyDocs').
 
 2. Start XTerm. Type 'sudo gainroot' to get root access.
@@ -173,7 +173,7 @@ Mobile device (Maemo)
    (for example, 'cd MyDocs').
 
 4. As root, install the package:
-   dpkg -i turntable_1.2.0_armel.deb
+   dpkg -i turntable_1.2.1_armel.deb
 
 5. Launch the Applications menu.
 
@@ -273,8 +273,8 @@ COMPATIBILITY
     
 Tested on:
 
-- Nokia N8
-- Nokia E7
+- Nokia N8-00
+- Nokia E7-00
 - Nokia C6-01
 - Nokia N900
 - Windows XP
@@ -282,6 +282,7 @@ Tested on:
 
 VERSION HISTORY
 -------------------------------------------------------------------------------
+v1.2.1 Added error handling to opening of external wav-files.
 v1.2 Added possibility to play external wav-files.
 v1.1 Updated version for Forum Nokia. 
 v1.0 Initial version published in Forum Nokia Projects only.

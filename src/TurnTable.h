@@ -90,7 +90,7 @@ protected:
 
     const int m_maxLoops;
     int m_loops;
-    int m_pos;
+    int64_t m_pos;
     int m_cc;
     float m_speed;
     float m_targetSpeed;

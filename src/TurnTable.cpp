@@ -3,8 +3,8 @@
 #include "TurnTable.h"
 
 #ifdef Q_OS_SYMBIAN
-    #include <remconcoreapitarget.h>
-    #include <remconinterfaceselector.h>
+#include <remconcoreapitarget.h>
+#include <remconinterfaceselector.h>
 #endif
 
 using namespace GE;
@@ -84,17 +84,18 @@ int TurnTable::pullAudio(AUDIO_SAMPLE_TYPE *target, int bufferLength)
         return 0;
     }
 
-    int channelLength = ((m_buffer->dataLength()) /
-                         (m_buffer->nofChannels() *
-                          m_buffer->bytesPerSample())) - 2;
-    channelLength<<=11;
+    int64_t channelLength = ((m_buffer->dataLength()) /
+                             (m_buffer->nofChannels() *
+                              m_buffer->bytesPerSample())) - 2;
+
+    channelLength <<= 11;
 
     int p;
     int fixedReso = (m_resonanceValue * 4096.0f);
     int fixedCutoff = (m_cutOffValue * 4096.0f);
 
     float speedmul = (float)m_buffer->samplesPerSec() /
-                     (float)AUDIO_FREQUENCY * 2048.0f;
+            (float)AUDIO_FREQUENCY * 2048.0f;
     int inc = (int)(m_speed * speedmul);
 
     int input;
@@ -198,6 +199,8 @@ void TurnTable::openSample(const QString &filePath)
         parsedFilePath.replace(QString("file:///"), QString(""));
     }
 
+    // Prevents the audio engine to play turntable sound,
+    // we are about to delete it
     m_audioMixer->removeAudioSource(this);
 
     if(m_buffer.isNull() == false) {
@@ -310,7 +313,7 @@ void TurnTable::seekToPosition(QVariant position)
         return;
     }
 
-    int channelLength = ((m_buffer->dataLength()) /
+    int64_t channelLength = ((m_buffer->dataLength()) /
                          (m_buffer->nofChannels() *
                           m_buffer->bytesPerSample())) - 2;
     channelLength <<= 11;

@@ -3,7 +3,7 @@ QT       += core gui declarative opengl
 TEMPLATE = app
 
 
-VERSION = 1.2.0
+VERSION = 1.2.1
 
 SOURCES += main.cpp \
            TurnTable.cpp \

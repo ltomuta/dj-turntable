@@ -55,7 +55,9 @@ TurnTable::~TurnTable()
     m_PosMutex.lock();
 
     m_audioMixer->removeAudioSource(this);
-    delete m_buffer;
+    if(m_buffer.isNull() == false) {
+        delete m_buffer;
+    }
 
     m_PosMutex.unlock();
 
@@ -75,7 +77,6 @@ int TurnTable::pullAudio(AUDIO_SAMPLE_TYPE *target, int bufferLength)
     if(m_headOn == false || m_buffer.isNull()) {
         return 0;
     }
-
 
     AUDIO_SAMPLE_TYPE *t_target = target + bufferLength;
     SAMPLE_FUNCTION_TYPE sfunc = m_buffer->sampleFunction();
@@ -186,6 +187,7 @@ void TurnTable::addAudioSource(GE::AudioSource *source)
 
 void TurnTable::openSample(const QString &filePath)
 {
+    qDebug() << "Opening sample: " << filePath;
     QMutexLocker locker(&m_PosMutex);
 
     QString parsedFilePath;
@@ -197,17 +199,18 @@ void TurnTable::openSample(const QString &filePath)
         parsedFilePath.replace(QString("file:///"), QString(""));
     }
 
-    if(m_audioMixer->removeAudioSource(this) == false) {
-        return;
-    }
+    m_audioMixer->removeAudioSource(this);
 
-    delete m_buffer;
+    if(m_buffer.isNull() == false) {
+        delete m_buffer;
+    }
     m_pos = 0;
     m_loops = 0;
 
     m_buffer = AudioBuffer::loadWav(parsedFilePath);
 
     if(m_buffer.isNull()) {
+        emit sampleOpened(QString("Failed to open wav"));
         // Failed to load sample
         return;
     }
@@ -301,6 +304,10 @@ void TurnTable::volumeDown()
 void TurnTable::seekToPosition(QVariant position)
 {
     QMutexLocker locker(&m_PosMutex);
+
+    if(m_buffer.isNull()) {
+        return;
+    }
 
     int channelLength = ((m_buffer->dataLength()) /
                          (m_buffer->nofChannels() *

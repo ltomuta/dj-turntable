@@ -31,9 +31,12 @@ namespace GE {
         AudioBuffer();
         virtual ~AudioBuffer();
 
-        static AudioBuffer* loadWav(const QString &fileName);
-        static AudioBuffer* loadWav(FILE *wavFile);
-        static AudioBuffer* loadWav(QFile &wavFile);
+        static AudioBuffer* loadWav(const QString &fileName,
+                                    QString *errorString = 0);
+        static AudioBuffer* loadWav(FILE *wavFile,
+                                    QString *errorString = 0);
+        static AudioBuffer* loadWav(QFile &wavFile,
+                                    QString *errorString = 0);
 
         void reallocate( int length );
 

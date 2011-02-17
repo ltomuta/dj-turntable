@@ -9,7 +9,7 @@ Rectangle {
 
     // Used when developing with QML Viewer, property is added as
     // context property by Qt in the real application
-    property bool lowPerf: false
+    // property bool lowPerf: false
 
     signal diskSpeed(variant speed)
     signal diskAimSpeed(variant speed)

@@ -20,6 +20,11 @@ Image {
         sampleFile = filePath
     }
 
+    // Called by Qt
+    function showError(file, error) {
+        errorDialog.show("Failed to load sample:\n" + file + "\n\n" + error)
+    }
+
     // QML function
     function setFolder(folder) {
         folderAnimation.folderToChange = folder
@@ -96,21 +101,6 @@ Image {
         width: height; height: 40
         source: "../images/iconfolderup.png"
         smooth: true
-
-        MouseArea {
-            anchors.fill: parent
-            scale: 1.5
-
-            onPressed: {
-                folderUp.pressed = true; folderUp.scale = 0.9
-            }
-
-            onReleased: {
-                folderUp.pressed = false; folderUp.scale = 1.0
-            }
-
-            onClicked: selector.setFolder(folderModel.parentFolder)
-        }
     }
 
 
@@ -126,6 +116,25 @@ Image {
         text: folderModel.folder
         color: "#505050"
         elide: Text.ElideLeft
+    }
+
+    MouseArea {
+        anchors {
+            top: parent.top
+            bottom: folderHole.top
+            left: folderUp.left
+            right: folderHole.right; rightMargin: 20
+        }
+
+        onPressed: {
+            folderUp.pressed = true; folderUp.scale = 0.9
+        }
+
+        onReleased: {
+            folderUp.pressed = false; folderUp.scale = 1.0
+        }
+
+        onClicked: selector.setFolder(folderModel.parentFolder)
     }
 
 
@@ -234,5 +243,12 @@ Image {
             top: nowPlayingText.top
             right: backButton.left
         }
+    }
+
+    Dialog {
+        id: errorDialog
+
+        anchors.centerIn: parent
+        radius: 10
     }
 }

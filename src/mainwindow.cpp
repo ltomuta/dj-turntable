@@ -104,7 +104,8 @@ void MainWindow::initializeQMLComponent()
             turnTable, SLOT(openDefaultSample()));
     connect(turnTable, SIGNAL(sampleOpened(QVariant)),
             sampleSelectorQML, SLOT(setCurrentSample(QVariant)));
-
+    connect(turnTable, SIGNAL(error(QVariant, QVariant)),
+            sampleSelectorQML, SLOT(showError(QVariant, QVariant)));
 
     // DrumMachine connections
     connect(drumMachineQML, SIGNAL(startBeat()),

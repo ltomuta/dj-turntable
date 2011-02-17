@@ -9,6 +9,7 @@
         <file>qml/LCDDisplay.qml</file>
         <file>qml/LCDDigit.qml</file>
         <file>qml/SampleSelector/SampleSelector.qml</file>
+        <file>qml/SampleSelector/Dialog.qml</file>
         <file>qml/DrumMachine/DrumMachine.qml</file>
         <file>qml/DrumMachine/DrumButton.qml</file>
         <file>qml/DrumMachine/BeatSelector.qml</file>

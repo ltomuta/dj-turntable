@@ -187,7 +187,6 @@ void TurnTable::addAudioSource(GE::AudioSource *source)
 
 void TurnTable::openSample(const QString &filePath)
 {
-    qDebug() << "Opening sample: " << filePath;
     QMutexLocker locker(&m_PosMutex);
 
     QString parsedFilePath;
@@ -207,11 +206,13 @@ void TurnTable::openSample(const QString &filePath)
     m_pos = 0;
     m_loops = 0;
 
-    m_buffer = AudioBuffer::loadWav(parsedFilePath);
+    QString errorString;
+    m_buffer = AudioBuffer::loadWav(parsedFilePath, &errorString);
 
     if(m_buffer.isNull()) {
-        emit sampleOpened(QString("Failed to open wav"));
         // Failed to load sample
+        emit sampleOpened("");
+        emit error(parsedFilePath, errorString);
         return;
     }
     else {

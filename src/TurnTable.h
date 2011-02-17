@@ -79,6 +79,7 @@ public slots:
 signals:
     void sampleOpened(QVariant filePath);
     void audioPosition(QVariant position);
+    void error(QVariant file, QVariant error);
 
 protected:
 

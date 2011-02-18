@@ -21,6 +21,8 @@ Rectangle {
 
     function audioPosition(pos) { arm.setPositionOnDisk(pos) }
     function inclination(deg) { diskReflection.rotation = deg * 2 + 45 }
+    function powerOn() { powerbutton.powerOn() }
+    function powerOff() { powerbutton.powerOff() }
 
     anchors.fill: parent
     width: 640; height: 360
@@ -482,6 +484,16 @@ Rectangle {
                         else {
                             arm.moveOut()
                         }
+                    }
+
+                    function powerOff() {
+                        turntable.playing = false
+                        arm.moveOut()
+                    }
+
+                    function powerOn() {
+                        turntable.playing = true
+                        arm.moveIn()
                     }
 
                     onClicked: press()

@@ -81,6 +81,9 @@ signals:
     void audioPosition(QVariant position);
     void error(QVariant file, QVariant error);
 
+    void powerOn();
+    void powerOff();
+
 protected:
 
     const QString m_defaultSample;

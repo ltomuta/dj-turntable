@@ -96,6 +96,7 @@ void MainWindow::initializeQMLComponent()
             turnTable, SLOT(seekToPosition(QVariant)));
     connect(turnTable, SIGNAL(audioPosition(QVariant)),
             turnTableQML, SLOT(audioPosition(QVariant)));
+    connect(turnTable, SIGNAL(powerOff()), turnTableQML, SLOT(powerOff()));
 
     // SampleSelector connections
     connect(sampleSelectorQML, SIGNAL(sampleSelected(QVariant)),

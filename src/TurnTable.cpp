@@ -214,6 +214,7 @@ void TurnTable::openSample(const QString &filePath)
 
     if(m_buffer.isNull()) {
         // Failed to load sample
+        emit powerOff();
         emit sampleOpened("");
         emit error(parsedFilePath, errorString);
         return;

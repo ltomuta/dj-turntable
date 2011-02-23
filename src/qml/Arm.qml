@@ -15,7 +15,7 @@ Item {
     function moveIn() { moveToStop.stop(); moveToDisk.start() }
     function moveOut() { moveToDisk.stop(); moveToStop.start() }
     function setPositionOnDisk(position) {
-        if(armdown) {
+        if (armdown) {
             positionOnDisk = position
             angle = (maxAngleOnDisk - minAngleOnDisk) * position
                     + minAngleOnDisk
@@ -23,7 +23,7 @@ Item {
     }
 
     function updateArmDown(userMoving) {
-        if(angle > minAngleOnDisk && userMoving == false) {
+        if (angle > minAngleOnDisk && userMoving == false) {
             arm.armReleasedByUser((angle - minAngleOnDisk)
                                   / (maxAngleOnDisk - minAngleOnDisk))
             armdown = true
@@ -102,9 +102,9 @@ Item {
                 var xdistance = -(object.x - pedal.centerX)
                 var ydistance = object.y - pedal.centerY
                 var angle = Math.atan(xdistance / ydistance) * 57.2957795
-                if(angle > arm.maxAngleOnDisk)
+                if (angle > arm.maxAngleOnDisk)
                     angle = arm.maxAngleOnDisk
-                else if(angle < 0)
+                else if (angle < 0)
                     angle = 0
 
                 arm.angle = angle

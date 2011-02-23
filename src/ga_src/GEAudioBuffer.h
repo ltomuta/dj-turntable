@@ -71,7 +71,7 @@ namespace GE {
         SAMPLE_FUNCTION_TYPE m_sampleFunction;
         short m_nofChannels;
         void *m_data;
-        int m_dataLength;				// in bytes
+        int m_dataLength; // in bytes
         short m_bitsPerSample;
         bool m_signedData;
         int m_samplesPerSec;

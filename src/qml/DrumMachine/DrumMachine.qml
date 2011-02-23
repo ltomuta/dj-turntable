@@ -17,10 +17,10 @@ Image {
     }
 
     function highlightTick(tick) {
-        if(tick % 8) { ledOn = false }
-        else if(powerbutton.pressed) { ledOn = true }
+        if (tick % 8) { ledOn = false }
+        else if (powerbutton.pressed) { ledOn = true }
 
-        if(tick < 16) { tickGroupSelector.selectedTickGroup = 1 }
+        if (tick < 16) { tickGroupSelector.selectedTickGroup = 1 }
         else { tickGroupSelector.selectedTickGroup = 2 }
 
         highligher.x = drumGrid.children[tick].x
@@ -283,7 +283,7 @@ Image {
                 glowColor: pressed ? "#CC00FF00" : "#CCFF0000"
 
                 onPressedChanged: {
-                    if(pressed) {
+                    if (pressed) {
                         drumMachine.startBeat()
                     }
                     else {

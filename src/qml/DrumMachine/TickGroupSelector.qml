@@ -59,7 +59,7 @@ BorderImage {
             drag.minimumX: 1
             drag.maximumX: parent.width - 1
             onReleased: {
-                if(knob.x > (toggleSwitch.width / 4)) {
+                if (knob.x > (toggleSwitch.width / 4)) {
                     toggleSwitch.selectedTickGroup = 1
                     toggleSwitch.selectedTickGroup = 2
                 }

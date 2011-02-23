@@ -56,10 +56,10 @@ Image {
         onPositionChanged: {
             var delta = (previousY - mouse.y) * 0.20
 
-            if(knob.value + delta > knob.maximumvalue) {
+            if (knob.value + delta > knob.maximumvalue) {
                 knob.value = knob.maximumvalue
             }
-            else if(knob.value + delta < knob.minimumvalue) {
+            else if (knob.value + delta < knob.minimumvalue) {
                 knob.value = knob.minimumvalue
             }
             else {

@@ -186,11 +186,11 @@ Image {
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
-                        if(fileName == "") {
+                        if (fileName == "") {
                             return;
                         }
 
-                        if(folderModel.isFolder(index)) {
+                        if (folderModel.isFolder(index)) {
                             selector.setFolder(filePath)
                         }
                         else {

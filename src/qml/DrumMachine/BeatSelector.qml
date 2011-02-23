@@ -8,7 +8,7 @@ Item {
     property alias buttonWidth: predefined.buttonWidth
 
     function buttonPressed(button, i) {
-        if(pressedButton != -1) { pressedButton.pressed = false }
+        if (pressedButton != -1) { pressedButton.pressed = false }
         pressedButton = button
         index = i
         pressedButton.pressed = true

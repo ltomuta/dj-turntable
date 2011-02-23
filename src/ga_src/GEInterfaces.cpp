@@ -57,7 +57,7 @@ void AudioMixer::destroyList()
     QMutexLocker locker(&m_mutex);
 
     QList<AudioSource*>::iterator it;
-    for(it = m_sourceList.begin(); it != m_sourceList.end(); it++) {
+    for (it = m_sourceList.begin(); it != m_sourceList.end(); it++) {
         delete *it;
     }
 
@@ -119,7 +119,7 @@ int AudioMixer::pullAudio(AUDIO_SAMPLE_TYPE *target, int bufferLength)
 {
     QMutexLocker locker(&m_mutex);
 
-    if(m_sourceList.isEmpty())
+    if (m_sourceList.isEmpty())
         return 0;
 
     if (m_mixingBufferLength < bufferLength) {
@@ -139,7 +139,7 @@ int AudioMixer::pullAudio(AUDIO_SAMPLE_TYPE *target, int bufferLength)
     QList<AudioSource*>::iterator it = m_sourceList.begin();
     while (it != m_sourceList.end()) {
         int mixed = (*it)->pullAudio(m_mixingBuffer, bufferLength);
-        if(mixed > 0) {
+        if (mixed > 0) {
             // mix to main..
             t = target;
             t_target = t + mixed;
@@ -151,7 +151,7 @@ int AudioMixer::pullAudio(AUDIO_SAMPLE_TYPE *target, int bufferLength)
             }
         }
 
-        if((*it)->canBeDestroyed()) {
+        if ((*it)->canBeDestroyed()) {
             // autodestroy
             // NOTE, IS UNDER TESTING,... MIGHT CAUSE UNPREDICTABLE CRASHING
             // WITH SOME USE CASES!!!

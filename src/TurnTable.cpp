@@ -55,7 +55,7 @@ TurnTable::~TurnTable()
     m_PosMutex.lock();
 
     m_audioMixer->removeAudioSource(this);
-    if(m_buffer.isNull() == false) {
+    if (m_buffer.isNull() == false) {
         delete m_buffer;
     }
 
@@ -74,13 +74,13 @@ int TurnTable::pullAudio(AUDIO_SAMPLE_TYPE *target, int bufferLength)
 {
     QMutexLocker locker(&m_PosMutex);
 
-    if(m_headOn == false || m_buffer.isNull()) {
+    if (m_headOn == false || m_buffer.isNull()) {
         return 0;
     }
 
     AUDIO_SAMPLE_TYPE *t_target = target + bufferLength;
     SAMPLE_FUNCTION_TYPE sfunc = m_buffer->sampleFunction();
-    if(sfunc == NULL) {
+    if (sfunc == NULL) {
         return 0;
     }
 
@@ -99,8 +99,8 @@ int TurnTable::pullAudio(AUDIO_SAMPLE_TYPE *target, int bufferLength)
     int inc = (int)(m_speed * speedmul);
 
     int input;
-    while(target != t_target) {
-        if(m_cc > 64) {
+    while (target != t_target) {
+        if (m_cc > 64) {
             m_speed += (m_targetSpeed - m_speed) * 0.1f;
             m_cutOffValue += (m_cutOffTarget - m_cutOffValue) * 0.1f;
             m_resonanceValue += (m_resonanceTarget - m_resonanceValue) * 0.1f;
@@ -113,23 +113,23 @@ int TurnTable::pullAudio(AUDIO_SAMPLE_TYPE *target, int bufferLength)
             m_cc++;
         }
 
-        if(m_loops >= m_maxLoops && m_pos >= channelLength) {
+        if (m_loops >= m_maxLoops && m_pos >= channelLength) {
             m_pos = channelLength - 1;
         }
-        else if(m_pos >= channelLength) {
+        else if (m_pos >= channelLength) {
             m_pos %= channelLength;
             m_loops++;
-            if(m_loops >= m_maxLoops) {
+            if (m_loops >= m_maxLoops) {
                 m_loops = 0;
             }
         }
 
-        if(m_loops == 0 && m_pos < 0) {
+        if (m_loops == 0 && m_pos < 0) {
             m_pos = 0;
         }
-        else if(m_pos < 0) {
+        else if (m_pos < 0) {
             m_pos = channelLength - 1 - ((-m_pos) % channelLength);
-            if(m_loops > 0) {
+            if (m_loops > 0) {
                 m_loops--;
             }
         }
@@ -143,10 +143,10 @@ int TurnTable::pullAudio(AUDIO_SAMPLE_TYPE *target, int bufferLength)
         m_bp[0] += ((m_hp[0] * fixedCutoff) >> 12);
 
         input = m_lp[0];
-        if(input < -32767) {
+        if (input < -32767) {
             input = -32767;
         }
-        if(input > 32767) {
+        if (input > 32767) {
             input = 32767;
         }
 
@@ -159,10 +159,10 @@ int TurnTable::pullAudio(AUDIO_SAMPLE_TYPE *target, int bufferLength)
         m_bp[1] += ((m_hp[1] * fixedCutoff) >> 12);
 
         input = m_lp[1];
-        if(input < -32767) {
+        if (input < -32767) {
             input = -32767;
         }
-        if(input > 32767) {
+        if (input > 32767) {
             input = 32767;
         }
 
@@ -191,7 +191,7 @@ void TurnTable::openSample(const QString &filePath)
     QMutexLocker locker(&m_PosMutex);
 
     QString parsedFilePath;
-    if(filePath.isEmpty()) {
+    if (filePath.isEmpty()) {
         parsedFilePath = m_defaultSample;
     }
     else {
@@ -203,7 +203,7 @@ void TurnTable::openSample(const QString &filePath)
     // we are about to delete it
     m_audioMixer->removeAudioSource(this);
 
-    if(m_buffer.isNull() == false) {
+    if (m_buffer.isNull() == false) {
         delete m_buffer;
     }
     m_pos = 0;
@@ -212,7 +212,7 @@ void TurnTable::openSample(const QString &filePath)
     QString errorString;
     m_buffer = AudioBuffer::loadWav(parsedFilePath, &errorString);
 
-    if(m_buffer.isNull()) {
+    if (m_buffer.isNull()) {
         // Failed to load sample
         emit powerOff();
         emit sampleOpened("");
@@ -251,7 +251,7 @@ void TurnTable::openDefaultSample()
 void TurnTable::setDiscAimSpeed(QVariant value)
 {
     float speed = value.toFloat();
-    if(speed > -100.0f && speed < 100.0f) {
+    if (speed > -100.0f && speed < 100.0f) {
         m_targetSpeed = m_targetSpeed * (1.0f - 0.10f) + speed * 0.10f;
     }
 }
@@ -260,7 +260,7 @@ void TurnTable::setDiscAimSpeed(QVariant value)
 void TurnTable::setDiscSpeed(QVariant value)
 {
     float speed = value.toFloat();
-    if(speed > -100.0f && speed < 100.0f) {
+    if (speed > -100.0f && speed < 100.0f) {
         m_targetSpeed = speed;
     }
 }
@@ -281,10 +281,10 @@ void TurnTable::setResonance(QVariant value)
 void TurnTable::volumeUp()
 {
     float volume = m_audioMixer->generalVolume() * 1.333f;
-    if(volume == 0.0f) {
+    if (volume == 0.0f) {
         volume = 0.01;
     }
-    else if(volume >= 0.95f) {
+    else if (volume >= 0.95f) {
         volume = 0.95f;
     }
 
@@ -296,7 +296,7 @@ void TurnTable::volumeUp()
 void TurnTable::volumeDown()
 {
     float volume = m_audioMixer->generalVolume() * 0.75f;
-    if(volume < 0.01f) {
+    if (volume < 0.01f) {
         volume = 0.0f;
     }
 
@@ -310,7 +310,7 @@ void TurnTable::seekToPosition(QVariant position)
 {
     QMutexLocker locker(&m_PosMutex);
 
-    if(m_buffer.isNull()) {
+    if (m_buffer.isNull()) {
         return;
     }
 
@@ -321,7 +321,7 @@ void TurnTable::seekToPosition(QVariant position)
 
     float value = position.toFloat();
     m_loops = value / (1.0 / m_maxLoops);
-    if(m_loops >= m_maxLoops) {
+    if (m_loops >= m_maxLoops) {
         m_loops = 0;
     }
 

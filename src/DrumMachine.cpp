@@ -41,7 +41,7 @@ DrumMachine::DrumMachine(QSettings *settings, QObject *parent)
                   << AudioBuffer::loadWav(QString(":/sounds/cymbal.wav"))
                   << AudioBuffer::loadWav(QString(":/sounds/cowbell.wav"));
 
-    for(int i=0; i<m_drumSamples.size(); i++) {
+    for (int i=0; i<m_drumSamples.size(); i++) {
         AudioBufferPlayInstance *playInstance = new AudioBufferPlayInstance;
         // Dont destroy object when playing is finished
         playInstance->setDestroyWhenFinished(false);
@@ -103,7 +103,7 @@ void DrumMachine::setBpm(int bpm)
 {
     float samplesPerTick = std::numeric_limits<float>::max();
 
-    if(bpm != 0) {
+    if (bpm != 0) {
         samplesPerTick  = (float)(AUDIO_FREQUENCY * 60.0f *
                                   m_speedMultiplier ) / (bpm * 1.0);
     }
@@ -114,7 +114,7 @@ void DrumMachine::setBpm(int bpm)
 
 bool DrumMachine::isUserBeat() const
 {
-    if(m_currentSeqIndex >= 3 && m_currentSeqIndex <= 5) {
+    if (m_currentSeqIndex >= 3 && m_currentSeqIndex <= 5) {
         return true;
     }
 
@@ -129,7 +129,7 @@ bool DrumMachine::isUserBeat() const
  */
 void DrumMachine::tick()
 {
-    if(!m_running || m_seq.empty()) {
+    if (!m_running || m_seq.empty()) {
         return;
     }
 
@@ -139,8 +139,8 @@ void DrumMachine::tick()
     unsigned char sbyte = m_seq[m_tickCount];
 
     float setvol = 1.0f;
-    for(int f=0; f<m_drumSamples.size(); f++) {
-        if(sbyte & (1 << f)) {
+    for (int f=0; f<m_drumSamples.size(); f++) {
+        if (sbyte & (1 << f)) {
             m_playInstances[f]->playBuffer(m_drumSamples[f], setvol, 1.0f);
         }
     }
@@ -158,13 +158,13 @@ int DrumMachine::pullAudio(AUDIO_SAMPLE_TYPE *target, int length)
         int sampleMixCount = ((length-pos) >> 1);
         int samplesBeforeNextTick = m_samplesPerTick - m_sampleCounter;
 
-        if(sampleMixCount > samplesBeforeNextTick) {
+        if (sampleMixCount > samplesBeforeNextTick) {
             sampleMixCount = samplesBeforeNextTick;
         }
 
-        if(sampleMixCount > 0) {
+        if (sampleMixCount > 0) {
             int mixed = m_mixer->pullAudio(target, sampleMixCount * 2);
-            if(mixed < 1) {
+            if (mixed < 1) {
                 // fatal error
                 return 0;
             }
@@ -173,7 +173,7 @@ int DrumMachine::pullAudio(AUDIO_SAMPLE_TYPE *target, int length)
             m_sampleCounter += (mixed >> 1);
         }
 
-        if(m_sampleCounter >= m_samplesPerTick) {
+        if (m_sampleCounter >= m_samplesPerTick) {
             tick();
             m_sampleCounter -= m_samplesPerTick;
         }
@@ -189,7 +189,7 @@ DrumMachine::TYPE_DRUM_SEQ DrumMachine::readUserBeat(int index)
 
     QString key = QString("UserBeat_%1").arg(index);
     QStringList list = m_Settings->value(key).toString().split(',');
-    if(list.size() != SEQUENCE_LENGTH) {
+    if (list.size() != SEQUENCE_LENGTH) {
         // There was no user saved beat yet or the beat was corrupted,
         // create an empty 32 item seq.
         seq.fill(0, SEQUENCE_LENGTH);
@@ -197,7 +197,7 @@ DrumMachine::TYPE_DRUM_SEQ DrumMachine::readUserBeat(int index)
     }
 
     QStringList::const_iterator it;
-    for(it=list.begin(); it!=list.end(); it++) {
+    for (it=list.begin(); it!=list.end(); it++) {
         seq.push_back(it->toULong());
     }
 
@@ -213,9 +213,9 @@ void DrumMachine::saveUserBeat(int index,
 
     DrumMachine::TYPE_DRUM_SEQ::const_iterator it;
 
-    for(it=seq.begin(); it != seq.end(); it++) {
+    for (it=seq.begin(); it != seq.end(); it++) {
         data += QString("%1").arg(*it);
-        if(it + 1 != seq.end())
+        if (it + 1 != seq.end())
             data += ",";
     }
 
@@ -230,7 +230,7 @@ void DrumMachine::setBeat(QVariant index)
     // easily from hard coded arrays to QVector
     std::vector<unsigned char> tempvec;
 
-    switch(index.toInt()) {
+    switch (index.toInt()) {
     // Predefined sequences
     //
     case 0:
@@ -261,10 +261,10 @@ void DrumMachine::setBeat(QVariant index)
 
     // Update the UI with new drum sequence
     //
-    for(unsigned char i=0; i<m_seq.size(); i++) {
+    for (unsigned char i=0; i<m_seq.size(); i++) {
         unsigned char tick = m_seq[i];
-        for(int j=0; j<m_drumSamples.size(); j++) {
-            if(tick & 1)
+        for (int j=0; j<m_drumSamples.size(); j++) {
+            if (tick & 1)
                 emit(drumButtonState(i, j, true));
             else
                 emit(drumButtonState(i, j, false));
@@ -288,18 +288,18 @@ void DrumMachine::drumButtonToggled(QVariant tick, QVariant sample,
     int iSample(sample.toInt());
     bool bPressed(pressed.toBool());
 
-    if(iTick >= m_seq.size()) {
+    if (iTick >= m_seq.size()) {
         // UI thinks the sequence is longer than the model
         // There is nothing we can do.
         return;
     }
 
-    if(bPressed)
+    if (bPressed)
         m_seq[iTick] = m_seq[iTick] | (1 << iSample);
     else
         m_seq[iTick] = m_seq[iTick] ^ (1 << iSample);
 
-    if(isUserBeat() == false) {
+    if (isUserBeat() == false) {
         // User edited predefined beats, don't save
         return;
     }

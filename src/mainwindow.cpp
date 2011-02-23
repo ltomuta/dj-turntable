@@ -75,7 +75,7 @@ void MainWindow::initializeQMLComponent()
 
     // If there are errors in QML code and the elements does not exist,
     // they won't be found Qt side either, check existance of the elements.
-    if(turnTableQML == NULL || sampleSelectorQML == NULL || drumMachineQML == NULL) {
+    if (turnTableQML == NULL || sampleSelectorQML == NULL || drumMachineQML == NULL) {
         QMessageBox::warning(NULL, "Warning",
                              "Failed to resolve QML elements in main.cpp");
         return;
@@ -164,15 +164,15 @@ void MainWindow::initializeQMLComponent()
  */
 QObject* MainWindow::findQMLElement(QObject *rootElement, const QString &objectName)
 {
-    if(rootElement->objectName() == objectName) {
+    if (rootElement->objectName() == objectName) {
         return rootElement;
     }
 
     const QObjectList list = rootElement->children();
-    for(QObjectList::const_iterator it=list.begin(); it!=list.end(); it++)
+    for (QObjectList::const_iterator it=list.begin(); it!=list.end(); it++)
     {
         QObject *object = findQMLElement((*it), objectName);
-        if(object != NULL) {
+        if (object != NULL) {
             return object;
         }
     }

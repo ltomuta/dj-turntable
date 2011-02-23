@@ -56,7 +56,7 @@ public slots:
 
 #if defined(Q_OS_SYMBIAN) || defined(Q_WS_MAEMO_5)
     void profile(QSystemDeviceInfo::Profile profile) {
-        if(profile == QSystemDeviceInfo::SilentProfile) {
+        if (profile == QSystemDeviceInfo::SilentProfile) {
             m_audioMixer->setGeneralVolume(0.0f);
         }
     #ifdef Q_WS_MAEMO_5
@@ -125,7 +125,7 @@ protected:
         virtual void MrccatoCommand(TRemConCoreApiOperationId aOperationId,
                                     TRemConCoreApiButtonAction /*aButtonAct*/)
         {
-            switch( aOperationId ) {
+            switch ( aOperationId ) {
             case ERemConCoreApiVolumeDown:
                 m_TurnTable->volumeDown();
                 break;

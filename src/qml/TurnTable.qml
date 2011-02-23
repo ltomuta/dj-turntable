@@ -35,33 +35,33 @@ Rectangle {
     Keys.onLeftPressed: drumMachine.selectedTickGroup = 1
     Keys.onRightPressed: drumMachine.selectedTickGroup = 2
     Keys.onPressed: {
-        if(event.key == 56 || event.key == Qt.Key_I) {
+        if (event.key == 56 || event.key == Qt.Key_I) {
             flickable.setState("Help")
             event.accepted = true
         }
-        else if(event.key == 115 || event.key == Qt.Key_S) {
+        else if (event.key == 115 || event.key == Qt.Key_S) {
             flickable.setState("SampleSelector")
             event.accepted = true
         }
-        else if(event.key == Qt.Key_PageDown) {
+        else if (event.key == Qt.Key_PageDown) {
             diskReflection.rotation += 11.25
             event.accepted = true
         }
-        else if(event.key == Qt.Key_PageUp) {
+        else if (event.key == Qt.Key_PageUp) {
             diskReflection.rotation -= 11.25
             event.accepted = true
         }
-        else if(event.key == Qt.Key_Backspace) {
+        else if (event.key == Qt.Key_Backspace) {
             if(flickable.state == "Help") {
                 helpScreen.backPressed()
                 event.accepted = true
             }
-            else if(flickable.state == "SampleSelector") {
+            else if (flickable.state == "SampleSelector") {
                 sampleSelector.backPressed()
                 event.accepted = true
             }
         }
-        else if(event.key == Qt.Key_Return || event.key == Qt.Key_Enter) {
+        else if (event.key == Qt.Key_Return || event.key == Qt.Key_Enter) {
             drumMachine.running = !drumMachine.running
             event.accepted = true
         }
@@ -90,7 +90,7 @@ Rectangle {
         property string prevState: ""
 
         function setState(newState) {
-            if(newState != state) {
+            if (newState != state) {
                 prevState = state
                 state = newState
             }
@@ -161,7 +161,7 @@ Rectangle {
                         disc.rotation = (disc.rotation + 0.36 *
                                          disc.currentSpeed * interval) % 360
 
-                        if(Math.abs(disc.currentSpeed - disc.targetSpeed) <= 0.01) {
+                        if (Math.abs(disc.currentSpeed - disc.targetSpeed) <= 0.01) {
                             disc.currentSpeed = disc.targetSpeed
                         }
                         else {
@@ -200,7 +200,7 @@ Rectangle {
                     var xlength = Math.abs(mouse.x - centerx)
                     var ylength = Math.abs(mouse.y - centery)
 
-                    if(Math.sqrt(xlength * xlength + ylength *
+                    if (Math.sqrt(xlength * xlength + ylength *
                                  ylength) > centerx) {
                         // mouse press did not hit on the disk, the disk is actually
                         // rectangle shaped and the mouse was pressed one of the corners
@@ -229,12 +229,12 @@ Rectangle {
                     var angledelta = (Math.atan2(by, bx) -
                                       Math.atan2(ay, ax)) * 57.2957795
 
-                    if(angledelta > 180)       { angledelta -= 360 }
-                    else if(angledelta < -180) { angledelta += 360 }
+                    if (angledelta > 180)       { angledelta -= 360 }
+                    else if (angledelta < -180) { angledelta += 360 }
 
                     disc.rotation = (disc.rotation + angledelta) % 360
 
-                    if(now - previousTime > 0) {
+                    if (now - previousTime > 0) {
                         disc.currentSpeed = angledelta * 2.77778 /
                                             (now - previousTime)
                     }
@@ -477,7 +477,7 @@ Rectangle {
 
                     function press() {
                         turntable.playing = !turntable.playing
-                        if(turntable.playing) {
+                        if (turntable.playing) {
                             ui.seekToPosition(0)
                             arm.moveIn()
                         }

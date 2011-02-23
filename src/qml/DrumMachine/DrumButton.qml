@@ -25,7 +25,7 @@ Item {
         anchors.fill: parent
         onClicked: {
             button.pressed = !button.pressed
-            if(tick != -1 || sample != -1) {
+            if (tick != -1 || sample != -1) {
                 button.buttonToggled()
             }
         }

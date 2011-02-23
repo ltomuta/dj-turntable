@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
     #ifdef Q_OS_SYMBIAN
         CAknAppUi* appUi = dynamic_cast<CAknAppUi*> (CEikonEnv::Static()->AppUi());
         TRAP_IGNORE(
-            if(appUi) {
+            if (appUi) {
                 appUi->SetOrientationL(CAknAppUi::EAppUiOrientationLandscape);
             }
         );

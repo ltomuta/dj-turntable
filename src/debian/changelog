@@ -1,7 +1,7 @@
 turntable (1.2.1) stable; urgency=low
 
   * Added error handling when loading external wavs
-  
+
  -- Forum Nokia <FN.Documentation@nokia.com>  Tue, 17 Feb 2011 14:05:10 +0300
 
 
@@ -9,13 +9,13 @@ turntable (1.2.0) stable; urgency=low
 
   * Added splash screen
   * Allow to playing of external wavs
-  
+
  -- Forum Nokia <FN.Documentation@nokia.com>  Tue, 15 Feb 2011 12:05:10 +0300
 
 turntable (1.1.0) unstable; urgency=low
 
   * Sync drum machine to turntable speed
-  
+
  -- Antonio Aloisio <antonio.aloisio@nokia.com>  Fri, 07 Jan 2010 10:14:38 +0300
 
 turntable (1.0.0) stable; urgency=low

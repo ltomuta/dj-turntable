@@ -83,7 +83,7 @@ AudioBuffer* AudioBuffer::loadWav(FILE *wavFile, QString *errorString)
 AudioBuffer* AudioBuffer::loadWav(QFile &wavFile, QString *errorString)
 {
     if (wavFile.open(QIODevice::ReadOnly) == false) {
-        if(errorString)
+        if (errorString)
             *errorString = QString("Permission problem");
         return 0;
     }
@@ -96,7 +96,7 @@ AudioBuffer* AudioBuffer::loadWav(QFile &wavFile, QString *errorString)
         if (header.chunkID[0] != 'R' || header.chunkID[1] != 'I' ||
                 header.chunkID[2] != 'F' || header.chunkID[3] != 'F') {
             // Incorrect header
-            if(errorString)
+            if (errorString)
                 *errorString = QString("Incorrect header");
             return 0;
         }
@@ -107,7 +107,7 @@ AudioBuffer* AudioBuffer::loadWav(QFile &wavFile, QString *errorString)
         if (header.format[0] != 'W' || header.format[1] != 'A' ||
                 header.format[2] != 'V' || header.format[3] != 'E') {
             // Incorrect header
-            if(errorString)
+            if (errorString)
                 *errorString = QString("Incorrect header");
             return 0;
         }
@@ -116,7 +116,7 @@ AudioBuffer* AudioBuffer::loadWav(QFile &wavFile, QString *errorString)
         if (header.subchunk1id[0] != 'f' || header.subchunk1id[1] != 'm' ||
                 header.subchunk1id[2] != 't' || header.subchunk1id[3] != ' ') {
             // Incorrect header
-            if(errorString)
+            if (errorString)
                 *errorString = QString("Incorrect header");
             return 0;
         }
@@ -131,12 +131,12 @@ AudioBuffer* AudioBuffer::loadWav(QFile &wavFile, QString *errorString)
 
         while (1) {
             if (wavFile.read((char*)&header.subchunk2id, 4 ) != 4) {
-                if(errorString)
+                if (errorString)
                     *errorString = QString("Incorrect header");
                 return 0;
             }
             if (wavFile.read((char*)&header.subchunk2size, 4 ) != 4) {
-                if(errorString)
+                if (errorString)
                     *errorString = QString("Incorrect header");
                 return 0;
             }
@@ -145,7 +145,7 @@ AudioBuffer* AudioBuffer::loadWav(QFile &wavFile, QString *errorString)
                 break; // found the data, chunk
             // this was not the data-chunk. skip it
             if (header.subchunk2size < 1) {
-                if(errorString)
+                if (errorString)
                     *errorString = QString("Incorrect header");
                 return 0;
             }
@@ -154,7 +154,7 @@ AudioBuffer* AudioBuffer::loadWav(QFile &wavFile, QString *errorString)
 
         // the data follows.
         if (header.subchunk2size < 1) {
-            if(errorString)
+            if (errorString)
                 *errorString = QString("Incorrect header");
             return 0;
         }
@@ -187,23 +187,23 @@ AudioBuffer* AudioBuffer::loadWav(QFile &wavFile, QString *errorString)
                 rval->m_sampleFunction = sampleFunction32bitStereo;
         }
 
-        if(rval->m_sampleFunction == NULL) {
+        if (rval->m_sampleFunction == NULL) {
             // unknown bit rate
             delete rval;
             rval = 0;
 
-            if(errorString)
+            if (errorString)
                 *errorString = QString("Unsupported bit rate");
             return 0;
         }
     }
     catch(...) {
-        if(rval != 0) {
+        if (rval != 0) {
             delete rval;
             rval = 0;
         }
 
-        if(errorString)
+        if (errorString)
             *errorString = QString("Out of memory");
         return 0;
     }

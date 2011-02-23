@@ -2,7 +2,7 @@
  * Copyright (c) 2011 Nokia Corporation.
  */
 
-import Qt 4.7
+import QtQuick 1.0
 
 Rectangle {
     id: page

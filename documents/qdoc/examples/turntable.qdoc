@@ -69,4 +69,20 @@
 	\section1 Playing audio
 
 	The TurnTable C++ object is the master mixer of the application in addition to being the audio source of the turntable sample. The DrumMachine C++ object handles the playing and mixing of drum samples. The drum machine audio is output to the TurnTable object which will mix the drum samples with the turntable sample. Finally the audio is outputted to the audio device via GE::AudioOut. 
+
+    \section1 Required capabilities
+
+	Application can be self-signed.
+
+    \section1 Compatibility
+
+    Qt 4.7.2 for Symbian
+	
+	Qt 4.7.0 for Maemo
+              
+    QtMobility 1.1.1
+                
+    Tested on: Nokia N8, Nokia E7, Nokia C6, Nokia N900
+                
+    Developed with: Qt SDK 1.1
 */

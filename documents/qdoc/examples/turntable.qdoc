@@ -26,63 +26,63 @@
 ****************************************************************************/
 
 /*!
-	\title DJ Turntable Example
-	\example
+    \title DJ Turntable Example
+    \example
 
-	The Dj Turntable is an application that integrates Qt Quick UI, Game Enabler (GE) audio engine and Qt Mobility features such as accelerometer sensor and profile reading. 
+    The Dj Turntable is an application that integrates Qt Quick UI, Game Enabler (GE) audio engine and Qt Mobility features such as accelerometer sensor and profile reading. 
 
-	\image qml-turntable-example.png
-	
-	\section1 Initialization
+    \image qml-turntable-example.png
+    
+    \section1 Initialization
 
-	All of the initialization is done in the main function: the orientation locking to landscape (only in Symbian), creating the QDeclarativeView to interpret QML, creating the Turntable and DrumMachine C++ objects and creating the Qt Mobility objects. The root QML element, TurnTable.qml, is retrieved from QDeclarativeView and stored as a QObject pointer to later make Qt Signals and Slots connections. Also the DrumMachine.qml element is retrieved via a recursive search from the QML element tree with object name "drumMachine". This way, both the Turntable.qml and the DrumMachine.qml can have C++ object equivalents and the code is much cleaner as the root element TurnTable.qml does not have to provide interface functions for the DrumMachine.qml. 
+    All of the initialization is done in the main function: the orientation locking to landscape (only in Symbian), creating the QDeclarativeView to interpret QML, creating the Turntable and DrumMachine C++ objects and creating the Qt Mobility objects. The root QML element, TurnTable.qml, is retrieved from QDeclarativeView and stored as a QObject pointer to later make Qt Signals and Slots connections. Also the DrumMachine.qml element is retrieved via a recursive search from the QML element tree with object name "drumMachine". This way, both the Turntable.qml and the DrumMachine.qml can have C++ object equivalents and the code is much cleaner as the root element TurnTable.qml does not have to provide interface functions for the DrumMachine.qml. 
 
-	See more details about searching the QML element by objectName property from Forum Nokia code snippet:
-	http://wiki.forum.nokia.com/index.php/Using_objectName_to_find_QML_elements_from_Qt 
+    See more details about searching the QML element by objectName property from Forum Nokia code snippet:
+    http://wiki.forum.nokia.com/index.php/Using_objectName_to_find_QML_elements_from_Qt 
 
-	\section1 Turntable
+    \section1 Turntable
 
-	The turntable is implemented using a Timer element which rotates a disk (Image element) 60 times in a second by using the currentSpeed property of the disk. The currentSpeed property follows the targetSpeed property which gives us the acceleration effect. For example, when the turntable is started the currentSpeed is zero and the targetSpeed is set to 1.0. The changes to the currentSpeed property value are signaled to the Qt side of the code and the frequency of the audio sample is then changed accordingly. 
+    The turntable is implemented using a Timer element which rotates a disk (Image element) 60 times in a second by using the currentSpeed property of the disk. The currentSpeed property follows the targetSpeed property which gives us the acceleration effect. For example, when the turntable is started the currentSpeed is zero and the targetSpeed is set to 1.0. The changes to the currentSpeed property value are signaled to the Qt side of the code and the frequency of the audio sample is then changed accordingly. 
 
-	A MouseArea element, anchored as the size of the disc, is used to detect user input to the disc. When the mouse is pressed on the disk the timer is stopped. The movement of the mouse on the disc is calculated and the disc is then rotated by the resolved angle. Also by calculating the angle speed of the rotation, the currentSpeed value can be set. When the disc is "scratched" another signal, diskAimSpeed, is used. It tells the audio engine to alter the frequency of the sample with a smoothing. 
+    A MouseArea element, anchored as the size of the disc, is used to detect user input to the disc. When the mouse is pressed on the disk the timer is stopped. The movement of the mouse on the disc is calculated and the disc is then rotated by the resolved angle. Also by calculating the angle speed of the rotation, the currentSpeed value can be set. When the disc is "scratched" another signal, diskAimSpeed, is used. It tells the audio engine to alter the frequency of the sample with a smoothing. 
 
-	See more details about implementing a spinnable disc with user interaction from Forum Nokia code snippet:
-	http://wiki.forum.nokia.com/index.php/Creating_a_spinnable_disc_with_QML 
+    See more details about implementing a spinnable disc with user interaction from Forum Nokia code snippet:
+    http://wiki.forum.nokia.com/index.php/Creating_a_spinnable_disc_with_QML 
 
-	\section1 View transitions
+    \section1 View transitions
 
-	The view change transitions between Turntable, Drum machine, Sample selector and Info screen were implemented by placing all the UI controls on a Flickable element that is set to non-interactive mode. By changing the Flickable's contentX and contentY properties the view could then be changed when the side panel buttons or the info screen button are pressed. 
+    The view change transitions between Turntable, Drum machine, Sample selector and Info screen were implemented by placing all the UI controls on a Flickable element that is set to non-interactive mode. By changing the Flickable's contentX and contentY properties the view could then be changed when the side panel buttons or the info screen button are pressed. 
 
-	See more details about using Flickable in non-interactive mode from Forum Nokia code snippet:
-	http://wiki.forum.nokia.com/index.php/Using_Flickable_to_implement_a_view_change_animation 
+    See more details about using Flickable in non-interactive mode from Forum Nokia code snippet:
+    http://wiki.forum.nokia.com/index.php/Using_Flickable_to_implement_a_view_change_animation 
 
-	\section1 Drum machine
+    \section1 Drum machine
 
-	The Drum machine is basically a grid filled with 32 (ticks) x 6 (samples) DrumButton elements. The grid is placed in a non-interactive Flickable element to divide the grid into two horizontal views. Each DrumButton knows its tick and sample so when pressed they will signal their current state to the C++ DrumMachine object. If the drum sequence is user-defined, it is saved into the platform-specific storage by using Qt class QSettings. When the beat of the BeatSelector is changed the signal setBeat is emitted and it is handled in C++ DrumMachine object. It will then read the corresponding beat via QSettings and signal the state of each DrumButton with signal drumButtonState. 
+    The Drum machine is basically a grid filled with 32 (ticks) x 6 (samples) DrumButton elements. The grid is placed in a non-interactive Flickable element to divide the grid into two horizontal views. Each DrumButton knows its tick and sample so when pressed they will signal their current state to the C++ DrumMachine object. If the drum sequence is user-defined, it is saved into the platform-specific storage by using Qt class QSettings. When the beat of the BeatSelector is changed the signal setBeat is emitted and it is handled in C++ DrumMachine object. It will then read the corresponding beat via QSettings and signal the state of each DrumButton with signal drumButtonState. 
 
-	When the drum machine is powered on, the C++ DrumMachine object will periodically emit signals about the progress of the beat. This is visualized in the UI by moving the highlight (narrow Rectangle element) on top of the drum buttons and changing between the two views to show the right tick range.
+    When the drum machine is powered on, the C++ DrumMachine object will periodically emit signals about the progress of the beat. This is visualized in the UI by moving the highlight (narrow Rectangle element) on top of the drum buttons and changing between the two views to show the right tick range.
 
-	\section1 Scaling
+    \section1 Scaling
 
-	The UI of the application is implemented to scale to the resolution. This is required because the application is targeted to Symbian and Maemo devices, whose resolutions are 640 x 360 and 800 x 480, respectively. Also to support desktop targets, where the resolution of the application can be almost anything, a scalable UI seemed to be the only choice. The scalability is implemented mostly by using percentage values instead of constant values. In some cases Math.min(x, y) is used to find out the minimum value of the width and height and scale other values according to this value. 
+    The UI of the application is implemented to scale to the resolution. This is required because the application is targeted to Symbian and Maemo devices, whose resolutions are 640 x 360 and 800 x 480, respectively. Also to support desktop targets, where the resolution of the application can be almost anything, a scalable UI seemed to be the only choice. The scalability is implemented mostly by using percentage values instead of constant values. In some cases Math.min(x, y) is used to find out the minimum value of the width and height and scale other values according to this value. 
 
-	\section1 Playing audio
+    \section1 Playing audio
 
-	The TurnTable C++ object is the master mixer of the application in addition to being the audio source of the turntable sample. The DrumMachine C++ object handles the playing and mixing of drum samples. The drum machine audio is output to the TurnTable object which will mix the drum samples with the turntable sample. Finally the audio is outputted to the audio device via GE::AudioOut. 
+    The TurnTable C++ object is the master mixer of the application in addition to being the audio source of the turntable sample. The DrumMachine C++ object handles the playing and mixing of drum samples. The drum machine audio is output to the TurnTable object which will mix the drum samples with the turntable sample. Finally the audio is outputted to the audio device via GE::AudioOut. 
 
     \section1 Required capabilities
 
-	Application can be self-signed.
+    Application can be self-signed.
 
     \section1 Compatibility
 
     Qt 4.7.2 for Symbian
-	
-	Qt 4.7.0 for Maemo
-              
+    
+    Qt 4.7.0 for Maemo
+
     QtMobility 1.1.1
-                
+
     Tested on: Nokia N8, Nokia E7, Nokia C6, Nokia N900
-                
-    Developed with: Qt SDK 1.1
+
+Developed with: Qt SDK 1.1
 */

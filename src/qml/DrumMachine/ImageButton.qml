@@ -5,10 +5,6 @@ Image {
 
     signal clicked(variant button, int index)
 
-    onClicked: {
-        pressed = !pressed
-    }
-
     property int index: -1
     property bool pressed: false
     property alias buttonCenterImage: buttonCenter.source

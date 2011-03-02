@@ -28,6 +28,7 @@ Image {
 
 
     property bool ledOn: false
+    property alias running: powerbutton.pressed
     property alias selectedTickGroup: tickGroupSelector.selectedTickGroup
     property real speed
 
@@ -279,6 +280,10 @@ Image {
                 width: beatSelector.buttonWidth; height: width
                 buttonCenterImage: "../images/powerbutton.png"
                 glowColor: pressed ? "#CC00FF00" : "#CCFF0000"
+
+                onClicked: {
+                    pressed = !pressed
+                }
 
                 onPressedChanged: {
                     if (pressed) {

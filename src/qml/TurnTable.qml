@@ -1,5 +1,4 @@
 import QtQuick 1.0
-import Qt.labs.folderlistmodel 1.0
 import "SampleSelector"
 import "DrumMachine"
 import "HelpScreen"

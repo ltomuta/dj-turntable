@@ -28,7 +28,6 @@ Image {
 
 
     property bool ledOn: false
-    property alias running: powerbutton.pressed
     property alias selectedTickGroup: tickGroupSelector.selectedTickGroup
     property real speed
 
@@ -111,7 +110,6 @@ Image {
             }
         }
     }
-
 
     Column {
         id: sampleIcons
@@ -291,8 +289,6 @@ Image {
                         drumMachine.ledOn = false
                     }
                 }
-
-                onClicked: pressed = !pressed
             }
         }
     }

@@ -1,3 +1,10 @@
+turntable (1.2.2) stable; urgency=low
+
+  * Compatibility with Qt 4.7.2
+  
+ -- Forum Nokia <FN.Documentation@nokia.com>  Wed, 02 Mar 2011 11:05:10 +0300
+
+
 turntable (1.2.1) stable; urgency=low
 
   * Added error handling when loading external wavs

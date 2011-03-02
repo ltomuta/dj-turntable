@@ -5,6 +5,10 @@ Image {
 
     signal clicked(variant button, int index)
 
+    onClicked: {
+        pressed = !pressed
+    }
+
     property int index: -1
     property bool pressed: false
     property alias buttonCenterImage: buttonCenter.source
@@ -16,7 +20,8 @@ Image {
 
     Rectangle {
         id: glowColor
-        anchors.fill: parent; anchors.margins: parent.width * 0.8
+        anchors.centerIn: parent
+        width: 0.5 * parent.width; height: 0.5 * parent.height
         z: -1
         color: button.pressed ? "#CCFF0000" : "#CC202020"
         Behavior on color { ColorAnimation { duration: 100 } }

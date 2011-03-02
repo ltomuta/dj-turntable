@@ -1,8 +1,8 @@
-DJ Turntable v1.2.1
+DJ Turntable v1.2.2
 ===================
 
 Dj Turntable demonstrates integrating a Qt Quick application to the Qt audio
-interface. The application is compatible with Symbian^3 devices with Qt 4.7.1
+interface. The application is compatible with Symbian^3 devices with Qt 4.7.2
 or higher, Maemo devices with Qt 4.7.0, and Windows desktop computers starting 
 with Windows XP (the Qt libraries are provided with the executable).
 
@@ -139,7 +139,7 @@ Mobile device (Symbian^3)
 
 There are two ways to install the application on the device.
 
-0. The Qt libraries (4.7.1 or higher) must be installed. See the section 
+0. The Qt libraries (4.7.2 or higher) must be installed. See the section 
    COMPATIBILITY for more information about the installation.
 
 1. a) Drag the turntable.sis file to the Nokia Ovi Suite when the device is 
@@ -164,7 +164,7 @@ Mobile device (Maemo)
 0. The Qt libraries (4.7.0 or higher) must be installed. See the section 
    COMPATIBILITY for more information about the installation.
 
-1. Copy the turntable_1.2.1_armel.deb file into a specific folder on the 
+1. Copy the turntable_1.2.2_armel.deb file into a specific folder on the 
    device (for example, 'MyDocs').
 
 2. Start XTerm. Type 'sudo gainroot' to get root access.
@@ -173,7 +173,7 @@ Mobile device (Maemo)
    (for example, 'cd MyDocs').
 
 4. As root, install the package:
-   dpkg -i turntable_1.2.1_armel.deb
+   dpkg -i turntable_1.2.2_armel.deb
 
 5. Launch the Applications menu.
 
@@ -253,13 +253,13 @@ http://creativecommons.org/licenses/sampling+/1.0/ license.
 COMPATIBILITY
 -------------------------------------------------------------------------------
 
-- Symbian^3 with Qt version 4.7.1 or higher.
+- Symbian^3 with Qt version 4.7.2 or higher.
 
-  1. Download Qt for Symbian (4.7.1 or higher) from qt.nokia.com.
+  1. Download Qt for Symbian (4.7.2 or higher) from qt.nokia.com.
   
   2. Drag qt_installer.sis on top of the device in Nokia Ovi Suite while the 
      device is connected. The SIS package is found in the installation folder 
-     of Qt for SYmbian (4.7.1 or higher).
+     of Qt for Symbian (4.7.2 or higher).
      
      
 - Maemo with PR1.3 which includes Qt 4.7.0.
@@ -279,9 +279,14 @@ Tested on:
 - Nokia N900
 - Windows XP
 
+Developed with:
+
+-QtSDK 1.1beta
+
 
 VERSION HISTORY
 -------------------------------------------------------------------------------
+v1.2.2 Compatibility with Qt 4.7.2.
 v1.2.1 Added error handling to opening of external wav-files.
 v1.2 Added possibility to play external wav-files.
 v1.1 Updated version for Forum Nokia. 

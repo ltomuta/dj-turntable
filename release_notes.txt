@@ -1,7 +1,7 @@
 DJ Turntable v1.2.2
 ===================
 
-Dj Turntable demonstrates integrating a Qt Quick application to the Qt audio
+DJ Turntable demonstrates integrating a Qt Quick application to the Qt audio
 interface. The application is compatible with Symbian^3 devices with Qt 4.7.2
 or higher, Maemo devices with Qt 4.7.0, and Windows desktop computers starting 
 with Windows XP (the Qt libraries are provided with the executable).
@@ -126,7 +126,7 @@ KNOWN ISSUES
 - There is currently some latency when playing audio in Symbian.
 
 - Symbian^1 target is currently not supported due to missing mmfdevsound, 
-  remconcoreapi and remconinterfacebase libraries in Symbian^1 target in
+  remconcoreapi, and remconinterfacebase libraries in Symbian^1 target in
   QtSDK 1.1TP. These libraries are required to control the master volume of
   the application and to handle the HW camera zoom buttons.
 
@@ -194,39 +194,44 @@ RUNNING THE APPLICATION
 DJ Turntable is a Forum Nokia example that demonstrates integrating a Qt Quick 
 application to the Qt audio interface.
 
+
 Turntable
 
 Play the looping sample with a realistic turntable. The sample can be 
-scratched with the finger, played faster, slower, and backwards. The speed of 
+scratched with a finger, played faster, slower, and backwards. The speed of 
 the record can be adjusted with the speed slider, the default 1x speed can be 
 obtained by double-clicking the speed slider knob. DJ Turntable includes 
 Cutoff and Resonance control knobs to alter the sample in real time. The knobs 
 are rotated by moving a finger up and down on top of them.
 
+
 Sample selector
 
-Use the sample selector to change the sample that turntable is playing by
-selecting the desired sample from the directory view. Following uncompressed
-wav-formats are supported:
- 8 bit unsigned
-16 bit unsigned
-32 bit float
+Use the sample selector to change the sample that the turntable is playing by
+selecting the desired sample from the directory view. The following 
+uncompressed WAV formats are supported:
+ 
+ 8-bit unsigned
+16-bit unsigned
+32-bit float
 
 The application will open the last selected sample on startup. Use the default
 sample button on the right under the back button to reset back to the default
 sample.
 
+
 Drum machine
                       
 Play and edit the drum beats. There are three predefined beats which can be
 played and edited but the edits are not stored. For the user there are three
-beats that are saved to the device memory whenever they are edited. Use the
-beat selector buttons in the bottom of the view to switch between the beats.
+beats that are saved in the device memory whenever they are edited. Use the
+beat selector buttons at the bottom of the view to switch between the beats.
 All the beats are 32 ticks long and they contain 6 different drum samples:
 hi-hat, hi-hat open, bass drum, snare, cymbal, and cow bell.
 
 The drum machine will play all drum beats at 150 bpm. Changing the speed of
-the turntable will affect to the playing speed of the drum machine accordingly.
+the turntable will affect the playing speed of the drum machine accordingly.
+
 
 Keyboard shortcuts
 
@@ -242,6 +247,7 @@ Key right = View the 2nd tick group in the drum machine
 Key i = Go to the info view
 Key s = Go to the sample selector view
 Backspace = Return from the info or sample selector view to the previous view
+
 
 Samples
 
@@ -286,8 +292,9 @@ Developed with:
 
 VERSION HISTORY
 -------------------------------------------------------------------------------
+
 v1.2.2 Compatibility with Qt 4.7.2.
-v1.2.1 Added error handling to opening of external wav-files.
-v1.2 Added possibility to play external wav-files.
+v1.2.1 Added error handling to opening of external WAV files.
+v1.2 Added possibility to play external WAV files.
 v1.1 Updated version for Forum Nokia. 
 v1.0 Initial version published in Forum Nokia Projects only.

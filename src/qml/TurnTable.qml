@@ -220,6 +220,14 @@ Rectangle {
                 onPositionChanged: {
                     var now = new Date().getTime()
 
+                    if(mouse.x == previousX && mouse.y == previousY) {
+                        // In Harmattan sometimes we get duplicate
+                        // touch events, we have to filter them out
+                        // or we will get the angledelta = 0 in our
+                        // calculations below.
+                        return;
+                    }
+
                     var ax = mouse.x - centerx
                     var ay = centery - mouse.y
                     var bx = previousX - centerx
@@ -233,9 +241,10 @@ Rectangle {
 
                     disc.rotation = (disc.rotation + angledelta) % 360
 
-                    if (now - previousTime > 0) {
-                        disc.currentSpeed = angledelta * 2.77778 /
-                                            (now - previousTime)
+                    var deltaTime = now - previousTime;
+
+                    if (deltaTime > 0) {
+                        disc.currentSpeed = angledelta * 2.77778 / deltaTime
                     }
 
                     previousX = mouse.x
@@ -331,8 +340,12 @@ Rectangle {
             Item {
                 id: buttonPanel
 
-                anchors { left: parent.left; right: parent.right }
-                anchors { top: parent.top }
+                anchors {
+                    left: parent.left
+                    right: parent.right
+                    top: parent.top
+                }
+
                 height: parent.height / 6
 
                 Image {
@@ -340,13 +353,20 @@ Rectangle {
 
                     property bool pressed: false
 
-                    anchors { left: parent.horizontalCenter }
-                    anchors { right: parent.right; top: parent.top }
-                    anchors { bottom: parent.bottom; margins: 5 }
+                    anchors {
+                        left: parent.horizontalCenter
+                        right: parent.right
+                        top: parent.top
+                        bottom: parent.bottom
+                        margins: 5
+                    }
 
                     source: pressed ? "images/exit_on.png" : "images/exit.png"
                     smooth: true
                     asynchronous: true
+                    // The exitButtonVisible is context property which is set to false
+                    // in harmattan target.
+                    opacity: exitButtonVisible ? 1 : 0
 
                     MouseArea {
                         anchors.fill: parent
@@ -369,10 +389,13 @@ Rectangle {
 
                     property bool pressed: false
 
-                    anchors { left: parent.left }
-                    anchors { right: parent.horizontalCenter }
-                    anchors { top: parent.top; bottom: parent.bottom }
-                    anchors { margins: 5 }
+                    anchors {
+                        left: exitButtonVisible ? parent.left : parent.horizontalCenter
+                        right: exitButtonVisible ? parent.horizontalCenter : parent.right
+                        top: parent.top
+                        bottom: parent.bottom
+                        margins: 5
+                    }
 
                     source: pressed ? "images/info_on.png" : "images/info.png"
                     smooth: true
@@ -526,6 +549,7 @@ Rectangle {
             y: flickable.height
             width: flickable.width; height: flickable.height
             speed: speedslider.value
+            exitButtonOpacity: closeButton.opacity
             onInfoPressed: flickable.setState("Help")
         }
 

@@ -1,10 +1,14 @@
+/**
+ * Copyright (c) 2011 Nokia Corporation.
+ */
+
 #include <QtGui>
 #include <math.h>
 #include "TurnTable.h"
 
-#ifdef Q_OS_SYMBIAN
-#include <remconcoreapitarget.h>
-#include <remconinterfaceselector.h>
+#if defined(Q_OS_SYMBIAN) && !defined(Q_OS_SYMBIAN_1)
+    #include <remconcoreapitarget.h>
+    #include <remconinterfaceselector.h>
 #endif
 
 using namespace GE;
@@ -41,7 +45,9 @@ TurnTable::TurnTable(QSettings *settings, QObject *parent)
     m_audioMixer->setGeneralVolume(m_Settings->value("Volume",
                                                      m_defaultVolume).toFloat());
 
-#ifdef Q_OS_SYMBIAN
+    m_audioMixer->setGeneralVolume(1.0);
+
+#if defined(Q_OS_SYMBIAN) && !defined(Q_OS_SYMBIAN_1)
     Observer *m_Observer = new Observer(this);
     m_Selector = CRemConInterfaceSelector::NewL();
     m_Target = CRemConCoreApiTarget::NewL(*m_Selector, *m_Observer);
@@ -64,7 +70,7 @@ TurnTable::~TurnTable()
     delete m_audioOut;
     delete m_audioMixer;
 
-#ifdef Q_OS_SYMBIAN
+#if defined(Q_OS_SYMBIAN) && !defined(Q_OS_SYMBIAN_1)
     delete m_Target;
 #endif
 }
@@ -252,7 +258,7 @@ void TurnTable::setDiscAimSpeed(QVariant value)
 {
     float speed = value.toFloat();
     if (speed > -100.0f && speed < 100.0f) {
-        m_targetSpeed = m_targetSpeed * (1.0f - 0.10f) + speed * 0.10f;
+        m_targetSpeed = m_targetSpeed * (1.0f - 0.50f) + speed * 0.50f;
     }
 }
 

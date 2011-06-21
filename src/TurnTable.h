@@ -8,7 +8,7 @@
 #include "ga_src/GEAudioOut.h"
 #include "ga_src/GEAudioBuffer.h"
 
-#if defined(Q_OS_SYMBIAN) || defined(Q_WS_MAEMO_5)
+#if defined(Q_OS_SYMBIAN) || defined(Q_WS_MAEMO_5) || defined(Q_WS_MAEMO_6)
     #include <QSystemDeviceInfo>
     QTM_USE_NAMESPACE
 #endif
@@ -54,12 +54,12 @@ public slots:
 
     void seekToPosition(QVariant position);
 
-#if defined(Q_OS_SYMBIAN) || defined(Q_WS_MAEMO_5)
+#if defined(Q_OS_SYMBIAN) || defined(Q_WS_MAEMO_5) || defined(Q_WS_MAEMO_6)
     void profile(QSystemDeviceInfo::Profile profile) {
         if (profile == QSystemDeviceInfo::SilentProfile) {
             m_audioMixer->setGeneralVolume(0.0f);
         }
-    #ifdef Q_WS_MAEMO_5
+    #if defined(Q_WS_MAEMO_5) || defined(Q_WS_MAEMO_6)
         // In Maemo where there is no way to get volume
         // back if it is set to 0, we set the volume
         // to the default volume when getting out of
@@ -93,7 +93,7 @@ protected:
 
     const int m_maxLoops;
     int m_loops;
-    int64_t m_pos;
+    long long int m_pos;
     int m_cc;
     float m_speed;
     float m_targetSpeed;

@@ -30,6 +30,7 @@ Image {
     property bool ledOn: false
     property alias running: powerbutton.pressed
     property alias selectedTickGroup: tickGroupSelector.selectedTickGroup
+    property alias exitButtonOpacity: closeButton.opacity
     property real speed
 
     onSpeedChanged: drumMachineSpeed(speed)
@@ -69,6 +70,7 @@ Image {
 
             source: pressed ? "../images/exit_on.png" : "../images/exit.png"
             smooth: true
+            opacity: exitButtonVisible ? 1 : 0
 
             MouseArea {
                 anchors.fill: parent
@@ -91,8 +93,13 @@ Image {
 
             property bool pressed: false
 
-            anchors { left: parent.left; right: parent.horizontalCenter }
-            anchors { top: parent.top; bottom: parent.bottom; margins: 5 }
+            anchors {
+                left: exitButtonVisible ? parent.left : parent.horizontalCenter
+                right: exitButtonVisible ? parent.horizontalCenter : parent.right
+                top: parent.top
+                bottom: parent.bottom
+                margins: 5
+            }
 
             source: pressed ? "../images/info_on.png" : "../images/info.png"
             smooth: true

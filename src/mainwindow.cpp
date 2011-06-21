@@ -7,7 +7,7 @@
 #include <QGLWidget>
 #endif
 
-#if defined(Q_OS_SYMBIAN) || defined(Q_WS_MAEMO_5)
+#if defined(Q_OS_SYMBIAN) || defined(Q_WS_MAEMO_5) || defined(Q_WS_MAEMO_6)
 #include <QSystemDeviceInfo>
 #include "accelerometerfilter.h"
 
@@ -19,6 +19,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent)
 {
     view = new QDeclarativeView(this);
+    view->setAttribute(Qt::WA_NoSystemBackground);
 
 #ifndef QT_NO_OPENGL
     // Use QGLWidget to get the opengl support if available
@@ -56,6 +57,13 @@ void MainWindow::initializeQMLComponent()
 #else
     context->setContextProperty("sampleFolder", QString("file:/") +
                                 QDir::currentPath());
+#endif
+
+#ifdef Q_WS_MAEMO_6
+    // Hide the exit button in Harmattan
+    context->setContextProperty("exitButtonVisible", false);
+#else
+    context->setContextProperty("exitButtonVisible", true);
 #endif
 
     view->setSource(QUrl("qrc:/qml/TurnTable.qml"));
@@ -131,11 +139,13 @@ void MainWindow::initializeQMLComponent()
     // Framework connections
     connect((QObject*)view->engine(), SIGNAL(quit()), qApp, SLOT(quit()));
 
-    #if defined(Q_OS_SYMBIAN) || defined(Q_WS_MAEMO_5)
+#if defined(Q_OS_SYMBIAN) || defined(Q_WS_MAEMO_5) || defined(Q_WS_MAEMO_6)
         // Create Qt accelerometer objects
         accelerometer = new QAccelerometer(this);
         accelerometerFilter = new AccelerometerFilter;
         accelerometer->addFilter(accelerometerFilter);   // does not take the ownership of the filter
+
+        accelerometer->setDataRate(50);
 
         // Create Qt objects for accessing profile information
         deviceInfo = new QSystemDeviceInfo(this);

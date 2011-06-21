@@ -84,7 +84,7 @@ AudioBuffer* AudioBuffer::loadWav(QFile &wavFile, QString *errorString)
 {
     if (wavFile.open(QIODevice::ReadOnly) == false) {
         if (errorString)
-            *errorString = QString("Permission problem");
+            *errorString = QString("Permission problem %1").arg(wavFile.error());
         return 0;
     }
 

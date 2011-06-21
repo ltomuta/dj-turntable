@@ -31,13 +31,17 @@ public:
 
         qreal divider = sqrt(rx * rx + ry * ry + rz * rz);
 
-#if defined(Q_OS_SYMBIAN)
+#if defined(Q_OS_SYMBIAN) || defined(Q_WS_MAEMO_6)
+        // These devices has accelerometer sensors placed as portrait
+        // orientation.
         rx = -(acos(rx / divider) * RADIANS_TO_DEGREES - 90);
-        if (fabs(rx - m_PrevValue) > 1.0f) {
+        if (fabs(rx - m_PrevValue) > 0.1f) {
             emit rotationChanged(rx);
             m_PrevValue = rx;
         }
 #else
+        // And these devices the accelerometer is placed
+        // as landscape orientation.
         ry = acos(ry / divider) * RADIANS_TO_DEGREES - 90;
         if (fabs(ry - m_PrevValue) > 3.0f) {
             emit rotationChanged(ry);

@@ -40,13 +40,13 @@ Rectangle {
                     textFormat: Text.RichText
                     font.pointSize: helpScreen.textSize
 
-                    text: "<b><h2>DJ Turntable v.1.2.2</b></h2>" +
-                          "DJ Turntable is a Forum Nokia example that " +
+                    text: "<b><h2>DJ Turntable v.1.3.0</b></h2>" +
+                          "DJ Turntable is a Nokia example that " +
                           "demonstrates integrating a Qt Quick application " +
                           "to Qt audio interface. See more information " +
                           "about the project at <a href=\"https://projects." +
-                          "forum.nokia.com/turntable\">https://projects." +
-                          "forum.nokia.com/turntable</a>." +
+                          "developer.nokia.com/turntable\">https://projects." +
+                          "developer.nokia.com/turntable</a>." +
                           "<h3>Turntable</h3>" +
                           "<p>Play the looping sample with a realistic " +
                           "turntable. The sample can be scratched with " +

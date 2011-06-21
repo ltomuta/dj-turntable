@@ -1,11 +1,12 @@
-/*
+/**
  * Copyright  2011 Nokia Corporation.
  */
 
 #include <QAudioOutput>
 #include "GEAudioOut.h"
 
-#ifdef Q_OS_SYMBIAN
+#if defined(Q_OS_SYMBIAN) && defined(ENABLE_VOLUME_HACK)
+    #include <QDebug>
     #include <SoundDevice.h>
 #endif
 
@@ -58,6 +59,8 @@ AudioOut::AudioOut(QObject *parent, GE::AudioSource *source)
     m_audioOutput->setNotifyInterval(5);
     connect(m_audioOutput, SIGNAL(notify()), this, SLOT(audioNotify()));
 
+#ifdef ENABLE_VOLUME_HACK
+    qDebug() << "Warning: Symbian volume hack enabled!";
     // Really ugly hack is used as a last resort. This allows us to adjust the
     // application volume in Symbian. The CMMFDevSound object lies deep
     // inside the QAudioOutput in Symbian implementation and it has the needed
@@ -72,6 +75,7 @@ AudioOut::AudioOut(QObject *parent, GE::AudioSource *source)
 
     CMMFDevSound *dev_sound = (CMMFDevSound*)(*temp);
     dev_sound->SetVolume(dev_sound->MaxVolume());
+#endif // ENABLE_VOLUME_HACK
 #endif
 }
 

@@ -10,7 +10,7 @@ class QSplashScreen;
 class TurnTable;
 class DrumMachine;
 
-#if defined(Q_OS_SYMBIAN) || defined(Q_WS_MAEMO_5)
+#if defined(Q_OS_SYMBIAN) || defined(Q_WS_MAEMO_5) || defined(Q_WS_MAEMO_6)
 #include <QAccelerometer>
 #include <QSystemDeviceInfo>
 
@@ -35,7 +35,7 @@ protected:
     QPointer<TurnTable> turnTable;
     QPointer<DrumMachine> drumMachine;
 
-#if defined(Q_OS_SYMBIAN) || defined(Q_WS_MAEMO_5)
+#if defined(Q_OS_SYMBIAN) || defined(Q_WS_MAEMO_5) || defined(Q_WS_MAEMO_6)
     QAccelerometer *accelerometer;
     QPointer<AccelerometerFilter> accelerometerFilter;
     QPointer<QSystemDeviceInfo> deviceInfo;

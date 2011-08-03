@@ -135,6 +135,16 @@ Rectangle {
             }
 
             Image {
+                id: discLabel
+                anchors.centerIn: disc
+                source: "images/disklabel.png"
+                scale: disc.width / disc.sourceSize.width
+                smooth: false
+                visible: lowPerf ? true : false;
+                z: 1
+            }
+
+            Image {
                 id: disc
 
                 // speed are Hz values of the disk
@@ -156,9 +166,16 @@ Rectangle {
                     // 30fps in lowPerf otherwise 60fps
                     interval: lowPerf ? 32 : 16
                     repeat: true
+
                     onTriggered: {
-                        disc.rotation = (disc.rotation + 0.36 *
-                                         disc.currentSpeed * interval) % 360
+                        if (lowPerf) {
+                            discLabel.rotation = (discLabel.rotation + 0.36 *
+                                             disc.currentSpeed * interval) % 360
+                        }
+                        else {
+                            disc.rotation = (disc.rotation + 0.36 *
+                                             disc.currentSpeed * interval) % 360
+                        }
 
                         if (Math.abs(disc.currentSpeed - disc.targetSpeed) <= 0.01) {
                             disc.currentSpeed = disc.targetSpeed
@@ -220,7 +237,7 @@ Rectangle {
                 onPositionChanged: {
                     var now = new Date().getTime()
 
-                    if(mouse.x == previousX && mouse.y == previousY) {
+                    if (mouse.x == previousX && mouse.y == previousY) {
                         // In Harmattan sometimes we get duplicate
                         // touch events, we have to filter them out
                         // or we will get the angledelta = 0 in our
@@ -238,6 +255,11 @@ Rectangle {
 
                     if (angledelta > 180)       { angledelta -= 360 }
                     else if (angledelta < -180) { angledelta += 360 }
+
+                    if (lowPerf) {
+                        discLabel.rotation =
+                                (discLabel.rotation + angledelta) % 360;
+                    }
 
                     disc.rotation = (disc.rotation + angledelta) % 360
 

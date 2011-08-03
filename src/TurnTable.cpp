@@ -61,6 +61,7 @@ TurnTable::~TurnTable()
     m_PosMutex.lock();
 
     m_audioMixer->removeAudioSource(this);
+
     if (m_buffer.isNull() == false) {
         delete m_buffer;
     }

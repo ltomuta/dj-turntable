@@ -2,7 +2,7 @@ QT += core gui declarative opengl
 
 TEMPLATE = app
 TARGET = turntable
-VERSION = 1.3.0
+VERSION = 1.3.1
 
 SOURCES += \
     main.cpp \
@@ -107,7 +107,7 @@ symbian {
     CONFIG += mobility
     MOBILITY += sensors systeminfo
 
-    HEADERS  += accelerometerfilter.h
+    HEADERS += accelerometerfilter.h
 
     !contains(SYMBIAN_VERSION, Symbian3) {
         message(Symbian^1)

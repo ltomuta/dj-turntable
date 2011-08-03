@@ -6,6 +6,7 @@ Item {
     property real angle: 0
     property bool armdown: false
     property real positionOnDisk: 0   // Values from 0.0 - 1.0
+    //property bool lowPerf: false
 
     property int minAngleOnDisk: 23
     property int maxAngleOnDisk: 43
@@ -14,6 +15,7 @@ Item {
 
     function moveIn() { moveToStop.stop(); moveToDisk.start() }
     function moveOut() { moveToDisk.stop(); moveToStop.start() }
+
     function setPositionOnDisk(position) {
         if (armdown) {
             positionOnDisk = position
@@ -42,7 +44,7 @@ Item {
         property real centerY: height / 2
 
         width: parent.width; height: width
-        smooth: true
+        smooth: lowPerf ? false : true;
         source: "images/pedal.png"
     }
 
@@ -71,7 +73,7 @@ Item {
                 topMargin: parent.height * 0.02
             }
             source: "images/armshadow.png"
-            smooth: true
+            smooth: lowPerf ? false : true;
         }
 
         Image {
@@ -79,7 +81,7 @@ Item {
 
             anchors { fill: parent; leftMargin: parent.width * 0.3 }
             source: "images/arm.png"
-            smooth: true
+            smooth: lowPerf ? false : true;
         }
 
         MouseArea {

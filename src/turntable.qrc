@@ -42,8 +42,9 @@
         <file>qml/images/dr_icon_crash.png</file>
         <file>qml/images/dr_icon_cowbell.png</file>
         <file>qml/images/tickgroupselectorslider.png</file>
-        <file>qml/images/discplate.png</file>
         <file>qml/images/disk.png</file>
+        <file>qml/images/disklabel.png</file>
+        <file>qml/images/discplate.png</file>
         <file>qml/images/diskreflection.png</file>
         <file>qml/images/backgroundaluminium.png</file>
         <file>qml/images/arm.png</file>

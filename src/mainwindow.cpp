@@ -1,17 +1,24 @@
-#include <QtDeclarative>
-#include "DrumMachine.h"
-#include "TurnTable.h"
 #include "mainwindow.h"
 
+#include <QDebug>
+#include <QtDeclarative>
+
+#include "DrumMachine.h"
+#include "TurnTable.h"
+
 #ifndef QT_NO_OPENGL
-#include <QGLWidget>
+    #include <QGLWidget>
 #endif
 
 #if defined(Q_OS_SYMBIAN) || defined(Q_WS_MAEMO_5) || defined(Q_WS_MAEMO_6)
-#include <QSystemDeviceInfo>
-#include "accelerometerfilter.h"
+// If OpenGL is not used, we're building for Symbian^1. If that is the case,
+// for performance reasons let's also drop the accelerometer feature.
+#ifndef QT_NO_OPENGL
+    #include <QSystemDeviceInfo>
+    #include "accelerometerfilter.h"
 
-QTM_USE_NAMESPACE
+    QTM_USE_NAMESPACE
+#endif
 #endif
 
 
@@ -44,9 +51,10 @@ MainWindow::MainWindow(QWidget *parent) :
 void MainWindow::initializeQMLComponent()
 {
     QDeclarativeContext *context = view->rootContext();
-#ifdef Q_WS_MAEMO_5
-    // Set UI to low performance mode in Maemo5, mostly this disables
-    // antialiasing on some performance costly elements
+
+#if defined(Q_WS_MAEMO_5) || defined(QT_NO_OPENGL)
+    // Set UI to low performance mode for Maemo5 and Symbian^1. This mainly
+    // disables antialiasing on some performance costly elements.
     context->setContextProperty("lowPerf", true);
 #else
     context->setContextProperty("lowPerf", false);
@@ -140,27 +148,29 @@ void MainWindow::initializeQMLComponent()
     connect((QObject*)view->engine(), SIGNAL(quit()), qApp, SLOT(quit()));
 
 #if defined(Q_OS_SYMBIAN) || defined(Q_WS_MAEMO_5) || defined(Q_WS_MAEMO_6)
-        // Create Qt accelerometer objects
-        accelerometer = new QAccelerometer(this);
-        accelerometerFilter = new AccelerometerFilter;
-        accelerometer->addFilter(accelerometerFilter);   // does not take the ownership of the filter
+#ifndef QT_NO_OPENGL
+    // Create Qt accelerometer objects
+    accelerometer = new QAccelerometer(this);
+    accelerometerFilter = new AccelerometerFilter;
+    accelerometer->addFilter(accelerometerFilter); // Does not take the ownership of the filter
 
-        accelerometer->setDataRate(50);
+    accelerometer->setDataRate(50);
 
-        // Create Qt objects for accessing profile information
-        deviceInfo = new QSystemDeviceInfo(this);
-        turnTable->profile(deviceInfo->currentProfile());
+    // Create Qt objects for accessing profile information
+    deviceInfo = new QSystemDeviceInfo(this);
+    turnTable->profile(deviceInfo->currentProfile());
 
-        connect(accelerometerFilter, SIGNAL(rotationChanged(QVariant)),
-                turnTableQML, SLOT(inclination(QVariant)));
-        connect(deviceInfo,
-                SIGNAL(currentProfileChanged(QSystemDeviceInfo::Profile)),
-                turnTable,
-                SLOT(profile(QSystemDeviceInfo::Profile)));
+    connect(accelerometerFilter, SIGNAL(rotationChanged(QVariant)),
+            turnTableQML, SLOT(inclination(QVariant)));
+    connect(deviceInfo,
+            SIGNAL(currentProfileChanged(QSystemDeviceInfo::Profile)),
+            turnTable,
+            SLOT(profile(QSystemDeviceInfo::Profile)));
 
-        // Begin the measuring of the accelerometer sensor
-        accelerometer->start();
-    #endif
+    // Begin the measuring of the accelerometer sensor
+    accelerometer->start();
+#endif
+#endif
 
     turnTable->openLastSample();
     drumMachine->setBeat(0);

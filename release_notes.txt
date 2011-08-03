@@ -1,4 +1,4 @@
-DJ Turntable v1.3.0
+DJ Turntable v1.3.1
 ===================
 
 DJ Turntable demonstrates integrating a Qt Quick application to the Qt audio
@@ -292,6 +292,7 @@ Tested on:
 - Nokia C6-01
 - Nokia N900
 - Nokia N950
+- Nokia 500
 - Windows 7
 
 Developed with:
@@ -301,6 +302,7 @@ Developed with:
 
 VERSION HISTORY
 -------------------------------------------------------------------------------
+v1.3.1 Some optimizations for low performance Symbian devices.
 v1.3 Added support for MeeGo 1.2 Harmattan.
 v1.2.2 Compatibility with Qt 4.7.2.
 v1.2.1 Added error handling to opening of external WAV files.

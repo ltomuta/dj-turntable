@@ -155,7 +155,7 @@ Image {
             id: folderModel
 
             folder: "file:/c:/"
-            nameFilters: [ "*.wav" ]
+            nameFilters: [ "*.wav", "*.ogg" ]
         }
 
         Component {

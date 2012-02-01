@@ -5,8 +5,12 @@
 #include <QPointer>
 #include <QMutex>
 
-#include "ga_src/GEAudioOut.h"
-#include "ga_src/GEAudioBuffer.h"
+#include "audioout.h"
+#include "audiomixer.h"
+#include "audiobuffer.h"
+#include "cutoffeffect.h"
+#include "vorbissource.h"
+#include "vorbisdecoder.h"
 
 #if defined(Q_OS_SYMBIAN) || defined(Q_WS_MAEMO_5) || defined(Q_WS_MAEMO_6)
     #include <QSystemDeviceInfo>
@@ -98,23 +102,16 @@ protected:
     float m_speed;
     float m_targetSpeed;
 
-    float m_cutOffValue;
-    float m_resonanceValue;
-    float m_cutOffTarget;
-    float m_resonanceTarget;
-
-    // Filters
-    int m_lp[2];
-    int m_hp[2];
-    int m_bp[2];
-
     QMutex m_PosMutex;
 
     QSettings *m_Settings;
 
-    QPointer<GE::AudioBuffer> m_buffer;
-    QPointer<GE::AudioMixer> m_audioMixer;
-    QPointer<GE::AudioOut> m_audioOut;
+    GE::AudioBuffer* m_buffer;
+    GE::VorbisDecoder *m_decoder;
+    GE::VorbisSource* m_vorbis;
+    GE::AudioMixer* m_audioMixer;
+    GE::AudioOut* m_audioOut;
+    GE::CutOffEffect *m_cutOffEffect;
 
 #ifdef Q_OS_SYMBIAN
     // To handle the hardware volume keys on Symbian

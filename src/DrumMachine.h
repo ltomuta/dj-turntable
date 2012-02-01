@@ -4,7 +4,9 @@
 #include <QVariant>
 #include <QVector>
 #include <QPointer>
-#include "ga_src/GEAudioBuffer.h"
+#include "audiomixer.h"
+#include "audiobufferplayinstance.h"
+#include "audiobuffer.h"
 
 class QSettings;
 

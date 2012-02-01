@@ -32,14 +32,14 @@ DrumMachine::DrumMachine(QSettings *settings, QObject *parent)
       m_sampleCounter(0),
       m_currentSeqIndex(-1)
 {
-    m_mixer = new AudioMixer;
+    m_mixer = new AudioMixer(this);
 
-    m_drumSamples << AudioBuffer::loadWav(QString(":/sounds/hihat.wav"))
-                  << AudioBuffer::loadWav(QString(":/sounds/hihat_open.wav"))
-                  << AudioBuffer::loadWav(QString(":/sounds/bassd.wav"))
-                  << AudioBuffer::loadWav(QString(":/sounds/snare.wav"))
-                  << AudioBuffer::loadWav(QString(":/sounds/cymbal.wav"))
-                  << AudioBuffer::loadWav(QString(":/sounds/cowbell.wav"));
+    m_drumSamples << AudioBuffer::load(QString(":/sounds/hihat.wav"))
+                  << AudioBuffer::load(QString(":/sounds/hihat_open.wav"))
+                  << AudioBuffer::load(QString(":/sounds/bassd.wav"))
+                  << AudioBuffer::load(QString(":/sounds/snare.wav"))
+                  << AudioBuffer::load(QString(":/sounds/cymbal.wav"))
+                  << AudioBuffer::load(QString(":/sounds/cowbell.wav"));
 
     for (int i=0; i<m_drumSamples.size(); i++) {
         AudioBufferPlayInstance *playInstance = new AudioBufferPlayInstance;

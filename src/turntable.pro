@@ -8,10 +8,7 @@ SOURCES += \
     main.cpp \
     DrumMachine.cpp \
     mainwindow.cpp \
-    TurnTable.cpp \
-    ga_src/GEAudioBuffer.cpp \
-    ga_src/GEInterfaces.cpp \
-    ga_src/GEAudioOut.cpp
+    TurnTable.cpp
 
 OTHER_FILES += \
     qml/*.qml \
@@ -24,11 +21,9 @@ RESOURCES += turntable.qrc
 HEADERS += \
     DrumMachine.h \
     mainwindow.h \
-    TurnTable.h \
-    ga_src/GEAudioOut.h \
-    ga_src/GEInterfaces.h \
-    ga_src/GEAudioBuffer.h
+    TurnTable.h
 
+include(qtgameenabler/qtgameenableraudio.pri)
 
 win32:!maemo5 {
     TARGET = DjTurntable
@@ -121,19 +116,15 @@ symbian {
     else {
         message(Symbian^3)
 
-        # Enable the volume hack
-        DEFINES += ENABLE_VOLUME_HACK
-
         # To handle volume up / down keys on Symbian
         LIBS += -lremconcoreapi
         LIBS += -lremconinterfacebase
-    }
 
-    contains(DEFINES, ENABLE_VOLUME_HACK) {
-        # For the very ugly hack to make the master volume control possible
-        INCLUDEPATH += /epoc32/include/mmf/common
-        INCLUDEPATH += /epoc32/include/mmf/server
-        LIBS += -lmmfdevsound
+        # Enable hardware floats (speeds up stb vorbis considerably)
+        MMP_RULES += "OPTION gcce -march=armv6"
+        MMP_RULES += "OPTION gcce -mfpu=vfp"
+        MMP_RULES += "OPTION gcce -mfloat-abi=softfp"
+        MMP_RULES += "OPTION gcce -marm"
     }
 
     # For the icon

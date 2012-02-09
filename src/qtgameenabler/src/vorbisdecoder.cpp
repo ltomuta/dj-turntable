@@ -23,6 +23,10 @@ using namespace GE;
 
 const int maxblocksize = 512 * 1024;
 
+/*!
+  Constructor. If cached is set to true the decoder loads the entire encoded
+  file into memory.
+*/
 VorbisDecoder::VorbisDecoder(bool cached, QObject *parent) :
     QObject(parent),
     m_file(this),
@@ -39,6 +43,9 @@ VorbisDecoder::VorbisDecoder(bool cached, QObject *parent) :
 {
 }
 
+/*!
+  Destructor.
+*/
 VorbisDecoder::~VorbisDecoder()
 {
     m_file.close();
@@ -51,12 +58,13 @@ VorbisDecoder::~VorbisDecoder()
     }
 
     vorbisUninit();
-
     delete m_cache;
-    delete m_decSamples;
-    delete m_readData;
 }
 
+/*!
+  Loads the given file, scans all the pages and initializes stb vorbis.
+  Returns true if successful.
+*/
 bool VorbisDecoder::load(QString &filename)
 {
     m_file.setFileName(filename);
@@ -90,6 +98,10 @@ bool VorbisDecoder::load(QString &filename)
     return true;
 }
 
+/*!
+  Scans all ogg pages of the file in order to support seeking into arbitrary
+  positions. Returns true if successful.
+*/
 bool VorbisDecoder::scan()
 {
     // Read the first page. It must be the beginning-of-stream page.
@@ -113,13 +125,19 @@ bool VorbisDecoder::scan()
     }
 
     m_decodedLength = page->m_granulePosition;
-    m_currentPage = m_pageList;
     // TODO: fill this properly (the stream does not always start from 0)
     m_granuleOffset = 0;
 
     return true;
 }
 
+/*!
+  Seek for an ogg page which contains (not really true, read forward) given
+  PCM sample. samplePos is in units of PCM samples per channel. If vorbis
+  packets span over multiple pages, the returned page is the last page. You'll
+  have to seek backwards from the returned page in order to find the position
+  where you should start decoding. Returns NULL if page was not found.
+*/
 const OggPage *VorbisDecoder::seekPage(quint64 samplePos)
 {
     OggPage *p = m_pageList;
@@ -129,36 +147,17 @@ const OggPage *VorbisDecoder::seekPage(quint64 samplePos)
     do {
         if (p->m_granulePosition &&
             p->m_granulePosition - m_granuleOffset > samplePos) {
-            m_currentPage = p;
             return p;
         }
     } while ((p = p->m_next));
 
-    return m_currentPage;
+    return NULL;
 }
 
-const OggPage *VorbisDecoder::nextPage()
-{
-    if (m_currentPage->m_next)
-        m_currentPage = m_currentPage->m_next;
-
-    return m_currentPage;
-}
-
-const OggPage *VorbisDecoder::prevPage()
-{
-    if (m_currentPage->m_prev)
-        m_currentPage = m_currentPage->m_prev;
-
-    return m_currentPage;
-}
-
-const OggPage *VorbisDecoder::firstPage()
-{
-    m_currentPage = m_pageList;
-    return m_currentPage;
-}
-
+/*!
+  Returns the first decodable audio page. The beginning of an ogg file contains
+  headers pages which are skipped.
+*/
 const OggPage *VorbisDecoder::firstAudioPage()
 {
     OggPage *page = m_pageList;
@@ -168,15 +167,22 @@ const OggPage *VorbisDecoder::firstAudioPage()
         if (!page)
             return NULL;
     }
-    m_currentPage = page;
-    return m_currentPage;
+    return page;
 }
 
+/*!
+  Returns info about the loaded file, such as channels and sample rate.
+*/
 const stb_vorbis_info *VorbisDecoder::fileInfo()
 {
     return &m_info;
 }
 
+/*!
+  Reads the header of an ogg page from current file position and returns
+  filled instance of an OggPage. Returns NULL if something is wrong with the
+  page.
+*/
 OggPage *VorbisDecoder::readPageHeader()
 {
     int len;
@@ -238,27 +244,6 @@ OggPage *VorbisDecoder::readPageHeader()
     return page;
 }
 
-unsigned char *VorbisDecoder::readPage(const OggPage *page)
-{
-    if (!page) {
-        DEBUG_INFO("NULL page given!");
-        return NULL;
-    }
-
-    unsigned char *data = (unsigned char*)malloc(page->m_pageLength);
-    if (!data)
-        return NULL;
-
-    unsigned int len = read(data, page->m_pageLength, page->m_pageStartPos);
-    if (len != page->m_pageLength) {
-        DEBUG_INFO("Read" << len << "bytes, expected" << page->m_pageLength);
-        free(data);
-        return NULL;
-    }
-
-    return data;
-}
-
 int VorbisDecoder::read(unsigned char *buf, int len, int pos)
 {
     if (m_cached) {
@@ -310,6 +295,9 @@ int VorbisDecoder::tell()
     }
 }
 
+/*!
+  Reads the header pages from the beginning of loaded ogg file.
+*/
 unsigned char *VorbisDecoder::readHeaderPages(int *len)
 {
     OggPage *page = m_pageList;
@@ -339,56 +327,66 @@ unsigned char *VorbisDecoder::readHeaderPages(int *len)
     return data;
 }
 
+/*!
+  Decode the entire file into memory.
+*/
 unsigned char *VorbisDecoder::decodeAll(unsigned int *len)
 {
+    int allocLen = m_decodedLength * sizeof(short) * m_info.channels;
     if (!m_vorbis)
         return NULL;
 
-    unsigned char *outBuf = (unsigned char*)malloc(m_decodedLength);
+    unsigned char *outBuf = (unsigned char*)malloc(allocLen);
     if (!outBuf) {
-        DEBUG_INFO("Failed to allocate" << m_decodedLength << "bytes!");
+        DEBUG_INFO("Failed to allocate" << allocLen << "bytes!");
         return NULL;
     }
     *len = 0;
 
     m_readPos = firstAudioPage()->m_pageStartPos;
     int rlen = 0;
-    while ((rlen = read(m_readData, 65536, m_readPos)) > 0) {
+    while ((rlen = read(m_readData, 65536 * 2, m_readPos)) > 0) {
         int leftover = 0;
-        if (!vorbisDecode(m_readData, rlen, &m_decSamplesLen, &leftover)
-            || !m_decSamplesLen) {
+        if (!vorbisDecode(m_readData, rlen, &leftover, false) ||
+            !m_decSamplesLen) {
             DEBUG_INFO("vorbisDecode failed");
             return false;
         }
         m_readPos += rlen - leftover;
 
-        if (*len + m_decSamplesLen > m_decodedLength) {
+        if (*len + m_decSamplesLen > allocLen ) {
 	        // Should not happen
-        	outBuf = (unsigned char*)realloc(outBuf, m_decSamplesLen + *len);
+            allocLen = m_decSamplesLen + *len;
+            outBuf = (unsigned char*)realloc(outBuf, allocLen);
         	if (!outBuf) {
-                DEBUG_INFO("Failed to allocate" << m_decSamplesLen + *len
-                    << "bytes!");
+                DEBUG_INFO("Failed to allocate" << allocLen << "bytes!");
                 return NULL;
             }
     	}
-    	memcpy(&outBuf[*len], m_decSamples, m_decSamplesLen);
-    	*len += m_decSamplesLen;
+        memcpy(&outBuf[*len], m_decSamples, m_decSamplesLen);
+        *len += m_decSamplesLen;
 	}
 
 	return outBuf;
 }
 
+/*!
+  Return PCM sample from given position. pos is in units of PCM samples.
+*/
 unsigned short VorbisDecoder::at(quint64 pos)
 {
     if (!m_decSamplesLen || pos < m_decodedDataStart ||
         pos > m_decodedDataEnd) {
-        if (!vorbisSeek(pos / 2))
+        if (!vorbisSeek(pos))
             return 0;
     }
 
     return m_decSamples[pos - m_decodedDataStart];
 }
 
+/*!
+  Initializes stb vorbis.
+*/
 int VorbisDecoder::vorbisInit()
 {
     int used = 0, error = 0;
@@ -422,6 +420,9 @@ int VorbisDecoder::vorbisInit()
     return used;
 }
 
+/*!
+  Frees up resources related to decoding.
+*/
 void VorbisDecoder::vorbisUninit()
 {
     if (m_vorbis) {
@@ -436,19 +437,32 @@ void VorbisDecoder::vorbisUninit()
     m_decSamplesLen = 0;
 }
 
-short *VorbisDecoder::vorbisDecode(unsigned char *data, int len, int *outLen,
-    int *leftover)
+/*!
+  Decode a block of data. data/len defines the input data,
+  m_decSamples/m_decSamplesLen contains the decoded data. leftover is the length
+  of unused input data. If singleFrame is set to true this will decode only the
+  first complete frame from the input data, otherwise this will try to decode
+  all the complete frames.
+*/
+bool VorbisDecoder::vorbisDecode(unsigned char *data, int len, int *leftover,
+                                 bool singleFrame)
 {
     float **outputs;
     int channels, samplecount, t, i;
     int outPos = 0;
     unsigned char *p = data;
 
+    m_decSamplesLen = 0;
+
 	if (!m_decSamples) {
         m_maxDecSamplesLen = maxblocksize;
 		m_decSamples = (short*)malloc(sizeof(short) * m_maxDecSamplesLen);
+        if (!m_decSamples) {
+            DEBUG_INFO("Failed to allocate" <<
+                       sizeof(short) * m_maxDecSamplesLen << "bytes");
+            return false;
+        }
 	}
-    m_decSamplesLen = 0;
 
     while (len) {
         int used = stb_vorbis_decode_frame_pushdata(m_vorbis, (unsigned char*)p,
@@ -461,6 +475,11 @@ short *VorbisDecoder::vorbisDecode(unsigned char *data, int len, int *outLen,
             m_maxDecSamplesLen += maxblocksize;
             m_decSamples = (short*)realloc(m_decSamples,
                 m_maxDecSamplesLen * sizeof(short));
+            if (!m_decSamples) {
+                DEBUG_INFO("Failed to allocate" <<
+                           sizeof(short) * m_maxDecSamplesLen << "bytes");
+                return false;
+            }
         }
 
         for (t = 0; t < samplecount; t++) {
@@ -469,12 +488,19 @@ short *VorbisDecoder::vorbisDecode(unsigned char *data, int len, int *outLen,
                 m_decSamples[outPos++] = (short)(outputs[i][t] * 30000.0f);
             }
         }
+        if (singleFrame)
+            break;
     }
     *leftover = len;
-    *outLen = outPos * sizeof(short);
-    return m_decSamples;
+    m_decSamplesLen = outPos * sizeof(short);
+    return true;
 }
 
+/*!
+  Informs stb vorbis that the the next datablock will not be contiguous with
+  previous ones. This is needed when seeking. Decoding will continue from the
+  beginning of next valid ogg page.
+*/
 bool VorbisDecoder::vorbisFlush()
 {
 	if (!m_vorbis)
@@ -483,12 +509,15 @@ bool VorbisDecoder::vorbisFlush()
     return true;
 }
 
-bool VorbisDecoder::vorbisDecodeCurrent()
+/*!
+  Decode given page. Note that the given page defines the end of decoding,
+  starting page is some of the previous pages.
+*/
+bool VorbisDecoder::vorbisDecodePage(const OggPage *page)
 {
-    m_decSamplesLen = 0;
-    OggPage *startPage = m_currentPage->m_prev;
-    OggPage *endPage = m_currentPage;
-    OggPage *p = startPage;
+    const OggPage *startPage = page->m_prev;
+    const OggPage *endPage = page;
+    const OggPage *p = startPage;
     do {
         if (p->m_granulePosition != startPage->m_granulePosition &&
             p->m_granulePosition != (quint64)-1) {
@@ -501,30 +530,77 @@ bool VorbisDecoder::vorbisDecodeCurrent()
     int lenToRead = endPage->m_pageStartPos - startPage->m_pageStartPos +
         endPage->m_pageLength;
 
-    int rlen = read(m_readData, lenToRead, m_readPos);
-    if (!rlen)
-        return false;
-
+    int rlen = lenToRead;
     int leftover = 0;
-    if (!vorbisDecode(m_readData, rlen, &m_decSamplesLen, &leftover)
-        || !m_decSamplesLen) {
-        DEBUG_INFO("vorbisDecode failed");
-        return false;
+    if (m_cached) {
+        if (!vorbisDecode(&m_cache[m_readPos], rlen, &leftover, false) ||
+                !m_decSamplesLen) {
+            DEBUG_INFO("vorbisDecode failed");
+            return false;
+        }
+    } else {
+        rlen = read(m_readData, lenToRead, m_readPos);
+        if (!rlen)
+            return false;
+
+        if (!vorbisDecode(m_readData, rlen, &leftover, false) ||
+                !m_decSamplesLen) {
+            DEBUG_INFO("vorbisDecode failed");
+            return false;
+        }
     }
     m_readPos += rlen - leftover;
 
-    int decPos = m_decSamplesLen / m_info.channels / sizeof(short);
+    unsigned int decPos = m_decSamplesLen / m_info.channels / sizeof(short);
     if (endPage->m_granulePosition < decPos) {
         m_decodedDataStart = 0;
     } else {
         m_decodedDataStart = (endPage->m_granulePosition - decPos -
-            m_granuleOffset) * 2;
+            m_granuleOffset) * m_info.channels;
     }
-    m_decodedDataEnd = (endPage->m_granulePosition - m_granuleOffset) * 2;
-    m_currentPage = endPage;
+    m_decodedDataEnd = (endPage->m_granulePosition - m_granuleOffset) *
+            m_info.channels;
     return true;
 }
 
+/*!
+  Decode next frame. This can be used only when decoding contiguously forward.
+*/
+bool VorbisDecoder::vorbisDecodeNext()
+{
+    int rlen;
+    int leftover = 0;
+
+    if (m_cached) {
+        rlen = qMin(65536, m_length - m_readPos);
+        if (!vorbisDecode(&m_cache[m_readPos], rlen, &leftover, true) ||
+                !m_decSamplesLen) {
+            DEBUG_INFO("vorbisDecode failed");
+            return false;
+        }
+    } else {
+        rlen = read(m_readData, rlen, m_readPos);
+        if (!rlen)
+            return false;
+
+        if (!vorbisDecode(m_readData, rlen, &leftover, true) ||
+                !m_decSamplesLen) {
+            DEBUG_INFO("vorbisDecode failed");
+            return false;
+        }
+    }
+    m_readPos += rlen - leftover;
+
+    unsigned int decLen = m_decSamplesLen / sizeof(short);
+    m_decodedDataStart = m_decodedDataEnd + 1;
+    m_decodedDataEnd = m_decodedDataStart + decLen - 1;
+    return true;
+}
+
+/*!
+  Seek relatively from current sample position. offset is in units of PCM
+  samples.
+*/
 bool VorbisDecoder::vorbisSeekRelative(qint64 offset)
 {
     if (!m_vorbis)
@@ -536,30 +612,45 @@ bool VorbisDecoder::vorbisSeekRelative(qint64 offset)
         return false;
     }
 
-    const OggPage *page = seekPage(current + offset);
-    if (!page)
-        return false;
+    if (m_decSamplesLen && current + offset - m_decodedDataEnd <
+            m_info.max_frame_size) {
+        if (!vorbisDecodeNext())
+            return false;
+    } else {
+        const OggPage *page = seekPage((current + offset) / m_info.channels);
+        if (!page)
+            return false;
 
-    if (!vorbisFlush())
-		return false;
+        if (!vorbisFlush())
+            return false;
 
-	if (!vorbisDecodeCurrent())
-        return false;
+        if (!vorbisDecodePage(page))
+            return false;
+    }
 
     return true;
 }
 
+/*!
+  Seek to given sample position. pos is in units of PCM samples.
+*/
 bool VorbisDecoder::vorbisSeek(qint64 pos)
 {
-    const OggPage *page = seekPage(pos);
-    if (!page)
-        return false;
+    if (m_decSamplesLen &&
+        pos - m_decodedDataEnd < m_info.max_frame_size) {
+        if (!vorbisDecodeNext())
+            return false;
+    } else {
+        const OggPage *page = seekPage(pos / m_info.channels);
+        if (!page)
+            return false;
 
-    if (!vorbisFlush())
-		return false;
+        if (!vorbisFlush())
+            return false;
 
-	if (!vorbisDecodeCurrent())
-        return false;
+        if (!vorbisDecodePage(page))
+            return false;
+    }
 
     return true;
 }

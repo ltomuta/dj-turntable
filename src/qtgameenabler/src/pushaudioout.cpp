@@ -76,7 +76,7 @@ PushAudioOut::PushAudioOut(AudioSource *source, QObject *parent /* = 0 */)
 #ifdef Q_OS_SYMBIAN
     m_needsTick = true;
 
-#if defined(QTGAMEENABLER_USE_VOLUME_HACK)
+#if defined(QTGAMEENABLER_USE_VOLUME_HACK) && defined(Q_OS_SYMBIAN)
     DEBUG_INFO("WARNING: Using the volume hack!");
 
     // This really ugly hack is used as the last resort. This allows us to
@@ -87,18 +87,26 @@ PushAudioOut::PushAudioOut(AudioSource *source, QObject *parent /* = 0 */)
     unsigned int *pointer_to_abstract_audio =
             (unsigned int*)((unsigned char*)m_audioOutput + 8);
 
-    unsigned int *dev_sound_wrapper;
+    unsigned int *dev_sound_wrapper = NULL;
     QSystemInfo sysInfo;
-    if (sysInfo.version(QSystemInfo::QtMobility) == QLatin1String("1.2.0")) {
+    QString mobilityVersion(sysInfo.version(QSystemInfo::QtMobility));
+
+    if (mobilityVersion == QLatin1String("1.2.0") ||
+        mobilityVersion == QLatin1String("1.2.1")) {
         dev_sound_wrapper = (unsigned int*)(*pointer_to_abstract_audio) + 16;
+    } else if (mobilityVersion >= QLatin1String("1.2.2")) {
+        // Do not use the volume hack with 1.2.2 and newer
+        dev_sound_wrapper = NULL;
     } else {
+        // Older than 1.2.0
         dev_sound_wrapper = (unsigned int*)(*pointer_to_abstract_audio) + 13;
     }
 
-    unsigned int *temp = ((unsigned int*)(*dev_sound_wrapper) + 6);
-
-    CMMFDevSound *devSound = (CMMFDevSound*)(*temp);
-    devSound->SetVolume(devSound->MaxVolume() * 6 / 10);
+    if (dev_sound_wrapper) {
+        unsigned int *temp = ((unsigned int*)(*dev_sound_wrapper) + 6);
+        CMMFDevSound *devSound = (CMMFDevSound*)(*temp);
+        devSound->SetVolume(devSound->MaxVolume() * 6 / 10);
+    }
 #endif
 
 #else // !Q_OS_SYMBIAN

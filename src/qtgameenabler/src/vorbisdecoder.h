@@ -39,18 +39,15 @@ private:
     bool scan();
     OggPage *readPageHeader();
     const OggPage *seekPage(quint64 samplePos);
-    const OggPage *firstPage();
     const OggPage *firstAudioPage();
-    const OggPage *nextPage();
-    const OggPage *prevPage();
-    unsigned char *readPage(const OggPage *page);
     unsigned char *readHeaderPages(int *len);
     bool vorbisSeek(qint64 pos);
     bool vorbisSeekRelative(qint64 offset);
-    bool vorbisDecodeCurrent();
+    bool vorbisDecodePage(const OggPage *page);
+    bool vorbisDecodeNext();
     bool vorbisFlush();
-    short *vorbisDecode(unsigned char *data, int len, int *outLen,
-        int *leftover);
+    bool vorbisDecode(unsigned char *data, int len,
+                      int *leftover, bool singleFrame);
     void vorbisUninit();
     int vorbisInit();
     int read(unsigned char *buf, int len, int pos);
@@ -59,7 +56,6 @@ private:
 
 private:
     QFile m_file;
-    OggPage *m_currentPage;
     OggPage *m_pageList;
     int m_pos;
     int m_length;

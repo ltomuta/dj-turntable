@@ -2,7 +2,7 @@ QT += core gui declarative opengl
 
 TEMPLATE = app
 TARGET = turntable
-VERSION = 1.3.1
+VERSION = 1.4.0
 
 SOURCES += \
     main.cpp \
@@ -22,8 +22,6 @@ HEADERS += \
     DrumMachine.h \
     mainwindow.h \
     TurnTable.h
-
-include(qtgameenabler/qtgameenableraudio.pri)
 
 win32:!maemo5 {
     TARGET = DjTurntable
@@ -72,7 +70,7 @@ unix:!symbian {
         DEFINES += Q_WS_MAEMO_6
 
         CONFIG += mobility
-        MOBILITY += sensors systeminfo multimedia
+        MOBILITY += sensors systeminfo
 
         HEADERS += accelerometerfilter.h
         OTHER_FILES += qtc_packaging/debian_harmattan/*
@@ -96,8 +94,6 @@ unix:!symbian {
 
 
 symbian {
-    QT += multimedia
-
     TARGET = DjTurntable
     CONFIG += mobility
     MOBILITY += sensors systeminfo
@@ -120,6 +116,9 @@ symbian {
         LIBS += -lremconcoreapi
         LIBS += -lremconinterfacebase
 
+        # Make the volume louder
+        DEFINES += QTGAMEENABLER_USE_VOLUME_HACK
+
         # Enable hardware floats (speeds up stb vorbis considerably)
         MMP_RULES += "OPTION gcce -march=armv6"
         MMP_RULES += "OPTION gcce -mfpu=vfp"
@@ -133,6 +132,8 @@ symbian {
     # To lock the application to landscape orientation
     LIBS += -lcone -leikcore -lavkon
 
-    TARGET.EPOCHEAPSIZE = 0x100000 0x2000000
+    TARGET.EPOCHEAPSIZE = 0x100000 0x4000000
     TARGET.EPOCSTACKSIZE = 0x14000
 }
+
+include(qtgameenabler/qtgameenableraudio.pri)

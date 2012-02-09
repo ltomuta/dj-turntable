@@ -5,6 +5,7 @@
 #include <QtGui>
 #include <math.h>
 #include "pullaudioout.h"
+#include "pushaudioout.h"
 #include "TurnTable.h"
 
 #if defined(Q_OS_SYMBIAN) && !defined(Q_OS_SYMBIAN_1)
@@ -19,7 +20,7 @@ const int MaxDiskSpeed = 5.0f;
 TurnTable::TurnTable(QSettings *settings, QObject *parent)
     : GE::AudioSource(parent),
       m_defaultSample(":/sounds/ivory.wav"),
-      m_defaultVolume(0.15f),
+      m_defaultVolume(0.65f),
       m_maxLoops(1),
       m_Settings(settings),
       m_buffer(NULL),
@@ -29,6 +30,7 @@ TurnTable::TurnTable(QSettings *settings, QObject *parent)
     m_pos = 0;
     m_speed = 0.0f;
     m_targetSpeed = 0.0f;
+    m_channelLength = 0;
     m_cc = 0;
     m_headOn = false;
 
@@ -37,13 +39,15 @@ TurnTable::TurnTable(QSettings *settings, QObject *parent)
     m_cutOffEffect = new CutOffEffect(this);
     m_cutOffEffect->setCutOff(1.0f);
     m_cutOffEffect->setResonance(1.0f);
-    m_audioMixer->setEffect(m_cutOffEffect);
+#ifdef Q_WS_MAEMO_6
+    // Works better with N9
+    m_audioOut = new PushAudioOut(m_audioMixer, this);
+#else
     m_audioOut = new PullAudioOut(m_audioMixer, this);
+#endif
 
     m_audioMixer->setGeneralVolume(m_Settings->value("Volume",
                                                      m_defaultVolume).toFloat());
-
-    m_audioMixer->setGeneralVolume(1.0);
 
 #if defined(Q_OS_SYMBIAN) && !defined(Q_OS_SYMBIAN_1)
     Observer *m_Observer = new Observer(this);
@@ -83,14 +87,12 @@ int TurnTable::pullAudio(AUDIO_SAMPLE_TYPE *target, int bufferLength)
         return 0;
     }
 
-    AUDIO_SAMPLE_TYPE *t_target = target + bufferLength;
+    AUDIO_SAMPLE_TYPE *dst = target;
+    AUDIO_SAMPLE_TYPE *t_target = dst + bufferLength;
     SAMPLE_FUNCTION_TYPE sfunc = NULL;
 
-    int64_t channelLength;
     float speedmul;
     if (m_decoder) {
-        channelLength = (m_decoder->decodedLength()) - 2;
-        channelLength <<= 11;
         speedmul = (float)m_decoder->fileInfo()->sample_rate /
                 (float)AUDIO_FREQUENCY * 2048.0f;
     } else {
@@ -98,17 +100,13 @@ int TurnTable::pullAudio(AUDIO_SAMPLE_TYPE *target, int bufferLength)
         if (sfunc == NULL) {
             return 0;
         }
-        channelLength = ((m_buffer->getDataLength()) /
-                         (m_buffer->getNofChannels() *
-                          m_buffer->getBytesPerSample())) - 2;
-        channelLength <<= 11;
         speedmul = (float)m_buffer->getSamplesPerSec() /
                 (float)AUDIO_FREQUENCY * 2048.0f;
     }
 
     int p;
     int inc = (int)(m_speed * speedmul);
-    while (target != t_target) {
+    while (dst != t_target) {
         if (++m_cc > 64) {
             m_speed += (m_targetSpeed - m_speed) * 0.1f;
             if (m_speed < -MaxDiskSpeed)
@@ -119,11 +117,11 @@ int TurnTable::pullAudio(AUDIO_SAMPLE_TYPE *target, int bufferLength)
             m_cc = 0;
         }
 
-        if (m_loops >= m_maxLoops && m_pos >= channelLength) {
-            m_pos = channelLength - 1;
+        if (m_loops >= m_maxLoops && m_pos >= m_channelLength) {
+            m_pos = m_channelLength - 1;
         }
-        else if (m_pos >= channelLength) {
-            m_pos %= channelLength;
+        else if (m_pos >= m_channelLength) {
+            m_pos %= m_channelLength;
             m_loops++;
             if (m_loops >= m_maxLoops) {
                 m_loops = 0;
@@ -134,7 +132,7 @@ int TurnTable::pullAudio(AUDIO_SAMPLE_TYPE *target, int bufferLength)
             m_pos = 0;
         }
         else if (m_pos < 0) {
-            m_pos = channelLength - 1 - ((-m_pos) % channelLength);
+            m_pos = m_channelLength - 1 - ((-m_pos) % m_channelLength);
             if (m_loops > 0) {
                 m_loops--;
             }
@@ -143,21 +141,22 @@ int TurnTable::pullAudio(AUDIO_SAMPLE_TYPE *target, int bufferLength)
         p = (m_pos >> 11);
 
         if (m_decoder) {
-            target[0] = m_decoder->at(p << 1);
-            target[1] = m_decoder->at((p << 1) + 1);
+            *dst++ = m_decoder->at(p << 1);
+            *dst++ = m_decoder->at((p << 1) + 1);
         } else {
-            target[0] = (((sfunc)(m_buffer, p, 0) * (2047^(m_pos & 2047)) +
+            *dst++ = (((sfunc)(m_buffer, p, 0) * (2047^(m_pos & 2047)) +
                       (sfunc)(m_buffer, p+1, 0) * (m_pos & 2047)) >> 11);
-            target[1] = (((sfunc)(m_buffer, p, 1) * (2047 ^ (m_pos & 2047)) +
+            *dst++ = (((sfunc)(m_buffer, p, 1) * (2047 ^ (m_pos & 2047)) +
                       (sfunc)(m_buffer, p+1, 1) * (m_pos & 2047)) >> 11);
         }
-        target += 2;
         m_pos += inc;
     }
 
+    m_cutOffEffect->process(target, bufferLength);
+
     // Emit signal about the audio position to advance the needle to
     // correct position
-    emit audioPosition(1.0 / m_maxLoops * (m_pos * 1.0f / channelLength
+    emit audioPosition(1.0 / m_maxLoops * (m_pos * 1.0f / m_channelLength
                                            + m_loops));
 
     return bufferLength;
@@ -180,7 +179,11 @@ void TurnTable::openSample(const QString &filePath)
     }
     else {
         parsedFilePath = filePath;
+#ifdef Q_WS_MAEMO_6
+        parsedFilePath.replace(QString("file://"), QString(""));
+#else
         parsedFilePath.replace(QString("file:///"), QString(""));
+#endif
     }
 
     // Prevents the audio engine to play turntable sound,
@@ -200,8 +203,12 @@ void TurnTable::openSample(const QString &filePath)
         // Decode the ogg file on the fly
         m_decoder = new VorbisDecoder(true, this);
         m_decoder->load(parsedFilePath);
+        // Support only stereo oggs for now
+        if (m_decoder->fileInfo()->channels != 2) {
+            delete m_decoder;
+            m_decoder = NULL;
+        }
     } else {
-        delete m_buffer;
         m_buffer = AudioBuffer::load(parsedFilePath);
     }
 
@@ -213,6 +220,15 @@ void TurnTable::openSample(const QString &filePath)
         return;
     }
     else {
+        if (m_decoder) {
+            m_channelLength = (m_decoder->decodedLength()) - 2;
+            m_channelLength <<= 11;
+        } else {
+            m_channelLength = ((m_buffer->getDataLength()) /
+                               (m_buffer->getNofChannels() *
+                                m_buffer->getBytesPerSample())) - 2;
+            m_channelLength <<= 11;
+        }
         m_audioMixer->addAudioSource(this);
     }
 
@@ -311,21 +327,11 @@ void TurnTable::seekToPosition(QVariant position)
         return;
     }
 
-    int64_t channelLength;
-    if (m_decoder) {
-        channelLength = (m_decoder->decodedLength()) - 2;
-    } else {
-        channelLength = ((m_buffer->getDataLength()) /
-                         (m_buffer->getNofChannels() *
-                          m_buffer->getBytesPerSample())) - 2;
-    }
-    channelLength <<= 11;
-
     float value = position.toFloat();
     m_loops = value / (1.0 / m_maxLoops);
     if (m_loops >= m_maxLoops) {
         m_loops = 0;
     }
 
-    m_pos = (value / (1.0 / m_maxLoops) - m_loops) * channelLength;
+    m_pos = (value / (1.0 / m_maxLoops) - m_loops) * m_channelLength;
 }

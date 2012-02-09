@@ -87,8 +87,6 @@ symbian {
         LIBS += -lmmfdevsound
     }
 
-    #DEFINES += GE_PULLMODEAUDIO
-
     INCLUDEPATH += /epoc32/include/mw
     HEADERS += $$PWD/src/volumekeys.h
     SOURCES += $$PWD/src/volumekeys.cpp
@@ -114,7 +112,6 @@ unix:!symbian {
 
             CONFIG += mobility
             MOBILITY += multimedia systeminfo
-            #DEFINES += GE_PULLMODEAUDIO
         }
     }
 }

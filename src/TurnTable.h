@@ -9,7 +9,6 @@
 #include "audiomixer.h"
 #include "audiobuffer.h"
 #include "cutoffeffect.h"
-#include "vorbissource.h"
 #include "vorbisdecoder.h"
 
 #if defined(Q_OS_SYMBIAN) || defined(Q_WS_MAEMO_5) || defined(Q_WS_MAEMO_6)
@@ -101,6 +100,7 @@ protected:
     int m_cc;
     float m_speed;
     float m_targetSpeed;
+    qint64 m_channelLength;
 
     QMutex m_PosMutex;
 
@@ -108,7 +108,6 @@ protected:
 
     GE::AudioBuffer* m_buffer;
     GE::VorbisDecoder *m_decoder;
-    GE::VorbisSource* m_vorbis;
     GE::AudioMixer* m_audioMixer;
     GE::AudioOut* m_audioOut;
     GE::CutOffEffect *m_cutOffEffect;

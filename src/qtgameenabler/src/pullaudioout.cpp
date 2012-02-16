@@ -29,7 +29,6 @@ using namespace GE;
 /*!
   Constructor.
 */
-#include <QDebug>
 PullAudioOut::PullAudioOut(AudioSource *source, QObject *parent)
     : QIODevice(parent),
       m_source(source)
@@ -168,13 +167,12 @@ qint64 PullAudioOut::readData(char *data, qint64 maxlen)
     sampleCount /= sizeof(AUDIO_SAMPLE_TYPE);
 #endif // !Q_OS_SYMBIAN
 
+    memset(data, 0, sampleCount * sizeof(AUDIO_SAMPLE_TYPE));
     int mixedSamples = m_source->pullAudio((AUDIO_SAMPLE_TYPE*)data,
         sampleCount);
 
-    if (mixedSamples < sampleCount) {
-        memset(data, 0, sampleCount * sizeof(AUDIO_SAMPLE_TYPE));
+    if (mixedSamples < sampleCount)
         mixedSamples = sampleCount;
-    }
 
     return (qint64)mixedSamples * sizeof(AUDIO_SAMPLE_TYPE);
 }

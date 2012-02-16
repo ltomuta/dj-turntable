@@ -9,8 +9,6 @@
  */
 
 #include <QtGlobal>
-#include <QDebug>
-#include <QTime>
 #include <stdlib.h>
 #include <memory.h>
 
@@ -371,7 +369,7 @@ unsigned char *VorbisDecoder::decodeAll(unsigned int *len)
 }
 
 /*!
-  Return PCM sample from given position. pos is in units of PCM samples.
+  Return sample from given position. pos is in units of PCM samples.
 */
 unsigned short VorbisDecoder::at(quint64 pos)
 {

@@ -40,7 +40,7 @@ Rectangle {
                     textFormat: Text.RichText
                     font.pointSize: helpScreen.textSize
 
-                    text: "<b><h2>DJ Turntable v.1.3.0</b></h2>" +
+                    text: "<b><h2>DJ Turntable v.1.4.0</b></h2>" +
                           "DJ Turntable is a Nokia example that " +
                           "demonstrates integrating a Qt Quick application " +
                           "to Qt audio interface. See more information " +
@@ -62,11 +62,15 @@ Rectangle {
                           "<p>Use the sample selector to change the sample " +
                           "that turntable is playing by selecting the " +
                           "desired sample from the directory view. " +
-                          "Following uncompressed wav-formats are " +
-                          "supported:</p>" +
+                          "DJ Turntable supports wav and ogg vorbis files. " +
+                          "Following uncompressed mono and stereo " +
+                          "wav-formats are supported:</p>" +
                           "8 bit unsigned<br>" +
                           "16 bit unsigned<br>" +
                           "32 bit float" +
+                          "<p>Only stereo ogg files are supported. Avoid " +
+                          "using files with high bitrates and sample rates " +
+                          "since the files are decoded in real-time.</p>" +
                           "<p>The application will open the last selected " +
                           "sample on startup. Use the default sample button " +
                           "on the right under the back button to reset back " +

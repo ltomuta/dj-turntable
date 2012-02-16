@@ -1,3 +1,10 @@
+turntable (1.4.0) stable; urgency=low
+
+  * Added support for OGG Vorbis files
+  * Use the latest Qt GameEnabler audio engine
+
+ -- Forum Nokia <FN.Documentation@nokia.com>  Tue, 15 Feb 2011 10:20:13 +0300
+
 turntable (1.3.0) stable; urgency=low
 
   * Harmattan support

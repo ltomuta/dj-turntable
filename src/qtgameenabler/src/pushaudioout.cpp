@@ -76,7 +76,7 @@ PushAudioOut::PushAudioOut(AudioSource *source, QObject *parent /* = 0 */)
 #ifdef Q_OS_SYMBIAN
     m_needsTick = true;
 
-#if defined(QTGAMEENABLER_USE_VOLUME_HACK) && defined(Q_OS_SYMBIAN)
+#if defined(QTGAMEENABLER_USE_VOLUME_HACK)
     DEBUG_INFO("WARNING: Using the volume hack!");
 
     // This really ugly hack is used as the last resort. This allows us to

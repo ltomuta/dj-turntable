@@ -1,8 +1,12 @@
+/**
+ * Copyright (c) 2011-2012 Nokia Corporation.
+ */
+
+#include "DrumMachine.h"
 
 #include <QtGui>
 #include <vector>
 #include <limits>
-#include "DrumMachine.h"
 
 using namespace GE;
 
@@ -10,17 +14,17 @@ using namespace GE;
 const unsigned char drum_seq0[] = { 5, 0, 1, 0, 9, 0, 5, 0,
                                     5, 0, 1, 0, 9, 4, 2, 0,
                                     5, 0, 1, 0, 9, 0, 1, 4,
-                                    1, 4, 1, 0, 9, 0, 2, 0};
+                                    1, 4, 1, 0, 9, 0, 2, 0 };
 
 const unsigned char drum_seq1[] = { 5, 0, 5, 0, 2, 0, 0, 0,
                                     1, 0, 1, 0, 2, 0, 0, 0,
                                     5, 0, 1, 0, 2, 0, 0, 0,
-                                    1, 0, 1, 0, 2, 0, 1, 0};
+                                    1, 0, 1, 0, 2, 0, 1, 0 };
 
 const unsigned char drum_seq2[] = { 5, 0, 1, 0,33, 0, 5, 0,
                                     5, 0, 1, 0,33, 0, 2, 0,
                                     5, 0, 1, 0,33, 0, 5, 0,
-                                    5, 0, 1, 0,33, 0, 2, 0};
+                                    5, 0, 1, 0,33, 0, 2, 0 };
 
 
 DrumMachine::DrumMachine(QSettings *settings, QObject *parent)
@@ -41,8 +45,8 @@ DrumMachine::DrumMachine(QSettings *settings, QObject *parent)
                   << AudioBuffer::load(QString(":/sounds/cymbal.wav"))
                   << AudioBuffer::load(QString(":/sounds/cowbell.wav"));
 
-    for (int i=0; i<m_drumSamples.size(); i++) {
-        AudioBufferPlayInstance *playInstance = new AudioBufferPlayInstance;
+    for (int i = 0; i < m_drumSamples.size(); i++) {
+        AudioBufferPlayInstance *playInstance = new AudioBufferPlayInstance();
         // Dont destroy object when playing is finished
         playInstance->setDestroyWhenFinished(false);
         m_mixer->addAudioSource(playInstance);

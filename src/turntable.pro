@@ -1,3 +1,5 @@
+# Copyright (c) 2011-2012 Nokia Corporation.
+
 QT += core gui declarative opengl
 
 TEMPLATE = app
@@ -22,6 +24,7 @@ HEADERS += \
     DrumMachine.h \
     mainwindow.h \
     TurnTable.h
+
 
 win32:!maemo5 {
     TARGET = DjTurntable

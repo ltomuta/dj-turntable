@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2011-2012 Nokia Corporation.
+ */
+
 #ifndef ACCELEROMETERFILTER_H
 #define ACCELEROMETERFILTER_H
 
@@ -5,10 +9,10 @@
 #include <QVariant>
 #include <math.h>
 
-
 QTM_USE_NAMESPACE
 
 #define RADIANS_TO_DEGREES 57.2957795
+
 
 class AccelerometerFilter : public QObject, public QAccelerometerFilter
 {
@@ -35,6 +39,7 @@ public:
         // These devices has accelerometer sensors placed as portrait
         // orientation.
         rx = -(acos(rx / divider) * RADIANS_TO_DEGREES - 90);
+
         if (fabs(rx - m_PrevValue) > 0.1f) {
             emit rotationChanged(rx);
             m_PrevValue = rx;
@@ -43,6 +48,7 @@ public:
         // And these devices the accelerometer is placed
         // as landscape orientation.
         ry = acos(ry / divider) * RADIANS_TO_DEGREES - 90;
+
         if (fabs(ry - m_PrevValue) > 3.0f) {
             emit rotationChanged(ry);
             m_PrevValue = ry;

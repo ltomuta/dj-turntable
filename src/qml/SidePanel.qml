@@ -1,27 +1,33 @@
+/**
+ * Copyright (c) 2011-2012 Nokia Corporation.
+ */
+
 import QtQuick 1.0
 
 Rectangle {
     id: sidepanel
 
-    signal turnTableClicked()
+    signal turntableClicked()
     signal drumMachineClicked()
     signal sampleSelectorClicked()
 
     property bool sampleSelectorButtonPressed: false
-    property bool turnTableButtonPressed: false
+    property bool turntableButtonPressed: false
     property bool drumMachineButtonPressed: false
-    property bool turnTableLedOn: false
+    property bool turntableLedOn: false
     property bool drumMachineLedOn: false
 
     color: "black"
-    width: 100; height: 400
+    width: 100
+    height: 400
 
     BorderImage {
         id: settingsButton
 
         anchors {
             left: parent.left
-            right: parent.right; rightMargin: 2
+            right: parent.right
+            rightMargin: 2
         }
         height: width
         source: sidepanel.sampleSelectorButtonPressed
@@ -30,7 +36,8 @@ Rectangle {
 
         Image {
             anchors.centerIn: parent
-            width: parent.width * 0.5 ; height: width
+            width: parent.width * 0.5
+            height: width
             source: "images/iconsampleselector.png"
             smooth: true
         }
@@ -42,29 +49,33 @@ Rectangle {
     }
 
     BorderImage {
-        id: turnTableButton
+        id: turntableButton
 
         anchors {
             left: parent.left
-            right: parent.right; rightMargin: 2
-            top: settingsButton.bottom; topMargin: 2
+            right: parent.right
+            rightMargin: 2
+            top: settingsButton.bottom
+            topMargin: 2
         }
 
         height: (parent.height - settingsButton.height) / 2 - 1
         smooth: true
-        source: sidepanel.turnTableButtonPressed
+        source: sidepanel.turntableButtonPressed
                 ? "images/buttonpressed.sci"
                 : "images/buttonup.sci"
 
         Image {
             anchors {
-                top: parent.top; topMargin: parent.height * 0.1
+                top: parent.top
+                topMargin: parent.height * 0.1
                 horizontalCenter: parent.horizontalCenter
             }
-            width: parent.width * 0.6; height: width
+            width: parent.width * 0.6
+            height: width
             smooth: true
 
-            source: sidepanel.turnTableLedOn
+            source: sidepanel.turntableLedOn
                     ? "images/led_on.png"
                     : "images/led_off.png"
         }
@@ -72,9 +83,11 @@ Rectangle {
         Image {
             anchors {
                 horizontalCenter: parent.horizontalCenter
-                bottom: parent.bottom; bottomMargin: parent.height * 0.05
+                bottom: parent.bottom
+                bottomMargin: parent.height * 0.05
             }
-            width: parent.width * 0.6; height: width
+            width: parent.width * 0.6
+            height: width
             smooth: true
             source: "images/icon_turntable.png"
         }
@@ -82,7 +95,7 @@ Rectangle {
 
         MouseArea {
             anchors.fill: parent
-            onPressed: sidepanel.turnTableClicked()
+            onPressed: sidepanel.turntableClicked()
         }
     }
 
@@ -91,8 +104,10 @@ Rectangle {
 
         anchors {
             left: parent.left
-            right: parent.right; rightMargin: 2
-            top: turnTableButton.bottom; topMargin: 2
+            right: parent.right
+            rightMargin: 2
+            top: turntableButton.bottom
+            topMargin: 2
             bottom: parent.bottom
         }
 
@@ -104,10 +119,12 @@ Rectangle {
 
         Image {
             anchors {
-                top: parent.top; topMargin: parent.height * 0.1
+                top: parent.top
+                topMargin: parent.height * 0.1
                 horizontalCenter: parent.horizontalCenter
             }
-            width: parent.width * 0.6; height: width
+            width: parent.width * 0.6
+            height: width
             smooth: true
 
             source: sidepanel.drumMachineLedOn
@@ -118,9 +135,11 @@ Rectangle {
         Image {
             anchors {
                 horizontalCenter: parent.horizontalCenter
-                bottom: parent.bottom; bottomMargin: parent.height * 0.05
+                bottom: parent.bottom
+                bottomMargin: parent.height * 0.05
             }
-            width: parent.width * 0.6 ; height: width
+            width: parent.width * 0.6
+            height: width
             smooth: true
             source: "images/icon_drummachine.png"
         }

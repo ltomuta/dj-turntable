@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2011-2012 Nokia Corporation.
+ */
+
 import QtQuick 1.0
 
 Image {
@@ -17,11 +21,17 @@ Image {
     }
 
     function highlightTick(tick) {
-        if (tick % 8) { ledOn = false }
-        else if (powerbutton.pressed) { ledOn = true }
+        if (tick % 8) {
+            ledOn = false
+        } else if (powerbutton.pressed) {
+            ledOn = true
+        }
 
-        if (tick < 16) { tickGroupSelector.selectedTickGroup = 1 }
-        else { tickGroupSelector.selectedTickGroup = 2 }
+        if (tick < 16) {
+            tickGroupSelector.selectedTickGroup = 1
+        } else {
+            tickGroupSelector.selectedTickGroup = 2
+        }
 
         highligher.x = drumGrid.children[tick].x
     }
@@ -39,8 +49,12 @@ Image {
     source: "../images/backgroundaluminium.png"
 
     Text {
-        anchors { right: tickGroupSelector.left; rightMargin: 10 }
-        anchors { top: tickGroupSelector.top; topMargin: 10 }
+        anchors {
+            right: tickGroupSelector.left
+            rightMargin: 10
+            top: tickGroupSelector.top
+            topMargin: 10
+        }
         text: "Ticks"
         color: "#505050"
         font.pixelSize: 10
@@ -49,24 +63,38 @@ Image {
     TickGroupSelector {
         id: tickGroupSelector
 
-        anchors { top: parent.top; left: drumFlickable.left }
-        anchors { right: buttonPanel.left; topMargin: 5 }
-        anchors { bottom: buttonPanel.bottom; bottomMargin: 5 }
+        anchors {
+            top: parent.top
+            left: drumFlickable.left
+            right: buttonPanel.left
+            topMargin: 5
+            bottom: buttonPanel.bottom
+            bottomMargin: 5
+        }
     }
 
     Item {
         id: buttonPanel
 
-        anchors { right: parent.right; top: parent.top }
-        width:  parent.width * 0.23; height: parent.height / 6
+        anchors {
+            right: parent.right
+            top: parent.top
+        }
+        width:  parent.width * 0.23
+        height: parent.height / 6
 
         Image {
             id: closeButton
 
             property bool pressed: false
 
-            anchors { left: parent.horizontalCenter; right: parent.right }
-            anchors { top: parent.top; bottom: parent.bottom; margins: 5 }
+            anchors {
+                left: parent.horizontalCenter
+                right: parent.right
+                top: parent.top
+                bottom: parent.bottom
+                margins: 5
+            }
 
             source: pressed ? "../images/exit_on.png" : "../images/exit.png"
             smooth: true
@@ -107,11 +135,13 @@ Image {
             MouseArea {
                 anchors.fill: parent
                 onPressed: {
-                    infoButton.pressed = true; infoButton.scale = 0.9
+                    infoButton.pressed = true
+                    infoButton.scale = 0.9
                 }
 
                 onReleased: {
-                    infoButton.pressed = false; infoButton.scale = 1.00
+                    infoButton.pressed = false
+                    infoButton.scale = 1.00
                 }
 
                 onClicked: drumMachine.infoPressed()
@@ -121,9 +151,13 @@ Image {
 
     Column {
         id: sampleIcons
-        anchors { left: parent.left; leftMargin: 6 }
-        anchors { top: tickGroupSelector.bottom; topMargin: 2 }
-        anchors { bottom: controlButtons.top }
+        anchors {
+            top: tickGroupSelector.bottom
+            topMargin: 2
+            bottom: controlButtons.top
+            left: parent.left
+            leftMargin: 6
+        }
         width: parent.width / 20
         spacing: 3
 
@@ -161,8 +195,13 @@ Image {
     Flickable {
         id: drumFlickable
 
-        anchors { top: sampleIcons.top; bottom: sampleIcons.bottom }
-        anchors { left: sampleIcons.right; leftMargin: 5; right: parent.right }
+        anchors {
+            top: sampleIcons.top
+            bottom: sampleIcons.bottom
+            left: sampleIcons.right
+            leftMargin: 5
+            right: parent.right
+        }
 
         contentWidth: drumGrid.width
         interactive: false
@@ -200,14 +239,16 @@ Image {
             // state "Ticks1". When moving to state "Ticks2" this rectangle
             // is hidden.
             x: drumGrid.children[16].x
-            width: drumGrid.drumButtonWidth; height: drumFlickable.height
+            width: drumGrid.drumButtonWidth
+            height: drumFlickable.height
             color: "#999999"
         }
 
         Rectangle {
             id: highligher
 
-            width: drumGrid.drumButtonWidth; height: drumGrid.height
+            width: drumGrid.drumButtonWidth
+            height: drumGrid.height
             opacity: 0.3; color: "red"
         }
 
@@ -215,14 +256,21 @@ Image {
             State {
                 name: "Ticks1"
                 when: tickGroupSelector.selectedTickGroup == 1
-                PropertyChanges { target: drumFlickable; contentX: 0 }
+                PropertyChanges {
+                    target: drumFlickable
+                    contentX: 0
+                }
             },
             State {
                 name: "Ticks2"
                 when: tickGroupSelector.selectedTickGroup == 2
-                PropertyChanges { target: hackAround; visible: false }
                 PropertyChanges {
-                    target: drumFlickable; contentX: drumGrid.children[16].x
+                    target: hackAround
+                    visible: false
+                }
+                PropertyChanges {
+                    target: drumFlickable
+                    contentX: drumGrid.children[16].x
                 }
             }
         ]
@@ -232,9 +280,13 @@ Image {
             to: "Ticks2"
             reversible: true
             SequentialAnimation {
-                PropertyAction { target: hackAround; property: "visible" }
+                PropertyAction {
+                    target: hackAround
+                    property: "visible"
+                }
                 PropertyAnimation {
-                    property: "contentX"; easing.type: Easing.InOutQuart
+                    property: "contentX"
+                    easing.type: Easing.InOutQuart
                 }
             }
         }
@@ -244,8 +296,11 @@ Image {
         id: controlButtons
 
         anchors {
-            left: parent.left; right: parent.right
-            bottom: parent.bottom; leftMargin: 10; rightMargin: 10
+            left: parent.left
+            right: parent.right
+            bottom: parent.bottom
+            leftMargin: 10
+            rightMargin: 10
             bottomMargin: 3
         }
 
@@ -255,7 +310,8 @@ Image {
             id: beatSelector
 
             anchors {
-                left: parent.left; right: powerButtonArea.left
+                left: parent.left
+                right: powerButtonArea.left
                 rightMargin: 30
             }
 
@@ -267,7 +323,8 @@ Image {
             id: powerButtonArea
 
             anchors {
-                top: parent.top; bottom: parent.bottom
+                top: parent.top
+                bottom: parent.bottom
                 right: parent.right
             }
 
@@ -283,7 +340,10 @@ Image {
             ImageButton {
                 id: powerbutton
 
-                anchors { right: parent.right; rightMargin: 10 }
+                anchors {
+                    right: parent.right
+                    rightMargin: 10
+                }
                 width: beatSelector.buttonWidth; height: width
                 buttonCenterImage: "../images/powerbutton.png"
                 glowColor: pressed ? "#CC00FF00" : "#CCFF0000"
@@ -295,8 +355,7 @@ Image {
                 onPressedChanged: {
                     if (pressed) {
                         drumMachine.startBeat()
-                    }
-                    else {
+                    } else {
                         drumMachine.stopBeat()
                         drumMachine.ledOn = false
                     }

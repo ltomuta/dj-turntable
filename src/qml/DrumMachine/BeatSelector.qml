@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2011-2012 Nokia Corporation.
+ */
+
 import QtQuick 1.0
 
 Item {
@@ -8,7 +12,9 @@ Item {
     property alias buttonWidth: predefined.buttonWidth
 
     function buttonPressed(button, i) {
-        if (pressedButton != -1) { pressedButton.pressed = false }
+        if (pressedButton !== -1) {
+            pressedButton.pressed = false
+        }
         pressedButton = button
         index = i
         pressedButton.pressed = true
@@ -31,14 +37,19 @@ Item {
 
         property real buttonWidth: Math.min(width / 3 - spacing, height)
 
-        anchors { left: predefinedText.right; right: parent.horizontalCenter }
-        anchors { top: parent.top; bottom: parent.bottom }
-        anchors { leftMargin: 10; rightMargin: 10 }
+        anchors {
+            top: parent.top
+            bottom: parent.bottom
+            left: predefinedText.right
+            right: parent.horizontalCenter
+            leftMargin: 10
+            rightMargin: 10
+        }
 
         spacing: 5
 
         ImageButton {
-            id: first;
+            id: first
             width: predefined.buttonWidth; height: width
             index: 0; buttonCenterImage: "../images/button1.png"
             onClicked: selector.buttonPressed(button, index)
@@ -69,9 +80,14 @@ Item {
     Row {
         id: userDefined
 
-        anchors { left: userDefinedText.right; right: parent.right }
-        anchors { top: parent.top; bottom: parent.bottom }
-        anchors { leftMargin: 10; rightMargin: 10 }
+        anchors {
+            top: parent.top
+            bottom: parent.bottom
+            left: userDefinedText.right
+            right: parent.right
+            leftMargin: 10
+            rightMargin: 10
+        }
         spacing: 5
 
         ImageButton {

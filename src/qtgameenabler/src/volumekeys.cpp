@@ -62,8 +62,8 @@ void VolumeKeys::MrccatoCommand(TRemConCoreApiOperationId operationId,
 
     if (buttonAct == ERemConCoreApiButtonClick) {
         if (operationId == ERemConCoreApiVolumeUp)
-            m_observer->onVolumeUp();
+            m_observer->volumeUp();
         else if (operationId == ERemConCoreApiVolumeDown)
-            m_observer->onVolumeDown();
+            m_observer->volumeDown();
     }
 }

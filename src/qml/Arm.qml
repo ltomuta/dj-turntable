@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2011-2012 Nokia Corporation.
+ */
+
 import QtQuick 1.0
 
 Item {
@@ -13,8 +17,15 @@ Item {
 
     signal armReleasedByUser(real position)
 
-    function moveIn() { moveToStop.stop(); moveToDisk.start() }
-    function moveOut() { moveToDisk.stop(); moveToStop.start() }
+    function moveIn() {
+        moveToStop.stop()
+        moveToDisk.start()
+    }
+
+    function moveOut() {
+        moveToDisk.stop()
+        moveToStop.start()
+    }
 
     function setPositionOnDisk(position) {
         if (armdown) {
@@ -25,17 +36,17 @@ Item {
     }
 
     function updateArmDown(userMoving) {
-        if (angle > minAngleOnDisk && userMoving == false) {
+        if (angle > minAngleOnDisk && userMoving === false) {
             arm.armReleasedByUser((angle - minAngleOnDisk)
                                   / (maxAngleOnDisk - minAngleOnDisk))
             armdown = true
-        }
-        else {
+        } else {
             armdown = false
         }
     }
 
-    width: 40; height: 360
+    width: 40
+    height: 360
 
     Image {
         id: pedal
@@ -43,20 +54,24 @@ Item {
         property real centerX: width / 2
         property real centerY: height / 2
 
-        width: parent.width; height: width
-        smooth: lowPerf ? false : true;
+        width: parent.width
+        height: width
+        smooth: lowPerf ? false : true
         source: "images/pedal.png"
     }
 
     Item {
         anchors {
-            top: pedal.verticalCenter; bottom: parent.bottom
-            left: parent.left; right: parent.right
+            top: pedal.verticalCenter
+            bottom: parent.bottom
+            left: parent.left
+            right: parent.right
         }
 
         transform: [
             Rotation {
-                origin.x: width / 2; origin.y: 0
+                origin.x: width / 2
+                origin.y: 0
                 angle: arm.angle
             },
             Rotation {
@@ -69,19 +84,23 @@ Item {
 
         Image {
             anchors {
-                fill: armImage; leftMargin: parent.width * 0.15
+                fill: armImage
+                leftMargin: parent.width * 0.15
                 topMargin: parent.height * 0.02
             }
             source: "images/armshadow.png"
-            smooth: lowPerf ? false : true;
+            smooth: lowPerf ? false : true
         }
 
         Image {
             id: armImage
 
-            anchors { fill: parent; leftMargin: parent.width * 0.3 }
+            anchors {
+                fill: parent
+                leftMargin: parent.width * 0.3
+            }
             source: "images/arm.png"
-            smooth: lowPerf ? false : true;
+            smooth: lowPerf ? false : true
         }
 
         MouseArea {
@@ -93,7 +112,8 @@ Item {
                 bottom: parent.bottom
             }
 
-            width: parent.width * 0.7; height: parent.height * 0.20
+            width: parent.width * 0.7
+            height: parent.height * 0.20
 
             onPressed: updateArmDown(true)
             onReleased: updateArmDown(false)
@@ -104,10 +124,11 @@ Item {
                 var xdistance = -(object.x - pedal.centerX)
                 var ydistance = object.y - pedal.centerY
                 var angle = Math.atan(xdistance / ydistance) * 57.2957795
-                if (angle > arm.maxAngleOnDisk)
+                if (angle > arm.maxAngleOnDisk) {
                     angle = arm.maxAngleOnDisk
-                else if (angle < 0)
+                } else if (angle < 0) {
                     angle = 0
+                }
 
                 arm.angle = angle
             }
@@ -126,7 +147,10 @@ Item {
     }
 
     Image {
-        anchors { fill: pedal; margins: pedal.width * 0.15 }
+        anchors {
+            fill: pedal
+            margins: pedal.width * 0.15
+        }
         smooth: true
         source: "images/armcasing.png"
     }
@@ -137,7 +161,10 @@ Item {
         ScriptAction { script: dragMouse.enabled = false }
         ScriptAction { script: arm.armdown = false }
         SmoothedAnimation {
-            target: arm; property: "angle"; to: arm.minAngleOnDisk; velocity: 23
+            target: arm
+            property: "angle"
+            to: arm.minAngleOnDisk
+            velocity: 23
         }
         ScriptAction { script: { arm.armdown = true } }
         ScriptAction { script: dragMouse.enabled = true }
@@ -149,7 +176,10 @@ Item {
         ScriptAction { script: dragMouse.enabled = false }
         ScriptAction { script: arm.armdown = false }
         SmoothedAnimation {
-            target: arm; property: "angle"; to: -0.1; velocity: 23
+            target: arm
+            property: "angle"
+            to: -0.1
+            velocity: 23
         }
         ScriptAction { script: dragMouse.enabled = true }
     }

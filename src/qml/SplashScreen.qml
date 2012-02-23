@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2011-2012 Nokia Corporation.
+ */
+
 import QtQuick 1.0
 
 Image {

@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2011-2012 Nokia Corporation.
+ */
+
 import QtQuick 1.0
 
 Image {
@@ -17,7 +21,8 @@ Image {
     Rectangle {
         id: glowColor
         anchors.centerIn: parent
-        width: 0.5 * parent.width; height: 0.5 * parent.height
+        width: 0.5 * parent.width
+        height: 0.5 * parent.height
         z: -1
         color: button.pressed ? "#CCFF0000" : "#CC202020"
         Behavior on color { ColorAnimation { duration: 100 } }

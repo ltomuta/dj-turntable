@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2011-2012 Nokia Corporation.
+ */
+
 import QtQuick 1.0
 import Qt.labs.folderlistmodel 1.0
 
@@ -31,7 +35,8 @@ Image {
         folderAnimation.start()
     }
 
-    width: 640; height: 360
+    width: 640
+    height: 360
     source: "../images/backgroundaluminium.png"
 
     Image {
@@ -39,9 +44,14 @@ Image {
 
         property bool pressed: false
 
-        anchors { top: parent.top; right: parent.right }
-        anchors { rightMargin: 5; topMargin: 5 }
-        width: parent.width * 0.10; height: width * 0.83607
+        anchors {
+            top: parent.top
+            right: parent.right
+            rightMargin: 5
+            topMargin: 5
+        }
+        width: parent.width * 0.10
+        height: width * 0.83607
         source: pressed ? "../images/back_on.png"
                         : "../images/back.png"
         smooth: true
@@ -49,11 +59,13 @@ Image {
         MouseArea {
             anchors.fill: parent
             onPressed: {
-                backButton.pressed = true; backButton.scale = 0.9
+                backButton.pressed = true
+                backButton.scale = 0.9
             }
 
             onReleased: {
-                backButton.pressed = false; backButton.scale = 1.0
+                backButton.pressed = false
+                backButton.scale = 1.0
             }
 
             onClicked: selector.backPressed()
@@ -65,8 +77,12 @@ Image {
 
         property bool pressed: false
 
-        anchors { top: backButton.bottom; right: parent.right }
-        anchors { rightMargin: 5; topMargin: 10 }
+        anchors {
+            top: backButton.bottom
+            right: parent.right
+            rightMargin: 5
+            topMargin: 10
+        }
         width: backButton.width
         height: backButton.height
         source: pressed ? "../images/defaultsample_on.png"
@@ -76,11 +92,13 @@ Image {
         MouseArea {
             anchors.fill: parent
             onPressed: {
-                defaultSampleButton.pressed = true; defaultSampleButton.scale = 0.9
+                defaultSampleButton.pressed = true
+                defaultSampleButton.scale = 0.9
             }
 
             onReleased: {
-                defaultSampleButton.pressed = false; defaultSampleButton.scale = 1.0
+                defaultSampleButton.pressed = false
+                defaultSampleButton.scale = 1.0
             }
 
             onClicked: selector.defaultSample()
@@ -94,8 +112,10 @@ Image {
         property bool pressed: false
 
         anchors {
-            top: parent.top; topMargin: 10
-            left: parent.left; leftMargin: 35
+            top: parent.top
+            topMargin: 10
+            left: parent.left
+            leftMargin: 35
         }
 
         width: height; height: 40
@@ -109,8 +129,10 @@ Image {
 
         anchors {
             verticalCenter: folderUp.verticalCenter
-            left: folderUp.right; leftMargin: 10
-            right: backButton.left; rightMargin: 20
+            left: folderUp.right
+            leftMargin: 10
+            right: backButton.left
+            rightMargin: 20
         }
 
         text: folderModel.folder
@@ -123,15 +145,18 @@ Image {
             top: parent.top
             bottom: folderHole.top
             left: folderUp.left
-            right: folderHole.right; rightMargin: 20
+            right: folderHole.right
+            rightMargin: 20
         }
 
         onPressed: {
-            folderUp.pressed = true; folderUp.scale = 0.9
+            folderUp.pressed = true
+            folderUp.scale = 0.9
         }
 
         onReleased: {
-            folderUp.pressed = false; folderUp.scale = 1.0
+            folderUp.pressed = false
+            folderUp.scale = 1.0
         }
 
         onClicked: selector.setFolder(folderModel.parentFolder)
@@ -162,13 +187,15 @@ Image {
             id: folderDelegate
 
             Item {
-                width: view.width; height: 40
+                width: view.width
+                height: 40
 
                 Behavior on scale { PropertyAnimation { duration: 50 } }
 
                 Image {
                     id: icon
-                    width: height; height: parent.height
+                    width: height
+                    height: parent.height
                     source: folderModel.isFolder(index) ? "../images/iconfolder.png"
                                                         : "../images/iconsample.png"
                     smooth: true
@@ -176,7 +203,8 @@ Image {
 
                 Text {
                     anchors {
-                        left: icon.right; leftMargin: 5
+                        left: icon.right
+                        leftMargin: 5
                         verticalCenter: parent.verticalCenter
                     }
                     text: fileName
@@ -186,14 +214,13 @@ Image {
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
-                        if (fileName == "") {
-                            return;
+                        if (fileName === "") {
+                            return
                         }
 
                         if (folderModel.isFolder(index)) {
                             selector.setFolder(filePath)
-                        }
-                        else {
+                        } else {
                             selector.sampleSelected(filePath)
                         }
                     }
@@ -204,7 +231,10 @@ Image {
         ListView {
             id: view
 
-            anchors { fill: parent; margins: 15 }
+            anchors {
+                fill: parent
+                margins: 15
+            }
 
             model: folderModel
             spacing: 10
@@ -215,9 +245,25 @@ Image {
 
                 property string folderToChange
 
-                PropertyAnimation { target: view; property: "opacity"; to: 0; duration: 100 }
-                PropertyAction { target: folderModel; property: "folder"; value: folderAnimation.folderToChange }
-                PropertyAnimation { target: view; property: "opacity"; to: 1.0; duration: 100 }
+                PropertyAnimation {
+                    target: view
+                    property: "opacity"
+                    to: 0
+                    duration: 100
+                }
+
+                PropertyAction {
+                    target: folderModel
+                    property: "folder"
+                    value: folderAnimation.folderToChange
+                }
+
+                PropertyAnimation {
+                    target: view
+                    property: "opacity"
+                    to: 1.0
+                    duration: 100
+                }
             }
         }
     }
@@ -226,8 +272,10 @@ Image {
         id: nowPlayingText
 
         anchors {
-            left: folderHole.left; leftMargin: 5
-            bottom: parent.bottom; bottomMargin: 10
+            left: folderHole.left
+            leftMargin: 5
+            bottom: parent.bottom
+            bottomMargin: 10
         }
 
         text: "Now playing: "
@@ -239,7 +287,8 @@ Image {
         text: selector.sampleFile
         elide: Text.ElideLeft
         anchors {
-            left: nowPlayingText.right; leftMargin: 5
+            left: nowPlayingText.right
+            leftMargin: 5
             top: nowPlayingText.top
             right: backButton.left
         }

@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2011-2012 Nokia Corporation.
+ */
+
 #include <QtGui>
 #include "mainwindow.h"
 
@@ -14,14 +18,14 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
 
     // Lock orientation in Symbian
-    #ifdef Q_OS_SYMBIAN
-        CAknAppUi* appUi = dynamic_cast<CAknAppUi*> (CEikonEnv::Static()->AppUi());
-        TRAP_IGNORE(
-            if (appUi) {
-                appUi->SetOrientationL(CAknAppUi::EAppUiOrientationLandscape);
-            }
-        );
-    #endif
+#ifdef Q_OS_SYMBIAN
+    CAknAppUi* appUi = dynamic_cast<CAknAppUi*> (CEikonEnv::Static()->AppUi());
+    TRAP_IGNORE(
+        if (appUi) {
+            appUi->SetOrientationL(CAknAppUi::EAppUiOrientationLandscape);
+        }
+    );
+#endif
 
     MainWindow mainWindow;
 

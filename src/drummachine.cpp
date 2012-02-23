@@ -10,6 +10,8 @@
 
 using namespace GE;
 
+#define SEQUENCE_LENGTH 32
+
 // Predefined sequences, they must be SEQUENCE_LENGTH ticks long each
 const unsigned char drum_seq0[] = { 5, 0, 1, 0, 9, 0, 5, 0,
                                     5, 0, 1, 0, 9, 4, 2, 0,
@@ -47,7 +49,7 @@ DrumMachine::DrumMachine(QSettings *settings, QObject *parent)
 
     for (int i = 0; i < m_drumSamples.size(); i++) {
         AudioBufferPlayInstance *playInstance = new AudioBufferPlayInstance();
-        // Dont destroy object when playing is finished
+        // Don't destroy the object when playing is finished
         playInstance->setDestroyWhenFinished(false);
         m_mixer->addAudioSource(playInstance);
         m_playInstances.push_back(playInstance);
@@ -75,12 +77,10 @@ DrumMachine::~DrumMachine()
 }
 
 
-/**
- *
+/*!
  * Returns copy of current sequence
- *
  */
-DrumMachine::TYPE_DRUM_SEQ DrumMachine::seq() const
+TYPE_DRUM_SEQ DrumMachine::seq() const
 {
     return m_seq;
 }
@@ -98,8 +98,17 @@ int DrumMachine::bpm() const
 }
 
 
-void DrumMachine::setSpeedMultiplier( float speedMul ) {
+void DrumMachine::setSpeedMultiplier(float speedMul)
+{
     m_speedMultiplier = speedMul;
+}
+
+/*!
+ * Sets the beats speep
+ */
+void DrumMachine::setBeatSpeed(QVariant speed)
+{
+    setBpm(speed.toFloat() * 600);
 }
 
 
@@ -126,11 +135,9 @@ bool DrumMachine::isUserBeat() const
 }
 
 
-/**
- *
- * Run the drum machine.
- *
- */
+/*!
+  Run the drum machine one tick.
+*/
 void DrumMachine::tick()
 {
     if (!m_running || m_seq.empty()) {
@@ -154,7 +161,9 @@ void DrumMachine::tick()
     m_tickCount++;
 }
 
-
+/*!
+  Called when more audio is needed
+*/
 int DrumMachine::pullAudio(AUDIO_SAMPLE_TYPE *target, int length)
 {
     int pos = 0;
@@ -187,9 +196,9 @@ int DrumMachine::pullAudio(AUDIO_SAMPLE_TYPE *target, int length)
 }
 
 
-DrumMachine::TYPE_DRUM_SEQ DrumMachine::readUserBeat(int index)
+TYPE_DRUM_SEQ DrumMachine::readUserBeat(int index)
 {
-    DrumMachine::TYPE_DRUM_SEQ seq;
+    TYPE_DRUM_SEQ seq;
 
     QString key = QString("UserBeat_%1").arg(index);
     QStringList list = m_Settings->value(key).toString().split(',');
@@ -209,13 +218,12 @@ DrumMachine::TYPE_DRUM_SEQ DrumMachine::readUserBeat(int index)
 }
 
 
-void DrumMachine::saveUserBeat(int index,
-                               const DrumMachine::TYPE_DRUM_SEQ &seq)
+void DrumMachine::saveUserBeat(int index, const TYPE_DRUM_SEQ &seq)
 {
     QString key = QString("UserBeat_%1").arg(index);
     QString data;
 
-    DrumMachine::TYPE_DRUM_SEQ::const_iterator it;
+    TYPE_DRUM_SEQ::const_iterator it;
 
     for (it=seq.begin(); it != seq.end(); it++) {
         data += QString("%1").arg(*it);
@@ -226,8 +234,9 @@ void DrumMachine::saveUserBeat(int index,
     m_Settings->setValue(key, data);
 }
 
-
-
+/*!
+  Indexes 0-3 are predefined beats, 4-7 are user defined
+*/
 void DrumMachine::setBeat(QVariant index)
 {
     // We use STL vector to get predefined beats
@@ -280,11 +289,9 @@ void DrumMachine::setBeat(QVariant index)
 }
 
 
-/**
- *
- * User has changed the sequence, edit the change directly to the playing beat
- *
- */
+/*!
+  User has changed the sequence, edit the change directly to the playing beat
+*/
 void DrumMachine::drumButtonToggled(QVariant tick, QVariant sample,
                                     QVariant pressed)
 {

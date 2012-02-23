@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2011 Nokia Corporation.
+/**
+ * Copyright (c) 2011-2012 Nokia Corporation.
  */
 
 import QtQuick 1.0
@@ -8,7 +8,7 @@ Rectangle {
     id: page
 
     function forceClose() {
-        page.opacity = 0;
+        page.opacity = 0
     }
 
     function show(txt) {
@@ -48,4 +48,3 @@ Rectangle {
         onTriggered: page.forceClose()
     }
 }
-

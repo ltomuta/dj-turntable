@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2011-2012 Nokia Corporation.
+ */
+
 import QtQuick 1.0
 
 Item {
@@ -17,7 +21,10 @@ Item {
     Image {
         id: image
 
-        anchors { fill: parent; margins: 3 }
+        anchors {
+            fill: parent
+            margins: 3
+        }
         source: button.pressed ? selectedSource : unselectedSource
     }
 
@@ -25,7 +32,7 @@ Item {
         anchors.fill: parent
         onClicked: {
             button.pressed = !button.pressed
-            if (tick != -1 || sample != -1) {
+            if (tick !== -1 || sample !== -1) {
                 button.buttonToggled()
             }
         }

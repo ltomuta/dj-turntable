@@ -1,10 +1,14 @@
+/**
+ * Copyright (c) 2011-2012 Nokia Corporation.
+ */
+
 #include "mainwindow.h"
 
 #include <QDebug>
 #include <QtDeclarative>
 
-#include "DrumMachine.h"
-#include "TurnTable.h"
+#include "drummachine.h"
+#include "turntable.h"
 
 #ifndef QT_NO_OPENGL
     #include <QGLWidget>
@@ -25,8 +29,8 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent)
 {
-    view = new QDeclarativeView(this);
-    view->setAttribute(Qt::WA_NoSystemBackground);
+    m_view = new QDeclarativeView(this);
+    m_view->setAttribute(Qt::WA_NoSystemBackground);
 
 #ifndef QT_NO_OPENGL
     // Use QGLWidget to get the opengl support if available
@@ -35,12 +39,12 @@ MainWindow::MainWindow(QWidget *parent) :
 
     QGLWidget *glWidget = new QGLWidget(format);
     glWidget->setAutoFillBackground(false);
-    view->setViewport(glWidget);     // ownership of glWidget is taken
+    m_view->setViewport(glWidget);     // ownership of glWidget is taken
 #endif
 
-    view->setSource(QUrl("qrc:/qml/SplashScreen.qml"));
-    view->setResizeMode(QDeclarativeView::SizeRootObjectToView);
-    setCentralWidget(view);
+    m_view->setSource(QUrl("qrc:/qml/SplashScreen.qml"));
+    m_view->setResizeMode(QDeclarativeView::SizeRootObjectToView);
+    setCentralWidget(m_view);
 
     // To delay the loading of main QML file so that the splash screen
     // would show, we use single shot timer.
@@ -50,7 +54,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 void MainWindow::initializeQMLComponent()
 {
-    QDeclarativeContext *context = view->rootContext();
+    QDeclarativeContext *context = m_view->rootContext();
 
 #if defined(Q_WS_MAEMO_5) || defined(QT_NO_OPENGL)
     // Set UI to low performance mode for Maemo5 and Symbian^1. This mainly
@@ -74,128 +78,109 @@ void MainWindow::initializeQMLComponent()
     context->setContextProperty("exitButtonVisible", true);
 #endif
 
-    view->setSource(QUrl("qrc:/qml/TurnTable.qml"));
+    m_view->setSource(QUrl("qrc:/qml/Main.qml"));
 
     // Create Qt settings object to load / store app settings
-    settings = new QSettings("Nokia", "DJTurntable");
+    m_settings = new QSettings("Nokia", "DJTurntable");
 
     // Create Qt objects to handle Turntable and Drum machine
-    turnTable = new TurnTable(settings, this);
-    drumMachine = new DrumMachine(settings, this);
-    turnTable->addAudioSource(drumMachine);
+    m_turntable = new Turntable(m_settings, this);
+    m_drumMachine = new DrumMachine(m_settings, this);
+    m_turntable->addAudioSource(m_drumMachine);
 
     // Find out the interesting Qt objects of the QML elements
-    QObject *turnTableQML = dynamic_cast<QObject*>(view->rootObject());
-    QObject *sampleSelectorQML = findQMLElement(turnTableQML, "sampleSelector");
-    QObject *drumMachineQML = findQMLElement(turnTableQML, "drumMachine");
+    QObject *turntableQML = dynamic_cast<QObject*>(m_view->rootObject());
+    QObject *sampleSelectorQML =
+            m_view->rootObject()->findChild<QObject*>("sampleSelector");
+    QObject *drumMachineQML =
+            m_view->rootObject()->findChild<QObject*>("drumMachine");
 
     // If there are errors in QML code and the elements does not exist,
     // they won't be found Qt side either, check existance of the elements.
-    if (turnTableQML == NULL || sampleSelectorQML == NULL || drumMachineQML == NULL) {
+    if (!turntableQML || !sampleSelectorQML || !drumMachineQML) {
         QMessageBox::warning(NULL, "Warning",
                              "Failed to resolve QML elements in main.cpp");
         return;
     }
 
-    // TurnTable connections
-    connect(turnTableQML, SIGNAL(start()), turnTable, SLOT(start()));
-    connect(turnTableQML, SIGNAL(stop()), turnTable, SLOT(stop()));
-    connect(turnTableQML, SIGNAL(diskAimSpeed(QVariant)),
-            turnTable, SLOT(setDiscAimSpeed(QVariant)));
-    connect(turnTableQML, SIGNAL(diskSpeed(QVariant)),
-            turnTable, SLOT(setDiscSpeed(QVariant)));
-    connect(turnTableQML, SIGNAL(cutOff(QVariant)),
-            turnTable, SLOT(setCutOff(QVariant)));
-    connect(turnTableQML, SIGNAL(resonance(QVariant)),
-            turnTable, SLOT(setResonance(QVariant)));
-    connect(turnTableQML, SIGNAL(seekToPosition(QVariant)),
-            turnTable, SLOT(seekToPosition(QVariant)));
-    connect(turnTable, SIGNAL(audioPosition(QVariant)),
-            turnTableQML, SLOT(audioPosition(QVariant)));
-    connect(turnTable, SIGNAL(powerOff()), turnTableQML, SLOT(powerOff()));
+    // Turntable connections
+    connect(turntableQML, SIGNAL(start()),
+            m_turntable, SLOT(start()));
+    connect(turntableQML, SIGNAL(stop()),
+            m_turntable, SLOT(stop()));
+    connect(turntableQML, SIGNAL(diskAimSpeed(QVariant)),
+            m_turntable, SLOT(setDiscAimSpeed(QVariant)));
+    connect(turntableQML, SIGNAL(diskSpeed(QVariant)),
+            m_turntable, SLOT(setDiscSpeed(QVariant)));
+    connect(turntableQML, SIGNAL(cutOff(QVariant)),
+            m_turntable, SLOT(setCutOff(QVariant)));
+    connect(turntableQML, SIGNAL(resonance(QVariant)),
+            m_turntable, SLOT(setResonance(QVariant)));
+    connect(turntableQML, SIGNAL(seekToPosition(QVariant)),
+            m_turntable, SLOT(seekToPosition(QVariant)));
+    connect(m_turntable, SIGNAL(audioPosition(QVariant)),
+            turntableQML, SLOT(audioPosition(QVariant)));
+    connect(m_turntable, SIGNAL(powerOff()), turntableQML, SLOT(powerOff()));
 
     // SampleSelector connections
     connect(sampleSelectorQML, SIGNAL(sampleSelected(QVariant)),
-            turnTable, SLOT(setSample(QVariant)));
+            m_turntable, SLOT(setSample(QVariant)));
     connect(sampleSelectorQML, SIGNAL(defaultSample()),
-            turnTable, SLOT(openDefaultSample()));
-    connect(turnTable, SIGNAL(sampleOpened(QVariant)),
+            m_turntable, SLOT(openDefaultSample()));
+    connect(m_turntable, SIGNAL(sampleOpened(QVariant)),
             sampleSelectorQML, SLOT(setCurrentSample(QVariant)));
-    connect(turnTable, SIGNAL(error(QVariant, QVariant)),
+    connect(m_turntable, SIGNAL(error(QVariant, QVariant)),
             sampleSelectorQML, SLOT(showError(QVariant, QVariant)));
 
     // DrumMachine connections
     connect(drumMachineQML, SIGNAL(startBeat()),
-            drumMachine, SLOT(startBeat()));
+            m_drumMachine, SLOT(startBeat()));
     connect(drumMachineQML, SIGNAL(stopBeat()),
-            drumMachine, SLOT(stopBeat()));
+            m_drumMachine, SLOT(stopBeat()));
     connect(drumMachineQML, SIGNAL(setBeat(QVariant)),
-            drumMachine, SLOT(setBeat(QVariant)));
+            m_drumMachine, SLOT(setBeat(QVariant)));
     connect(drumMachineQML,
             SIGNAL(drumButtonToggled(QVariant, QVariant, QVariant)),
-            drumMachine,
+            m_drumMachine,
             SLOT(drumButtonToggled(QVariant, QVariant, QVariant)));
     connect(drumMachineQML, SIGNAL(drumMachineSpeed(QVariant)),
-            drumMachine, SLOT(setBeatSpeed(QVariant)));
-    connect(drumMachine,
+            m_drumMachine, SLOT(setBeatSpeed(QVariant)));
+    connect(m_drumMachine,
             SIGNAL(drumButtonState(QVariant, QVariant, QVariant)),
             drumMachineQML,
             SLOT(setDrumButton(QVariant, QVariant, QVariant)));
-    connect(drumMachine, SIGNAL(tickChanged(QVariant)),
+    connect(m_drumMachine, SIGNAL(tickChanged(QVariant)),
             drumMachineQML, SLOT(highlightTick(QVariant)));
 
     // Framework connections
-    connect((QObject*)view->engine(), SIGNAL(quit()), qApp, SLOT(quit()));
+    connect((QObject*)m_view->engine(), SIGNAL(quit()), qApp, SLOT(quit()));
 
 #if defined(Q_OS_SYMBIAN) || defined(Q_WS_MAEMO_5) || defined(Q_WS_MAEMO_6)
 #ifndef QT_NO_OPENGL
     // Create Qt accelerometer objects
-    accelerometer = new QAccelerometer(this);
-    accelerometerFilter = new AccelerometerFilter;
-    accelerometer->addFilter(accelerometerFilter); // Does not take the ownership of the filter
+    m_accelerometer = new QAccelerometer(this);
+    m_accelerometerFilter = new AccelerometerFilter;
+    // Does not take the ownership of the filter
+    m_accelerometer->addFilter(m_accelerometerFilter);
 
-    accelerometer->setDataRate(50);
+    m_accelerometer->setDataRate(50);
 
     // Create Qt objects for accessing profile information
-    deviceInfo = new QSystemDeviceInfo(this);
-    turnTable->profile(deviceInfo->currentProfile());
+    m_deviceInfo = new QSystemDeviceInfo(this);
+    m_turntable->profile(m_deviceInfo->currentProfile());
 
-    connect(accelerometerFilter, SIGNAL(rotationChanged(QVariant)),
-            turnTableQML, SLOT(inclination(QVariant)));
-    connect(deviceInfo,
+    connect(m_accelerometerFilter, SIGNAL(rotationChanged(QVariant)),
+            turntableQML, SLOT(inclination(QVariant)));
+    connect(m_deviceInfo,
             SIGNAL(currentProfileChanged(QSystemDeviceInfo::Profile)),
-            turnTable,
+            m_turntable,
             SLOT(profile(QSystemDeviceInfo::Profile)));
 
     // Begin the measuring of the accelerometer sensor
-    accelerometer->start();
+    m_accelerometer->start();
 #endif
 #endif
 
-    turnTable->openLastSample();
-    drumMachine->setBeat(0);
-}
-
-
-/**
- *
- * Recursive function that finds object from QObject tree.
- * Return NULL if element was not found.
- */
-QObject* MainWindow::findQMLElement(QObject *rootElement, const QString &objectName)
-{
-    if (rootElement->objectName() == objectName) {
-        return rootElement;
-    }
-
-    const QObjectList list = rootElement->children();
-    for (QObjectList::const_iterator it=list.begin(); it!=list.end(); it++)
-    {
-        QObject *object = findQMLElement((*it), objectName);
-        if (object != NULL) {
-            return object;
-        }
-    }
-
-    return NULL;
+    m_turntable->openLastSample();
+    m_drumMachine->setBeat(0);
 }

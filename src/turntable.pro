@@ -8,9 +8,9 @@ VERSION = 1.4.0
 
 SOURCES += \
     main.cpp \
-    DrumMachine.cpp \
+    drummachine.cpp \
     mainwindow.cpp \
-    TurnTable.cpp
+    turntable.cpp
 
 OTHER_FILES += \
     qml/*.qml \
@@ -21,9 +21,9 @@ OTHER_FILES += \
 RESOURCES += turntable.qrc
 
 HEADERS += \
-    DrumMachine.h \
+    drummachine.h \
     mainwindow.h \
-    TurnTable.h
+    turntable.h
 
 
 win32:!maemo5 {
@@ -63,6 +63,8 @@ unix:!symbian {
         MOBILITY  += sensors systeminfo
 
         HEADERS   += accelerometerfilter.h
+        SOURCES   += accelerometerfilter.cpp
+
         OTHER_FILES += qtc_packaging/debian_fremantle/*
 
         desktop.path = $$DATADIR/applications/hildon
@@ -76,6 +78,8 @@ unix:!symbian {
         MOBILITY += sensors systeminfo
 
         HEADERS += accelerometerfilter.h
+        SOURCES += accelerometerfilter.cpp
+
         OTHER_FILES += qtc_packaging/debian_harmattan/*
 
         desktop.path = $$DATADIR/applications
@@ -102,6 +106,7 @@ symbian {
     MOBILITY += sensors systeminfo
 
     HEADERS += accelerometerfilter.h
+    SOURCES += accelerometerfilter.cpp
 
     !contains(SYMBIAN_VERSION, Symbian3) {
         message(Symbian^1)

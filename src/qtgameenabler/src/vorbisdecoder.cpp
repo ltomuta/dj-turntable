@@ -371,7 +371,7 @@ unsigned char *VorbisDecoder::decodeAll(unsigned int *len)
 /*!
   Return sample from given position. pos is in units of PCM samples.
 */
-unsigned short VorbisDecoder::at(quint64 pos)
+short VorbisDecoder::at(quint64 pos)
 {
     if (!m_decSamplesLen || pos < m_decodedDataStart ||
         pos > m_decodedDataEnd) {
@@ -566,7 +566,7 @@ bool VorbisDecoder::vorbisDecodePage(const OggPage *page)
 */
 bool VorbisDecoder::vorbisDecodeNext()
 {
-    int rlen;
+    int rlen = 65536;
     int leftover = 0;
 
     if (m_cached) {
@@ -632,7 +632,7 @@ bool VorbisDecoder::vorbisSeekRelative(qint64 offset)
 /*!
   Seek to given sample position. pos is in units of PCM samples.
 */
-bool VorbisDecoder::vorbisSeek(qint64 pos)
+bool VorbisDecoder::vorbisSeek(quint64 pos)
 {
     if (m_decSamplesLen &&
         pos - m_decodedDataEnd < m_info.max_frame_size) {

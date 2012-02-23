@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2011-2012 Nokia Corporation.
+ */
+
 import QtQuick 1.0
 
 Item {
@@ -13,7 +17,8 @@ Item {
                 / (maximum - minimum) + handle.height * 0.358 + 2
     }
 
-    width: 100; height: 200
+    width: 100
+    height: 200
 
     Image {
         id: sliderimage
@@ -30,7 +35,8 @@ Item {
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.horizontalCenterOffset: 1
         y: (value - minimum) * handle.yMax / (maximum - minimum)
-        width: sliderimage.width * 1.4; height: parent.height * 0.3
+        width: sliderimage.width * 1.4
+        height: parent.height * 0.3
         source: "images/speedslider.png"
     }
 
@@ -38,8 +44,12 @@ Item {
         id: mouseArea
 
         anchors.fill: handle
-        drag { target: handle; axis: "YAxis" }
-        drag { minimumY: 0; maximumY: handle.yMax }
+        drag {
+            target: handle
+            axis: "YAxis"
+            minimumY: 0
+            maximumY: handle.yMax
+        }
 
         onPositionChanged: value = (maximum - minimum) * (handle.y) / handle.yMax + minimum
         onDoubleClicked: moveToDefault.start()
@@ -49,7 +59,10 @@ Item {
         id: moveToDefault
 
         SmoothedAnimation {
-            target: slider; property: "value"; to: slider.defaultValue; velocity: 0.8
+            target: slider
+            property: "value"
+            to: slider.defaultValue
+            velocity: 0.8
         }
     }
 }

@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2011-2012 Nokia Corporation.
+ */
+
 import QtQuick 1.0
 
 Rectangle {
@@ -9,7 +13,8 @@ Rectangle {
                             ? 8
                             : Math.min(width, height) * 0.02
 
-    width: 500; height: 360
+    width: 500
+    height: 360
     radius: 4
     color: "#999999"
     clip: true
@@ -17,7 +22,10 @@ Rectangle {
     Flickable {
         id: flickable
 
-        anchors { fill: parent; margins: 20 }
+        anchors {
+            fill: parent
+            margins: 20
+        }
         contentHeight: column.height
 
         Column {
@@ -26,13 +34,17 @@ Rectangle {
             width: parent.width
 
             Item {
-                width: parent.width; height: projectInfo.height
+                width: parent.width
+                height: projectInfo.height
 
                 Text {
                     id: projectInfo
 
-                    anchors { left: parent.left; right: backButton.left }
-                    anchors { rightMargin: 10 }
+                    anchors {
+                        left: parent.left
+                        right: backButton.left
+                        rightMargin: 10
+                    }
                     color: "white"
 
                     width: parent.width
@@ -123,8 +135,12 @@ Rectangle {
 
                     property bool pressed: false
 
-                    anchors { top: parent.top; right: parent.right }
-                    anchors { rightMargin: -15; topMargin: -15 }
+                    anchors {
+                        top: parent.top
+                        right: parent.right
+                        rightMargin: -15
+                        topMargin: -15
+                    }
                     width: helpScreen.width * 0.10
                     height: helpScreen.height / 6
                     source: pressed ? "../images/back_on.png" :
@@ -134,12 +150,14 @@ Rectangle {
                     MouseArea {
                         anchors.fill: parent
                         onPressed: {
-                            backButton.pressed = true; backButton.scale = 0.9
+                            backButton.pressed = true
+                            backButton.scale = 0.9
                             flickable.interactive = false
                         }
 
                         onReleased: {
-                            backButton.pressed = false; backButton.scale = 1.0
+                            backButton.pressed = false
+                            backButton.scale = 1.0
                             flickable.interactive = true
                         }
 

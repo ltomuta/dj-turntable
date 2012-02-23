@@ -21,8 +21,8 @@ namespace GE {
 class IVolumeKeyObserver
 {
 public:
-    virtual void onVolumeUp() = 0;
-    virtual void onVolumeDown() = 0;
+    virtual void volumeUp() = 0;
+    virtual void volumeDown() = 0;
 };
 
 class VolumeKeys : public QObject,

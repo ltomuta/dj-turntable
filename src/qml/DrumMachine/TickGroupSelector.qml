@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2011-2012 Nokia Corporation.
+ */
+
 import QtQuick 1.0
 
 BorderImage {
@@ -5,7 +9,8 @@ BorderImage {
 
     property int selectedTickGroup: 1
 
-    width: 300; height: 40
+    width: 300
+    height: 40
     source: "../images/buttonpressed.sci"
 
     Text {
@@ -27,29 +32,45 @@ BorderImage {
     }
 
     MouseArea {
-        anchors { top: parent.top; bottom: parent.bottom }
-        anchors { left: parent.left; right: parent.horizontalCenter }
+        anchors {
+            top: parent.top
+            bottom: parent.bottom
+            left: parent.left
+            right: parent.horizontalCenter
+        }
         onClicked: toggleSwitch.selectedTickGroup = 1
     }
 
     MouseArea {
-        anchors { top: parent.top; bottom: parent.bottom }
-        anchors { left: parent.horizontalCenter; right: parent.right }
+        anchors {
+            top: parent.top
+            bottom: parent.bottom
+            left: parent.horizontalCenter
+            right: parent.right
+        }
         onClicked: toggleSwitch.selectedTickGroup = 2
     }
 
     Image {
         id: knob
 
-        anchors { top: parent.top; bottom: parent.bottom }
-        anchors { topMargin: 3; bottomMargin: 3 }
-        width: parent.width / 2; height: parent.height
+        anchors {
+            top: parent.top
+            bottom: parent.bottom
+            topMargin: 3
+            bottomMargin: 3
+        }
+        width: parent.width / 2
+        height: parent.height
         source: "../images/tickgroupselectorslider.png"
 
         x: toggleSwitch.selectedTickGroup == 2 ? toggleSwitch.width / 2 - 4 : 4
 
         Behavior on x {
-            NumberAnimation { easing.type: Easing.InOutQuad; duration: 100 }
+            NumberAnimation {
+                easing.type: Easing.InOutQuad
+                duration: 100
+            }
         }
 
         MouseArea {

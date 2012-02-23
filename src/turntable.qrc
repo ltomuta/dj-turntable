@@ -1,10 +1,12 @@
 <RCC>
     <qresource prefix="/">
         <file>qml/SplashScreen.qml</file>
-        <file>qml/TurnTable.qml</file>
+        <file>qml/Main.qml</file>
+        <file>qml/Turntable.qml</file>
         <file>qml/SpeedSlider.qml</file>
         <file>qml/Arm.qml</file>
         <file>qml/SidePanel.qml</file>
+		<file>qml/MixerPanel.qml</file>
         <file>qml/KnobDial.qml</file>
         <file>qml/LCDDisplay.qml</file>
         <file>qml/LCDDigit.qml</file>

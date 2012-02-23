@@ -33,7 +33,7 @@ public:
     inline quint64 decodedLength() { return m_decodedLength; }
     unsigned char *decodeAll(unsigned int *len);
     const stb_vorbis_info *fileInfo();
-    unsigned short at(quint64 pos);
+    short at(quint64 pos);
 
 private:
     bool scan();
@@ -41,7 +41,7 @@ private:
     const OggPage *seekPage(quint64 samplePos);
     const OggPage *firstAudioPage();
     unsigned char *readHeaderPages(int *len);
-    bool vorbisSeek(qint64 pos);
+    bool vorbisSeek(quint64 pos);
     bool vorbisSeekRelative(qint64 offset);
     bool vorbisDecodePage(const OggPage *page);
     bool vorbisDecodeNext();

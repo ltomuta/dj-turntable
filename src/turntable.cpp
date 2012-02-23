@@ -1,23 +1,18 @@
 /**
- * Copyright (c) 2011 Nokia Corporation.
+ * Copyright (c) 2011-2012 Nokia Corporation.
  */
 
 #include <QtGui>
 #include <math.h>
 #include "pullaudioout.h"
 #include "pushaudioout.h"
-#include "TurnTable.h"
-
-#if defined(Q_OS_SYMBIAN) && !defined(Q_OS_SYMBIAN_1)
-    #include <remconcoreapitarget.h>
-    #include <remconinterfaceselector.h>
-#endif
+#include "turntable.h"
 
 using namespace GE;
 
 const int MaxDiskSpeed = 5.0f;
 
-TurnTable::TurnTable(QSettings *settings, QObject *parent)
+Turntable::Turntable(QSettings *settings, QObject *parent)
     : GE::AudioSource(parent),
       m_defaultSample(":/sounds/ivory.wav"),
       m_defaultVolume(0.65f),
@@ -39,6 +34,7 @@ TurnTable::TurnTable(QSettings *settings, QObject *parent)
     m_cutOffEffect = new CutOffEffect(this);
     m_cutOffEffect->setCutOff(1.0f);
     m_cutOffEffect->setResonance(1.0f);
+
 #ifdef Q_WS_MAEMO_6
     // Works better with N9
     m_audioOut = new PushAudioOut(m_audioMixer, this);
@@ -50,15 +46,12 @@ TurnTable::TurnTable(QSettings *settings, QObject *parent)
                                                      m_defaultVolume).toFloat());
 
 #if defined(Q_OS_SYMBIAN) && !defined(Q_OS_SYMBIAN_1)
-    Observer *m_Observer = new Observer(this);
-    m_Selector = CRemConInterfaceSelector::NewL();
-    m_Target = CRemConCoreApiTarget::NewL(*m_Selector, *m_Observer);
-    m_Selector->OpenTargetL();
+    m_volumeKeys = new VolumeKeys(this, this);
 #endif
 }
 
 
-TurnTable::~TurnTable()
+Turntable::~Turntable()
 {
     m_PosMutex.lock();
 
@@ -74,12 +67,12 @@ TurnTable::~TurnTable()
     delete m_cutOffEffect;
 
 #if defined(Q_OS_SYMBIAN) && !defined(Q_OS_SYMBIAN_1)
-    delete m_Target;
+    delete m_volumeKeys;
 #endif
 }
 
 
-int TurnTable::pullAudio(AUDIO_SAMPLE_TYPE *target, int bufferLength)
+int Turntable::pullAudio(AUDIO_SAMPLE_TYPE *target, int bufferLength)
 {
     QMutexLocker locker(&m_PosMutex);
 
@@ -163,13 +156,13 @@ int TurnTable::pullAudio(AUDIO_SAMPLE_TYPE *target, int bufferLength)
 }
 
 
-void TurnTable::addAudioSource(GE::AudioSource *source)
+void Turntable::addAudioSource(GE::AudioSource *source)
 {
     m_audioMixer->addAudioSource(source);
 }
 
 
-void TurnTable::openSample(const QString &filePath)
+void Turntable::openSample(const QString &filePath)
 {
     QMutexLocker locker(&m_PosMutex);
 
@@ -239,25 +232,25 @@ void TurnTable::openSample(const QString &filePath)
 }
 
 
-void TurnTable::openLastSample()
+void Turntable::openLastSample()
 {
     openSample(m_Settings->value("LastSample", m_defaultSample).toString());
 }
 
 
-void TurnTable::setSample(QVariant value)
+void Turntable::setSample(QVariant value)
 {
     openSample(value.toString());
 }
 
 
-void TurnTable::openDefaultSample()
+void Turntable::openDefaultSample()
 {
     openSample();
 }
 
 
-void TurnTable::setDiscAimSpeed(QVariant value)
+void Turntable::setDiscAimSpeed(QVariant value)
 {
     float speed = value.toFloat();
     if (speed > -MaxDiskSpeed && speed < MaxDiskSpeed) {
@@ -266,7 +259,7 @@ void TurnTable::setDiscAimSpeed(QVariant value)
 }
 
 
-void TurnTable::setDiscSpeed(QVariant value)
+void Turntable::setDiscSpeed(QVariant value)
 {
     float speed = value.toFloat();
     if (speed < -MaxDiskSpeed) {
@@ -279,19 +272,19 @@ void TurnTable::setDiscSpeed(QVariant value)
 }
 
 
-void TurnTable::setCutOff(QVariant value)
+void Turntable::setCutOff(QVariant value)
 {
     m_cutOffEffect->setCutOff(value.toFloat());
 }
 
 
-void TurnTable::setResonance(QVariant value)
+void Turntable::setResonance(QVariant value)
 {
     m_cutOffEffect->setResonance(powf(value.toFloat(), 2.0f));
 }
 
 
-void TurnTable::volumeUp()
+void Turntable::volumeUp()
 {
     float volume = m_audioMixer->generalVolume() * 1.333f;
     if (volume == 0.0f) {
@@ -306,7 +299,7 @@ void TurnTable::volumeUp()
 }
 
 
-void TurnTable::volumeDown()
+void Turntable::volumeDown()
 {
     float volume = m_audioMixer->generalVolume() * 0.75f;
     if (volume < 0.01f) {
@@ -317,9 +310,10 @@ void TurnTable::volumeDown()
     m_Settings->setValue("Volume", volume);
 }
 
-
-// The parameter position should be in range 0 - 1.0
-void TurnTable::seekToPosition(QVariant position)
+/*!
+  The parameter \a position should be in range 0 - 1.0
+*/
+void Turntable::seekToPosition(QVariant position)
 {
     QMutexLocker locker(&m_PosMutex);
 
@@ -335,3 +329,29 @@ void TurnTable::seekToPosition(QVariant position)
 
     m_pos = (value / (1.0 / m_maxLoops) - m_loops) * m_channelLength;
 }
+
+#if defined(Q_OS_SYMBIAN) || defined(Q_WS_MAEMO_5) || defined(Q_WS_MAEMO_6)
+
+/*!
+
+*/
+void Turntable::profile(QSystemDeviceInfo::Profile profile)
+{
+    if (profile == QSystemDeviceInfo::SilentProfile) {
+        m_audioMixer->setGeneralVolume(0.0f);
+    }
+
+#if defined(Q_WS_MAEMO_5) || defined(Q_WS_MAEMO_6)
+    // In Maemo where there is no way to get volume
+    // back if it is set to 0, we set the volume
+    // to the default volume when getting out of
+    // silent profile. In Maemo the devices volume
+    // buttons control the devices volume, in Symbian
+    // the devices volume buttons control application
+    // specific volume.
+    else {
+        m_audioMixer->setGeneralVolume(m_defaultVolume);
+    }
+#endif
+}
+#endif

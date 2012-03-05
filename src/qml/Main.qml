@@ -5,6 +5,8 @@
 import QtQuick 1.0
 import "SampleSelector"
 import "DrumMachine"
+import "Turntable"
+import "MixerPanel"
 import "HelpScreen"
 
 Rectangle {
@@ -33,11 +35,6 @@ Rectangle {
 
     function inclination(deg) {
         diskReflection.rotation = deg * 2 + 45
-    }
-
-    function powerOn() {
-        turntable.playing = true
-        turntable.moveIn()
     }
 
     function powerOff() {

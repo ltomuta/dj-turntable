@@ -55,9 +55,6 @@ public slots:
     void setCutOff(QVariant value);
     void setResonance(QVariant value);
 
-    void volumeUp();
-    void volumeDown();
-
     void seekToPosition(QVariant position);
 
 #if defined(Q_OS_SYMBIAN) || defined(Q_WS_MAEMO_5) || defined(Q_WS_MAEMO_6)
@@ -71,10 +68,13 @@ signals:
     void audioPosition(QVariant position);
     void error(QVariant file, QVariant error);
 
-    void powerOn();
     void powerOff();
 
-protected:
+protected: // from IVolumeKeyObserver
+    void volumeUp();
+    void volumeDown();
+
+private:
     QSettings *m_Settings; // Not owned
     GE::AudioBuffer* m_buffer; // Owned
     GE::VorbisDecoder *m_decoder; // Owned
@@ -91,6 +91,7 @@ protected:
     int m_cc;
     float m_speed;
     float m_targetSpeed;
+    float m_speedMul;
     qint64 m_channelLength;
 
 #if defined(Q_OS_SYMBIAN) && !defined(Q_OS_SYMBIAN_1)

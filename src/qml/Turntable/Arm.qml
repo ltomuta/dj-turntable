@@ -57,7 +57,7 @@ Item {
         width: parent.width
         height: width
         smooth: lowPerf ? false : true
-        source: "images/pedal.png"
+        source: "../images/pedal.png"
     }
 
     Item {
@@ -88,7 +88,7 @@ Item {
                 leftMargin: parent.width * 0.15
                 topMargin: parent.height * 0.02
             }
-            source: "images/armshadow.png"
+            source: "../images/armshadow.png"
             smooth: lowPerf ? false : true
         }
 
@@ -99,7 +99,7 @@ Item {
                 fill: parent
                 leftMargin: parent.width * 0.3
             }
-            source: "images/arm.png"
+            source: "../images/arm.png"
             smooth: lowPerf ? false : true
         }
 
@@ -143,7 +143,7 @@ Item {
         }
 
         smooth: true
-        source: "images/armcasingshadow.png"
+        source: "../images/armcasingshadow.png"
     }
 
     Image {
@@ -152,7 +152,7 @@ Item {
             margins: pedal.width * 0.15
         }
         smooth: true
-        source: "images/armcasing.png"
+        source: "../images/armcasing.png"
     }
 
     SequentialAnimation {

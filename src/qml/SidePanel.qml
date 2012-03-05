@@ -92,7 +92,6 @@ Rectangle {
             source: "images/icon_turntable.png"
         }
 
-
         MouseArea {
             anchors.fill: parent
             onPressed: sidepanel.turntableClicked()

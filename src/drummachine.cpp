@@ -28,11 +28,10 @@ const unsigned char drum_seq2[] = { 5, 0, 1, 0,33, 0, 5, 0,
                                     5, 0, 1, 0,33, 0, 5, 0,
                                     5, 0, 1, 0,33, 0, 2, 0 };
 
-
 DrumMachine::DrumMachine(QSettings *settings, QObject *parent)
     : GE::AudioSource(parent),
-      m_tickCount(0),
       m_Settings(settings),
+      m_tickCount(0),
       m_running(false),
       m_samplesPerTick(0),
       m_sampleCounter(0),
@@ -78,8 +77,8 @@ DrumMachine::~DrumMachine()
 
 
 /*!
- * Returns copy of current sequence
- */
+  Returns copy of current sequence
+*/
 TYPE_DRUM_SEQ DrumMachine::seq() const
 {
     return m_seq;
@@ -97,15 +96,17 @@ int DrumMachine::bpm() const
     return (AUDIO_FREQUENCY * 60) / m_samplesPerTick;
 }
 
-
+/*!
+  You must call setBpm after this one.
+*/
 void DrumMachine::setSpeedMultiplier(float speedMul)
 {
     m_speedMultiplier = speedMul;
 }
 
 /*!
- * Sets the beats speep
- */
+  Sets the beats speep
+*/
 void DrumMachine::setBeatSpeed(QVariant speed)
 {
     setBpm(speed.toFloat() * 600);
@@ -124,7 +125,9 @@ void DrumMachine::setBpm(int bpm)
     m_samplesPerTick = (int)samplesPerTick;
 }
 
-
+/*!
+  Returns true if beat index is in range 4-7
+*/
 bool DrumMachine::isUserBeat() const
 {
     if (m_currentSeqIndex >= 3 && m_currentSeqIndex <= 5) {

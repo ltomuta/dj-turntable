@@ -12,7 +12,7 @@ Image {
 
     width:  flickable.width - mixerpanel.width - 2
     height: flickable.height
-    source: "images/backgroundaluminium.png"
+    source: "../images/backgroundaluminium.png"
     fillMode: Image.Stretch
 
     function start() {
@@ -42,14 +42,14 @@ Image {
         anchors.horizontalCenterOffset: -0.085 * parent.paintedWidth
         anchors.verticalCenterOffset: -0.0055 * parent.paintedHeight
 
-        source: "images/discplate.png"
+        source: "../images/discplate.png"
         smooth: lowPerf ? false : true
     }
 
     Image {
         id: discLabel
         anchors.centerIn: disc
-        source: "images/disklabel.png"
+        source: "../images/disklabel.png"
         scale: disc.width / disc.sourceSize.width
         smooth: false
         visible: lowPerf ? true : false
@@ -68,7 +68,7 @@ Image {
             fill: discPlate
             margins: discPlate.width * 0.045
         }
-        source: "images/disk.png"
+        source: "../images/disk.png"
         smooth: lowPerf ? false : true
 
         onCurrentSpeedChanged: playTimer.running ?
@@ -105,7 +105,7 @@ Image {
         id: diskReflection
 
         anchors.fill: disc
-        source: "images/diskreflection.png"
+        source: "../images/diskreflection.png"
         fillMode: Image.PreserveAspectFit
 
         rotation: 45

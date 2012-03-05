@@ -1,22 +1,22 @@
 <RCC>
     <qresource prefix="/">
-        <file>qml/SplashScreen.qml</file>
         <file>qml/Main.qml</file>
-        <file>qml/Turntable.qml</file>
-        <file>qml/SpeedSlider.qml</file>
-        <file>qml/Arm.qml</file>
+        <file>qml/SplashScreen.qml</file>
         <file>qml/SidePanel.qml</file>
-		<file>qml/MixerPanel.qml</file>
-        <file>qml/KnobDial.qml</file>
-        <file>qml/LCDDisplay.qml</file>
-        <file>qml/LCDDigit.qml</file>
+        <file>qml/Common/ImageButton.qml</file>
+        <file>qml/Turntable/Turntable.qml</file>
+        <file>qml/Turntable/SpeedSlider.qml</file>
+        <file>qml/Turntable/Arm.qml</file>
+		<file>qml/MixerPanel/MixerPanel.qml</file>
+        <file>qml/MixerPanel/KnobDial.qml</file>
+        <file>qml/MixerPanel/LCDDisplay.qml</file>
+        <file>qml/MixerPanel/LCDDigit.qml</file>
         <file>qml/SampleSelector/SampleSelector.qml</file>
         <file>qml/SampleSelector/Dialog.qml</file>
         <file>qml/DrumMachine/DrumMachine.qml</file>
         <file>qml/DrumMachine/DrumButton.qml</file>
         <file>qml/DrumMachine/BeatSelector.qml</file>
         <file>qml/DrumMachine/TickGroupSelector.qml</file>
-        <file>qml/DrumMachine/ImageButton.qml</file>
         <file>qml/HelpScreen/HelpScreen.qml</file>
         <file>qml/images/iconsampleselector.png</file>
         <file>qml/images/buttonpressed.png</file>

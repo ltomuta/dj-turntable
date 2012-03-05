@@ -14,9 +14,12 @@ SOURCES += \
 
 OTHER_FILES += \
     qml/*.qml \
+    qml/Common/*.qml \
     qml/DrumMachine/*.qml \
     qml/HelpScreen/*.qml \
-    qml/SampleSelector/*.qml
+    qml/SampleSelector/*.qml \
+    qml/MixerPanel/*.qml \
+    qml/Turntable/*.qml
 
 RESOURCES += turntable.qrc
 

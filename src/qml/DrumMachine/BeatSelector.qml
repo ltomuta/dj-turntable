@@ -3,6 +3,7 @@
  */
 
 import QtQuick 1.0
+import "../Common"
 
 Item {
     id: selector

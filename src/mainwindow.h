@@ -42,8 +42,8 @@ protected:
 
 #if defined(Q_OS_SYMBIAN) || defined(Q_WS_MAEMO_5) || defined(Q_WS_MAEMO_6)
     QAccelerometer *m_accelerometer; // Owned
-    QPointer<AccelerometerFilter> m_accelerometerFilter;
-    QPointer<QSystemDeviceInfo> m_deviceInfo;
+    QPointer<AccelerometerFilter> m_accelerometerFilter; // Owned
+    QPointer<QSystemDeviceInfo> m_deviceInfo; // Owned
 #endif
 };
 

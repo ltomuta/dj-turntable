@@ -14,21 +14,20 @@ const int MaxDiskSpeed = 5.0f;
 
 Turntable::Turntable(QSettings *settings, QObject *parent)
     : GE::AudioSource(parent),
-      m_defaultSample(":/sounds/ivory.wav"),
-      m_defaultVolume(0.65f),
-      m_maxLoops(1),
       m_Settings(settings),
       m_buffer(NULL),
-      m_decoder(NULL)
+      m_decoder(NULL),
+      m_defaultSample(":/sounds/ivory.wav"),
+      m_defaultVolume(0.65f),
+      m_headOn(false),
+      m_maxLoops(1),
+      m_loops(0),
+      m_pos(0),
+      m_cc(0),
+      m_speed(0.0f),
+      m_targetSpeed(0.0f),
+      m_channelLength(0)
 {
-    m_loops = 0;
-    m_pos = 0;
-    m_speed = 0.0f;
-    m_targetSpeed = 0.0f;
-    m_channelLength = 0;
-    m_cc = 0;
-    m_headOn = false;
-
     m_audioMixer = new AudioMixer;
     m_audioMixer->addAudioSource(this);
     m_cutOffEffect = new CutOffEffect(this);
@@ -84,21 +83,15 @@ int Turntable::pullAudio(AUDIO_SAMPLE_TYPE *target, int bufferLength)
     AUDIO_SAMPLE_TYPE *t_target = dst + bufferLength;
     SAMPLE_FUNCTION_TYPE sfunc = NULL;
 
-    float speedmul;
-    if (m_decoder) {
-        speedmul = (float)m_decoder->fileInfo()->sample_rate /
-                (float)AUDIO_FREQUENCY * 2048.0f;
-    } else {
+    if (m_buffer) {
         sfunc = m_buffer->getSampleFunction();
         if (sfunc == NULL) {
             return 0;
         }
-        speedmul = (float)m_buffer->getSamplesPerSec() /
-                (float)AUDIO_FREQUENCY * 2048.0f;
     }
 
-    int p;
-    int inc = (int)(m_speed * speedmul);
+    int samplePos;
+    int inc = (int)(m_speed * m_speedMul);
     while (dst != t_target) {
         if (++m_cc > 64) {
             m_speed += (m_targetSpeed - m_speed) * 0.1f;
@@ -106,7 +99,7 @@ int Turntable::pullAudio(AUDIO_SAMPLE_TYPE *target, int bufferLength)
                 m_speed = -MaxDiskSpeed;
             else if (m_speed > MaxDiskSpeed)
                 m_speed = MaxDiskSpeed;
-            inc = (int)(m_speed * speedmul);
+            inc = (int)(m_speed * m_speedMul);
             m_cc = 0;
         }
 
@@ -131,16 +124,20 @@ int Turntable::pullAudio(AUDIO_SAMPLE_TYPE *target, int bufferLength)
             }
         }
 
-        p = (m_pos >> 11);
+        samplePos = (m_pos >> 11);
 
         if (m_decoder) {
-            *dst++ = m_decoder->at(p << 1);
-            *dst++ = m_decoder->at((p << 1) + 1);
+            *dst++ = m_decoder->at(samplePos << 1);
+            *dst++ = m_decoder->at((samplePos << 1) + 1);
         } else {
-            *dst++ = (((sfunc)(m_buffer, p, 0) * (2047^(m_pos & 2047)) +
-                      (sfunc)(m_buffer, p+1, 0) * (m_pos & 2047)) >> 11);
-            *dst++ = (((sfunc)(m_buffer, p, 1) * (2047 ^ (m_pos & 2047)) +
-                      (sfunc)(m_buffer, p+1, 1) * (m_pos & 2047)) >> 11);
+            *dst++ = (((sfunc)(m_buffer, samplePos, 0) *
+                       (2047^(m_pos & 2047)) +
+                      (sfunc)(m_buffer, samplePos + 1, 0) *
+                       (m_pos & 2047)) >> 11);
+            *dst++ = (((sfunc)(m_buffer, samplePos, 1) *
+                       (2047 ^ (m_pos & 2047)) +
+                      (sfunc)(m_buffer, samplePos + 1, 1) *
+                       (m_pos & 2047)) >> 11);
         }
         m_pos += inc;
     }
@@ -169,8 +166,7 @@ void Turntable::openSample(const QString &filePath)
     QString parsedFilePath;
     if (filePath.isEmpty()) {
         parsedFilePath = m_defaultSample;
-    }
-    else {
+    } else {
         parsedFilePath = filePath;
 #ifdef Q_WS_MAEMO_6
         parsedFilePath.replace(QString("file://"), QString(""));
@@ -212,18 +208,24 @@ void Turntable::openSample(const QString &filePath)
         emit error(parsedFilePath, "");
         return;
     }
-    else {
-        if (m_decoder) {
-            m_channelLength = (m_decoder->decodedLength()) - 2;
-            m_channelLength <<= 11;
-        } else {
-            m_channelLength = ((m_buffer->getDataLength()) /
-                               (m_buffer->getNofChannels() *
-                                m_buffer->getBytesPerSample())) - 2;
-            m_channelLength <<= 11;
-        }
-        m_audioMixer->addAudioSource(this);
+
+    if (m_decoder) {
+        m_channelLength = (m_decoder->decodedLength()) - 2;
+        m_channelLength <<= 11;
+
+        m_speedMul = (float)m_decoder->fileInfo()->sample_rate /
+                (float)AUDIO_FREQUENCY * 2048.0f;
+    } else {
+        m_channelLength = ((m_buffer->getDataLength()) /
+                           (m_buffer->getNofChannels() *
+                            m_buffer->getBytesPerSample())) - 2;
+        m_channelLength <<= 11;
+
+        m_speedMul = (float)m_buffer->getSamplesPerSec() /
+                (float)AUDIO_FREQUENCY * 2048.0f;
     }
+
+    m_audioMixer->addAudioSource(this);
 
     // Save the succesfully loaded sample to the persistent storage
     m_Settings->setValue("LastSample", parsedFilePath);
@@ -253,8 +255,9 @@ void Turntable::openDefaultSample()
 void Turntable::setDiscAimSpeed(QVariant value)
 {
     float speed = value.toFloat();
+
     if (speed > -MaxDiskSpeed && speed < MaxDiskSpeed) {
-        m_targetSpeed = m_targetSpeed * (1.0f - 0.50f) + speed * 0.50f;
+        m_targetSpeed = m_targetSpeed * 0.50f + speed * 0.50f;
     }
 }
 
@@ -262,6 +265,7 @@ void Turntable::setDiscAimSpeed(QVariant value)
 void Turntable::setDiscSpeed(QVariant value)
 {
     float speed = value.toFloat();
+
     if (speed < -MaxDiskSpeed) {
         m_targetSpeed = -MaxDiskSpeed;
     } else if (speed > MaxDiskSpeed) {
@@ -287,10 +291,10 @@ void Turntable::setResonance(QVariant value)
 void Turntable::volumeUp()
 {
     float volume = m_audioMixer->generalVolume() * 1.333f;
+
     if (volume == 0.0f) {
         volume = 0.01;
-    }
-    else if (volume >= 0.95f) {
+    } else if (volume >= 0.95f) {
         volume = 0.95f;
     }
 
@@ -333,7 +337,7 @@ void Turntable::seekToPosition(QVariant position)
 #if defined(Q_OS_SYMBIAN) || defined(Q_WS_MAEMO_5) || defined(Q_WS_MAEMO_6)
 
 /*!
-
+  Mutes the sound if silent profile is chosen.
 */
 void Turntable::profile(QSystemDeviceInfo::Profile profile)
 {

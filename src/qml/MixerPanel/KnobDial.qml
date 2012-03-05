@@ -17,7 +17,7 @@ Image {
 
     width: 300
     height: 300
-    source: "images/knobdial.png"
+    source: "../images/knobdial.png"
     smooth: true
 
     Image {
@@ -27,7 +27,7 @@ Image {
         height: parent.height
         x: width * 0.04
         y: height * 0.04
-        source: "images/armcasingshadow.png"
+        source: "../images/armcasingshadow.png"
         smooth: true
     }
 
@@ -35,7 +35,7 @@ Image {
         id: knobImage
 
         anchors.fill: parent
-        source: "images/knobdialpointer.png"
+        source: "../images/knobdialpointer.png"
         rotation: knob.minimumrotation + knob.value / knob.maximumvalue *
                   knob.maximumrotation
         smooth: true
@@ -44,7 +44,7 @@ Image {
     Image {
         id: knobHat
         anchors.fill: parent
-        source: "images/knobhat.png"
+        source: "../images/knobhat.png"
         smooth: true
     }
 

@@ -3,7 +3,7 @@
  */
 
 import QtQuick 1.0
-import "DrumMachine"
+import "../Common"
 
 Rectangle {
     id: mixerpanel
@@ -34,7 +34,7 @@ Rectangle {
                 margins: 5
             }
 
-            source: pressed ? "images/exit_on.png" : "images/exit.png"
+            source: pressed ? "../images/exit_on.png" : "../images/exit.png"
             smooth: true
             asynchronous: true
             // The exitButtonVisible is context property which is set to false
@@ -70,7 +70,7 @@ Rectangle {
                 margins: 5
             }
 
-            source: pressed ? "images/info_on.png" : "images/info.png"
+            source: pressed ? "../images/info_on.png" : "../images/info.png"
             smooth: true
 
             MouseArea {
@@ -199,7 +199,7 @@ Rectangle {
             glowColor: pressed ? "#CC00FF00" : "#CCFF0000"
             pressed: turntable.playing
             smooth: true
-            buttonCenterImage: "images/powerbutton.png"
+            buttonCenterImage: "../images/powerbutton.png"
         }
     }
 }

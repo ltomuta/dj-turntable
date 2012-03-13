@@ -4,7 +4,7 @@ QT += core gui declarative opengl
 
 TEMPLATE = app
 TARGET = turntable
-VERSION = 1.4.0
+VERSION = 1.4.1
 
 SOURCES += \
     main.cpp \
@@ -47,17 +47,8 @@ unix:!symbian {
 
     target.path = $$BINDIR
 
-    iconxpm.path = $$DATADIR/pixmap
-    iconxpm.files += icons/xpm/turntable.xpm
-
-    icon26.path = $$DATADIR/icons/hicolor/26x26/apps
-    icon26.files += icons/26x26/turntable.png
-
-    icon40.path = $$DATADIR/icons/hicolor/40x40/apps
-    icon40.files += icons/40x40/turntable.png
-
-    icon64.path = $$DATADIR/icons/hicolor/64x64/apps
-    icon64.files += icons/64x64/turntable.png
+    icon.path = $$DATADIR/icons/hicolor/80x80/apps
+    icon.files += icons/80x80/turntable.png
 
     maemo5 {
         # Maemo 5 specific
@@ -96,10 +87,7 @@ unix:!symbian {
 
     INSTALLS += target \
                 desktop \
-                iconxpm \
-                icon26 \
-                icon40 \
-                icon64
+                icon
 }
 
 

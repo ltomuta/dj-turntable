@@ -34,7 +34,7 @@ Rectangle {
     }
 
     function inclination(deg) {
-        diskReflection.rotation = deg * 2 + 45
+        turntable.diskReflection.rotation = deg * 2 + 45
     }
 
     function powerOff() {

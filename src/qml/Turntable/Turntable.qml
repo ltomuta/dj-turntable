@@ -9,6 +9,7 @@ Image {
 
     property bool playing: false
     property real speedSliderValue: speedslider.value
+    property alias diskReflection: diskReflection
 
     width:  flickable.width - mixerpanel.width - 2
     height: flickable.height
@@ -109,7 +110,7 @@ Image {
         fillMode: Image.PreserveAspectFit
 
         rotation: 45
-        Behavior on rotation { RotationAnimation {} }
+        Behavior on rotation { SmoothedAnimation {} }
     }
 
     MouseArea {

@@ -24,6 +24,7 @@ AccelerometerFilter::AccelerometerFilter()
 bool AccelerometerFilter::filter(QAccelerometerReading *reading)
 {
     const qreal radians_to_degrees = 57.2957795;
+
     qreal rx = reading->x();
     qreal ry = reading->y();
     qreal rz = reading->z();
@@ -33,22 +34,25 @@ bool AccelerometerFilter::filter(QAccelerometerReading *reading)
 #if defined(Q_OS_SYMBIAN) || defined(Q_WS_MAEMO_6)
     // These devices has accelerometer sensors placed as portrait
     // orientation.
-    rx = -(acos(rx / divider) * radians_to_degrees - 90);
+    const qreal newReadingWeight = 0.1f;
 
-    if (fabs(rx - m_prevValue) > 0.1f) {
-        emit rotationChanged(rx);
-        m_prevValue = rx;
-    }
+    qreal newValue = -(acos(rx / divider) * radians_to_degrees - 90);
 #else
     // And these devices the accelerometer is placed
     // as landscape orientation.
-    ry = acos(ry / divider) * radians_to_degrees - 90;
+    const qreal newReadingWeight = 0.2f;
 
-    if (fabs(ry - m_prevValue) > 3.0f) {
-        emit rotationChanged(ry);
-        m_prevValue = ry;
-    }
+    qreal newValue = acos(ry / divider) * radians_to_degrees - 90;
 #endif
+
+    // Low pass filtering
+    qreal value =
+            newValue * newReadingWeight + m_prevValue * (1 - newReadingWeight);
+
+    if (fabs(value - m_prevValue) > 0.1f)
+        emit rotationChanged(value);
+
+    m_prevValue = value;
 
     return false;
 }

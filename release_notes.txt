@@ -1,4 +1,4 @@
-DJ Turntable v1.4.0
+DJ Turntable v1.4.1
 ===================
 
 DJ Turntable demonstrates integrating a Qt Quick application to the Qt audio
@@ -297,6 +297,7 @@ http://projects.developer.nokia.com/turntable/browser/Licence.txt
 
 7. Version history
 -------------------------------------------------------------------------------
+v1.4.1 Added surround icon. Fixed the disk reflection.
 v1.4.0 Added support for ogg vorbis files and use the latest Qt GameEnabler.
 v1.3.1 Some optimizations for low performance Symbian devices.
 v1.3 Added support for MeeGo 1.2 Harmattan.

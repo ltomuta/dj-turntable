@@ -1,6 +1,7 @@
 # Copyright (c) 2011-2012 Nokia Corporation.
 
 QT += core gui declarative opengl
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TEMPLATE = app
 TARGET = turntable

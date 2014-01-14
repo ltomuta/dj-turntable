@@ -36,8 +36,13 @@ PullAudioOut::PullAudioOut(AudioSource *source, QObject *parent)
     DEBUG_INFO(this);
 
     QAudioFormat format;
+#if (QT_MAJOR_VERSION == 4)
     format.setFrequency(AUDIO_FREQUENCY);
     format.setChannels(AUDIO_CHANNELS);
+#else
+    format.setSampleRate(AUDIO_FREQUENCY);
+    format.setChannelCount(AUDIO_CHANNELS);
+#endif
     format.setSampleSize(AUDIO_SAMPLE_BITS);
     format.setCodec(GEDefaultAudioCodec);
     format.setByteOrder(GEByteOrder);

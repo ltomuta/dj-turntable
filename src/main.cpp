@@ -2,7 +2,11 @@
  * Copyright (c) 2011-2012 Nokia Corporation.
  */
 
+#if (QT_MAJOR_VERSION == 4)
 #include <QtGui>
+#else
+#include <QtWidgets>
+#endif
 #include "mainwindow.h"
 
 // Lock orientation in Symbian
